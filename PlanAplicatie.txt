@@ -1,0 +1,20 @@
+Aplicatie:
+Back-end: Java Spring Boot
+Front-end: Angular
+
+Ce vom face?
+AmadeuSports:
+- sign up, login, delete, update user
+- show live matches and teams from some sports
+- make friends with other users
+- notify or mail based on matches results or starting a match
+- set teams or matches as favorites
+- gain coins in app and you can bet with your friends on matches
+- show all bets, show money lost or won
+- show data about teams (last matches results and some other things)
+
+User: admin, user visitor:
+user: all of the above, does not have access to other users 
+admin: delete accounts, update accounts
+
+
