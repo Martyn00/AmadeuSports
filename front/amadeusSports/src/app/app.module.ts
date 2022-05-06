@@ -16,17 +16,22 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { MatchesTableComponent } from './matches-table/matches-table.component';
+import { MatTableModule } from '@angular/material/table';
+
 @NgModule({
   declarations: [
     AppComponent,
     LogInComponent,
     UserRegisterComponent,
     SideBarComponent,
+    MatchesTableComponent,
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
+      { path: 'matches-table', component: MatchesTableComponent }
     ]),
     MatFormFieldModule,
     BrowserModule,
@@ -39,7 +44,7 @@ import { RouterModule } from '@angular/router';
     HttpClientModule,
     MatSidenavModule,
     MatButtonModule,
-
+    MatTableModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

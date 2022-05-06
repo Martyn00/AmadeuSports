@@ -1,17 +1,28 @@
 <mat-drawer-container class="example-container">
     <mat-drawer mode="side" opened>
-        <div *ngIf ="!isSignedIn">
-            <button mat-raised-button color="primary" (click)="changeState()" routerLink="/{{typeOfLog}}">{{typeOfLog}}</button>
+        <div class>
+            <div *ngIf="!isSignedIn">
+                <div *ngIf="showLogIn">
+                    <button mat-raised-button color="primary" routerLink="/register" (click)="changeState('register')">
+                        register
+                    </button>
+                </div>
+                <div *ngIf="showRegister">
+                    <button mat-raised-button color="primary" routerLink="/log-in" (click)="changeState('log-in')">
+                        log-in
+                    </button>
+                </div>
+                <div *ngIf="!isSignedIn"></div>
+            </div>
+            <div>
+                <button mat-raised-button color="primary" routerLink="/{{component}}">Favorites</button>
+            </div>
+            <div>
+                <button mat-raised-button color="primary" (click)="changeState('matches-table')"
+                    routerLink="/matches-table">All Matches</button>
+            </div>
         </div>
-        <div>
-            <button mat-raised-button color="primary">Primary</button>
-        </div>
-        <div>
-            <button mat-raised-button color="primary">Favorites</button>
-        </div>
-        <div>
-            <button mat-raised-button color="primary">Matches</button>
-        </div>
+
     </mat-drawer>
     <mat-drawer-content>
         <router-outlet></router-outlet>

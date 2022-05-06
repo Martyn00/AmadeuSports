@@ -24,7 +24,7 @@ export class LogInComponent implements OnInit {
   }
 
   submitData() {
-    this.userService.logIn(this.username.value, this.password.value)
+    this.userService.logIn(this.username.value, this.password.value);
   }
 
 }
