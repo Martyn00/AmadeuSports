@@ -1,7 +1,7 @@
 import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y/input-modality/input-modality-detector';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { UserDto } from '../dto/userDto';
+import { UserDto } from '../dto/UserDto';
 import { UserService } from '../service/user.service';
 
 @Component({

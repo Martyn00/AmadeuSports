@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserDto } from '../dto/userDto';
+import { UserDto } from '../dto/UserDto';
 import { HttpClient } from '@angular/common/http';
 
 const URL = "http://localhost:8080/AmadeusSports/register"

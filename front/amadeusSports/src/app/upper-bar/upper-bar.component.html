@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+    <span>AmadeusSports</span>
+    <span class="example-spacer"></span>
+
+    <button class="settings-btn"mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="changeState('/log-in')">log in</button>
+        <button mat-menu-item (click)="changeState('/register')">sign up</button>
+    </mat-menu>
+
+</mat-toolbar>
