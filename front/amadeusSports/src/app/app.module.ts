@@ -25,6 +25,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { PrincipalComponentLoaderService } from './service/principal-component-loader.service';
+import { FavoritesComponent } from './favorites/favorites.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,14 +36,16 @@ import { PrincipalComponentLoaderService } from './service/principal-component-l
     SideBarComponent,
     MatchTabsComponent,
     MatchesTableComponent,
-    UpperBarComponent
+    UpperBarComponent,
+    FavoritesComponent
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
       // { path: 'matches-table', component: MatchesTableComponent },
-      { path: 'match-tabs', component: MatchTabsComponent }
+      { path: 'match-tabs', component: MatchTabsComponent },
+      {path:'favorites', component: FavoritesComponent}
 
     ]),
     MatFormFieldModule,
@@ -58,8 +63,9 @@ import { PrincipalComponentLoaderService } from './service/principal-component-l
     MatTabsModule,
     MatToolbarModule,
     MatIconModule,
-    MatMenuModule
-    
+    MatMenuModule,
+    MatSelectModule,
+    MatButtonToggleModule
   ],
   providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService],
   bootstrap: [AppComponent]

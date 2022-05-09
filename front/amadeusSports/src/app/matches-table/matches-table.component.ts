@@ -9,16 +9,25 @@ import { MatchTableLoaderService } from '../service/match-table-loader.service';
   styleUrls: ['./matches-table.component.css']
 })
 export class MatchesTableComponent implements OnInit {
-  displayedColumns: string[] = ['time', 'team1', 'team2', 'league', 'sport', 'details', 'actions'];
+  displayedColumns: string[] = ['time', 'team1', 'team2', 'score', 'league', 'sport', 'details', 'actions', 'favorites'];
   dataSource!: MatchDto[];
-
-  constructor(private matchTableService:MatchTableLoaderService) {
+  isChecked!: boolean;
+  favoriteText!: string;
+  constructor(private matchTableService: MatchTableLoaderService) {
   }
 
   ngOnInit(): void {
     this.matchTableService.matchesLoaded
       .subscribe((data) => { console.log(data); this.dataSource = data; });
     this.matchTableService.populateMatchTable(0);
-  }
 
+  }
+  clickedFavorite(element: MatchDto) {
+    element.isFavorite = !element.isFavorite;
+    if (element.isFavorite) {
+      this.favoriteText = 'Remove'
+    } else {
+      this.favoriteText = 'Favorite'
+    }
+  }
 }

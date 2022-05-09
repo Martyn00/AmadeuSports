@@ -13,10 +13,7 @@ const REG_STR = 'register'
 })
 export class SideBarComponent implements OnInit {
   component: string = LOG_IN_STR;
-  logBool: boolean = true;
   isSignedIn: boolean = false;
-  showLogIn: boolean = true;
-  showRegister: boolean = false;
   constructor(private route: Router, private loader: PrincipalComponentLoaderService) { }
   ngOnInit(): void {
     this.loader.stateLoaded
@@ -26,12 +23,5 @@ export class SideBarComponent implements OnInit {
   changeState(component: string): void {
     this.component = component;
     this.route.navigate([component]);
-    if (component === '/log-in') {
-      this.showLogIn = true;
-      this.showRegister = false;
-    } else if (component === '/register') {
-      this.showLogIn = false;
-      this.showRegister = true;
-    }
   }
 }

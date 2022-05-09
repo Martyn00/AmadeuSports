@@ -9,21 +9,27 @@
     <ng-container matColumnDef="team1">
         <th mat-header-cell *matHeaderCellDef>team1</th>
         <td mat-cell *matCellDef="let element">
-        <button mat-button>{{element.team1}}</button></td>
+            <button mat-button>{{element.team1}}</button>
+        </td>
     </ng-container>
 
     <!-- Weight Column -->
     <ng-container matColumnDef="team2">
         <th mat-header-cell *matHeaderCellDef>team2</th>
         <td mat-cell *matCellDef="let element">
-        <button mat-button>{{element.team2}}</button></td>
+            <button mat-button>{{element.team2}}</button>
+        </td>
     </ng-container>
-
+    <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef>Score</th>
+        <td mat-cell *matCellDef="let element">{{element.score}}</td>
+    </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="league">
         <th mat-header-cell *matHeaderCellDef>League</th>
         <td mat-cell *matCellDef="let element">
-            <button mat-button>{{element.league}}</button></td>
+            <button mat-button>{{element.league}}</button>
+        </td>
     </ng-container>
     <ng-container matColumnDef="sport">
         <th mat-header-cell *matHeaderCellDef>sport</th>
@@ -37,6 +43,16 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let row">
             <button mat-raised-button color="primary">BET</button>
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="favorites">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+            <mat-button-toggle-group>
+                <mat-button-toggle checked={{element.isFavorite}} (click)="clickedFavorite(element)">
+                    {{favoriteText}}
+                </mat-button-toggle>
+            </mat-button-toggle-group>
         </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
