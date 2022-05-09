@@ -1,0 +1,18 @@
+<mat-drawer-container class="example-container">
+    <mat-drawer mode="side" opened>
+        <div class>
+            <div>
+                <button mat-raised-button color="primary" (click)="changeState('/favorites')">Favorites</button>
+            </div>
+            <div>
+                <button mat-raised-button color="primary" (click)="changeState('/match-tabs')">
+                    All Matches
+                </button>
+            </div>
+        </div>
+
+    </mat-drawer>
+    <mat-drawer-content>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

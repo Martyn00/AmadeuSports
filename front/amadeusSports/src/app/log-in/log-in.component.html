@@ -1,2 +1,25 @@
-<p>log-in works!</p>
-<app-text-field></app-text-field>
+<div class="form">
+    <form (submit)="$event.preventDefault()">
+        <div class="form-element">
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput (cdkAutofill)="firstNameAutofilled =$event.isAutofilled" [formControl]="username">
+                <mat-hint *ngIf="firstNameAutofilled">Autofilled!</mat-hint>
+            </mat-form-field>
+        </div>
+        <div class="form-element">
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" (cdkAutofill)="lastNameAutofilled =  $event.isAutofilled"
+                    [formControl]="password">
+                <mat-hint *ngIf="lastNameAutofilled">Autofilled!</mat-hint>
+            </mat-form-field>
+        </div>
+        <div class="form-element">
+            <button mat-raised-button (click)="submitData()">Submit</button>
+        </div>
+
+
+
+    </form>
+</div>

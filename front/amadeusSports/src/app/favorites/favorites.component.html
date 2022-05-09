@@ -1,0 +1,21 @@
+<form>
+    <mat-form-field appearance="fill">
+        <mat-label>What are you searching?</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let type of types" [value]="type">
+                {{type}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>when?</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let period of periods" [value]="period">
+                {{period}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</form>
+
+<app-matches-table></app-matches-table>
