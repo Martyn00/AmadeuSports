@@ -31,29 +31,29 @@ public class BackApplication {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void doSomethingAfterStartup() {
-        User appUser = new User("TibiAlex",
-                "tibi.alex@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-
-        appUser = new User("Martin",
-                "martin@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-
-        appUser = new User("Stefan",
-                "stefan@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-
-        appUser = new User("Rares",
-                "rares@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
+//        User appUser = new User("TibiAlex",
+//                "tibi.alex@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//
+//        appUser = new User("Martin",
+//                "martin@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//
+//        appUser = new User("Stefan",
+//                "stefan@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//
+//        appUser = new User("Rares",
+//                "rares@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
     }
 
     @Transactional
