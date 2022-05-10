@@ -1,16 +1,17 @@
 package com.example.back.service;
 
+import com.example.back.handlers.MatchAlreadyExistsInFavoritesException;
+import com.example.back.handlers.MatchNotFoundException;
+import com.example.back.handlers.UserNotFoundException;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
+import com.example.back.models.entities.User;
 import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+
+    private final MatchRepo matchRepo;
 
     @Override
     public List<MatchEntity> getFavoriteMatchesByUserId(Long id) {
@@ -43,5 +46,24 @@ public class UserServiceImpl implements UserService {
             return new ArrayList<>(userRepo.findById(id).get().getFavoriteLeagues());
         }
         return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> addMatchToFavorites(Long userId, Long matchId) {
+        User user =  userRepo.findById(userId).orElseThrow(() -> {
+            throw new UserNotFoundException();
+        });
+
+        MatchEntity match =  matchRepo.findById(matchId).orElseThrow(() -> {
+            throw new MatchNotFoundException();
+        });
+
+        if (user.getFavoriteMatches().contains(match)) {
+            throw new MatchAlreadyExistsInFavoritesException();
+        }
+
+        user.getFavoriteMatches().add(match);
+        userRepo.save(user);
+        return ResponseEntity.ok(null);
     }
 }

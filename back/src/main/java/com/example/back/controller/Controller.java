@@ -23,9 +23,6 @@ public class Controller {
 
     private final RegisterService registerService;
     private final LoginService loginService;
-    private final MatchService matchService;
-    private final UserService userService;
-    private final TeamService teamService;
 
 
 
@@ -47,30 +44,5 @@ public class Controller {
     @PostMapping(path = "/forgotPassword")
     public String forgotPassword(@RequestBody ForgotPassRequest forgotPassRequest) {
         return loginService.forgotPassword(forgotPassRequest);
-    }
-
-    @GetMapping(path = "/match/{data}")
-    public List<MatchEntity> getMatchByDate(@PathVariable String data) {
-        return matchService.getMatchByDate(data);
-    }
-
-    @GetMapping(path = "/user/{id}/favorite-matches")
-    public List<MatchEntity> getFavoriteMatchesByUserId(@PathVariable Long id) {
-        return userService.getFavoriteMatchesByUserId(id);
-    }
-
-    @GetMapping(path = "/user/{id}/favorite-teams")
-    public List<Team> getFavoriteTeamsByUserId(@PathVariable Long id) {
-        return userService.getFavoriteTeamsByUserId(id);
-    }
-
-    @GetMapping(path = "/user/{id}/favorite-leagues")
-    public List<League> getFavoriteLeaguesByUserId(@PathVariable Long id) {
-        return userService.getFavoriteLeaguesByUserId(id);
-    }
-
-    @GetMapping(path = "/team/{id}/matches")
-    public List<MatchEntity> getMatchesHistory(@PathVariable Long id) {
-        return teamService.getMatchesHistory(id);
     }
 }
