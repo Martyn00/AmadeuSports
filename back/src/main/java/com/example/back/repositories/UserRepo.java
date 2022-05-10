@@ -12,6 +12,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findById(Long id);
+
     @Modifying
     @Query("update User a set a.confirmed = true where a.username = ?1")
     void  updateConfirmUser(String username);
