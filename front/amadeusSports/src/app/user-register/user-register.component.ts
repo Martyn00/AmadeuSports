@@ -31,7 +31,6 @@ export class UserRegisterComponent implements OnInit {
     submitData() {
         const result: UserDto = Object.assign({}, this.regForm.value);
         this.userService.register(result);
-        console.log(result);
         this.regForm.reset();
     }
 }
