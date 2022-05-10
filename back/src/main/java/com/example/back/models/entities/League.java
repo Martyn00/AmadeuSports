@@ -13,9 +13,10 @@ public class League {
     private Long id;
 
     @OneToMany
+    @JoinColumn(name = "league_id")
     private Set<Team> teams;
 
     @OneToMany
-    private Set<Match> matches;
-
+    @JoinColumn(name = "league_id")
+    private Set<MatchEntity> matches;
 }

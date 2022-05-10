@@ -16,5 +16,6 @@ public class Team {
     private String name;
 
     @OneToMany
-    private Set<Match> matches;
+    @JoinColumn(name = "team_id")
+    private Set<MatchEntity> matches;
 }

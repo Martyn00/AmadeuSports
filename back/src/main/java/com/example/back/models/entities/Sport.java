@@ -16,5 +16,6 @@ public class Sport {
     private String name;
 
     @OneToMany
+    @JoinColumn(name = "sport_id")
     private Set<League> leagues;
 }
