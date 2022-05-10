@@ -3,23 +3,23 @@ package com.example.back.service;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
-import com.example.back.models.entities.User;
 import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
-
-    public UserServiceImpl(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
 
     @Override
     public List<MatchEntity> getFavoriteMatchesByUserId(Long id) {

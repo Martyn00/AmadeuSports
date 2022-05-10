@@ -15,7 +15,6 @@ public class Team {
     private Long id;
 
     @OneToMany
-    @JoinColumn(name = "team_id")
     private Set<MatchEntity> matches = new HashSet<>();
 
     private String name;
