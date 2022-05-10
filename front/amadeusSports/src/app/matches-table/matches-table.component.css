@@ -16,3 +16,10 @@
 .demo-row-is-clicked {
   font-weight: bold;
 }
+
+.mat-button-toggle{
+    height:48px !important;
+    width:90px !important;
+  text-align: center;
+  block-size: auto;
+}
