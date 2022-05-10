@@ -50,7 +50,7 @@ public class Controller {
     }
 
     @GetMapping(path = "/match/{data}")
-    public List<MatchEntity> getMatchByDate(@PathVariable String data) {
+    public List<MatchEntity> getMatchByDate(@PathVariable Integer data) {
         return matchService.getMatchByDate(data);
     }
 

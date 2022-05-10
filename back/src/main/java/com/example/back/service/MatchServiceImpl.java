@@ -17,9 +17,9 @@ public class MatchServiceImpl implements MatchService{
     private final MatchRepo matchRepo;
 
     @Override
-    public List<MatchEntity> getMatchByDate(String data) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
-        LocalDateTime dateTime = LocalDateTime.parse(data, formatter);
+    public List<MatchEntity> getMatchByDate(Integer numberOfDays) {
+
+        LocalDateTime dateTime = LocalDateTime.now().plusDays(numberOfDays);
 
         List<MatchEntity> matches = new LinkedList<>();
         for (MatchEntity match : matchRepo.findAll()) {
