@@ -10,9 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Getter
@@ -26,11 +24,26 @@ public class User implements UserDetails {
     )
     private Long id;
     private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private Boolean confirmed;
+    private int Wallet;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany
+    private Set<Team> favoriteTeams = new HashSet<>();
+
+    @OneToMany
+    private Set<League> favoriteLeagues = new HashSet<>();
+
+    @OneToMany
+    private Set<MatchEntity> favoriteMatches = new HashSet<>();
+
+    @OneToMany
+    private Set<Bet> betHistory = new HashSet<>();
 
 
 

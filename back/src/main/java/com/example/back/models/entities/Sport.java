@@ -3,6 +3,7 @@ package com.example.back.models.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -13,9 +14,9 @@ public class Sport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
     @OneToMany
     @JoinColumn(name = "sport_id")
-    private Set<League> leagues;
+    private Set<League> leagues = new HashSet<>();
+
+    private String name;
 }

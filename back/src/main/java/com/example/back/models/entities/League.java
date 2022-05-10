@@ -3,6 +3,7 @@ package com.example.back.models.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -14,9 +15,12 @@ public class League {
 
     @OneToMany
     @JoinColumn(name = "league_id")
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<>();
 
     @OneToMany
     @JoinColumn(name = "league_id")
-    private Set<MatchEntity> matches;
+    private Set<MatchEntity> matches = new HashSet<>();
+
+    private String name;
+    private String country;
 }
