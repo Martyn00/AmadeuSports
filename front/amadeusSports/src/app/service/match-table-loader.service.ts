@@ -20,13 +20,13 @@ export class MatchTableLoaderService{
   constructor(private loader: PrincipalComponentLoaderService, private http: HttpClient) { }
 
   populateMatchTable(pos: number) {
-    let url = URL + "/match" + pos;
-    // this.http.get<MatchDto[]>(url).subscribe(response => {
-    //   this.sendMatches = response;
-    //   this.matchesLoaded.emit(this.sendMatches);
-    // });
-    this.sendMatches = [this.matches[pos]]
-    this.matchesLoaded.emit(this.sendMatches);
+    let url = URL + "/match/" + pos;
+    this.http.get<MatchDto[]>(url).subscribe(response => {
+      this.sendMatches = response;
+      this.matchesLoaded.emit(this.sendMatches);
+    });
+    // this.sendMatches = [this.matches[pos]]
+    // this.matchesLoaded.emit(this.sendMatches);
 
   }
 }

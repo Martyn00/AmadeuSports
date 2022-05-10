@@ -1,5 +1,6 @@
 package com.example.back.controller;
 
+import com.example.back.controller.dto.MatchDto;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
@@ -50,7 +51,7 @@ public class Controller {
     }
 
     @GetMapping(path = "/match/{data}")
-    public List<MatchEntity> getMatchByDate(@PathVariable Integer data) {
+    public List<MatchDto> getMatchByDate(@PathVariable Integer data) {
         return matchService.getMatchByDate(data);
     }
 

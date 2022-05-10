@@ -28,50 +28,50 @@ public class BackApplication {
         SpringApplication.run(BackApplication.class, args);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    @Transactional
-    public void doSomethingAfterStartup() {
-        User appUser = new User("TibiAlex",
-                "tibi.alex@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-
-        appUser = new User("Martin",
-                "martin@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-
-        appUser = new User("Stefan",
-                "stefan@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-
-        appUser = new User("Rares",
-                "rares@yahoo.com",
-                "password",
-                Role.ADMIN);
-        saveUser(appUser);
-    }
-
-    @Transactional
-    public void saveUser(User appUser) {
-        appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
-        appUserRepo.save(appUser);
-        String token = UUID.randomUUID().toString();
-        confirmationTokenService.saveCorfirmationToken(new ConfirmationToken(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(20),
-                appUser
-        ));
-        ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
-                .orElseThrow(() -> new IllegalStateException("token not found"));
-        confirmationTokenService.updateConfirmedAt(token);
-        appUserRepo.updateConfirmUser(confirmationToken.getUser().getUsername());
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    @Transactional
+//    public void doSomethingAfterStartup() {
+//        User appUser = new User("TibiAlex",
+//                "tibi.alex@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//
+//        appUser = new User("Martin",
+//                "martin@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//
+//        appUser = new User("Stefan",
+//                "stefan@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//
+//        appUser = new User("Rares",
+//                "rares@yahoo.com",
+//                "password",
+//                Role.ADMIN);
+//        saveUser(appUser);
+//    }
+//
+//    @Transactional
+//    public void saveUser(User appUser) {
+//        appUser.setPassword(bCryptPasswordEncoder.encode(appUser.getPassword()));
+//        appUserRepo.save(appUser);
+//        String token = UUID.randomUUID().toString();
+//        confirmationTokenService.saveCorfirmationToken(new ConfirmationToken(
+//                token,
+//                LocalDateTime.now(),
+//                LocalDateTime.now().plusMinutes(20),
+//                appUser
+//        ));
+//        ConfirmationToken confirmationToken = confirmationTokenService
+//                .getToken(token)
+//                .orElseThrow(() -> new IllegalStateException("token not found"));
+//        confirmationTokenService.updateConfirmedAt(token);
+//        appUserRepo.updateConfirmUser(confirmationToken.getUser().getUsername());
+//    }
 
 }
