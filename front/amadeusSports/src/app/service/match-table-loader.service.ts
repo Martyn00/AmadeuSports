@@ -25,8 +25,5 @@ export class MatchTableLoaderService{
       this.sendMatches = response;
       this.matchesLoaded.emit(this.sendMatches);
     });
-    // this.sendMatches = [this.matches[pos]]
-    // this.matchesLoaded.emit(this.sendMatches);
-
   }
 }

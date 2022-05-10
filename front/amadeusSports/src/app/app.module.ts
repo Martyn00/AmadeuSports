@@ -28,6 +28,7 @@ import { PrincipalComponentLoaderService } from './service/principal-component-l
 import { FavoritesComponent } from './favorites/favorites.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,7 +68,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatSelectModule,
     MatButtonToggleModule
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService],
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, UserEmulationInterceptor],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
