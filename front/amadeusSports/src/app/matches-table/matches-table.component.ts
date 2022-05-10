@@ -24,10 +24,5 @@ export class MatchesTableComponent implements OnInit {
   }
   clickedFavorite(element: MatchDto) {
     element.isFavorite = !element.isFavorite;
-    if (element.isFavorite) {
-      this.favoriteText = 'Remove'
-    } else {
-      this.favoriteText = 'Favorite'
-    }
   }
 }
