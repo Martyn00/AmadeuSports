@@ -1,6 +1,7 @@
 package com.example.back.controller;
 
 
+import com.example.back.controller.dto.MatchDto;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.service.MatchService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,8 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping(path = "/{data}")
-    public List<MatchEntity> getMatchByDate(@PathVariable String data) {
+    public List<MatchDto> getMatchByDate(@PathVariable Integer data) {
+
         return matchService.getMatchByDate(data);
     }
 }
