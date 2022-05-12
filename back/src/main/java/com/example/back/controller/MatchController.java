@@ -2,7 +2,6 @@ package com.example.back.controller;
 
 
 import com.example.back.controller.dto.MatchDto;
-import com.example.back.models.entities.MatchEntity;
 import com.example.back.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
