@@ -1,5 +1,5 @@
 export class MatchDto {
-    time!: number;
+    time!: string;
     team1!: string;
     team2!: string;
     sport!: string;
@@ -8,7 +8,7 @@ export class MatchDto {
     details!: string;
     isFavorite!: boolean;
 
-    constructor(time: number, team1: string, team2: string, score:string, sport: string, league: string,
+    constructor(time: string, team1: string, team2: string, score:string, sport: string, league: string,
         details: string, isFavorite:boolean) {
         this.time = time;
         this.details = details;
