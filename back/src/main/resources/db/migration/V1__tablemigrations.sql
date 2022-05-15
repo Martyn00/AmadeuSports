@@ -22,6 +22,15 @@ create table confirmation_token
 ) engine=MyISAM;
 
 
+create table friends
+(
+    id          bigint not null auto_increment,
+    friends_id  bigint,
+    me_id       bigint,
+    primary key (id)
+) engine=MyISAM;
+
+
 create table league
 (
     id       bigint not null auto_increment,
@@ -172,6 +181,16 @@ alter table bet
 alter table confirmation_token
     add constraint FKhjrtky9wbd6lbk7mu9tuddqgn
         foreign key (user_id)
+            references user (id);
+
+alter table friends
+    add constraint FKhfa6fmq8olgrgufffn9fnt8qh
+        foreign key (friends_id)
+            references user (id);
+
+alter table friends
+    add constraint FK4rcvuhlgwwjgdd3jl60gmn40e
+        foreign key (me_id)
             references user (id);
 
 alter table league
