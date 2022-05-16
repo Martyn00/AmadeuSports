@@ -1,4 +1,4 @@
-package com.example.back.controller;
+package com.example.back.controllers;
 
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.service.TeamService;

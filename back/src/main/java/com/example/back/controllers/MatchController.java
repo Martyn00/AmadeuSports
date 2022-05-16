@@ -1,6 +1,6 @@
-package com.example.back.controller;
+package com.example.back.controllers;
 
-import com.example.back.controller.dto.MatchDto;
+import com.example.back.controllers.dto.MatchDto;
 import com.example.back.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

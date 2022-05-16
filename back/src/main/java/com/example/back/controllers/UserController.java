@@ -1,4 +1,4 @@
-package com.example.back.controller;
+package com.example.back.controllers;
 
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
