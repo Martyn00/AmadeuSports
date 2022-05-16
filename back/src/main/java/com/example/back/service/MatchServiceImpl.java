@@ -1,6 +1,6 @@
 package com.example.back.service;
 
-import com.example.back.controller.dto.MatchDto;
+import com.example.back.controllers.dto.MatchDto;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.repositories.MatchRepo;
 import lombok.AllArgsConstructor;

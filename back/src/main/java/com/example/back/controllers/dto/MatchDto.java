@@ -1,4 +1,4 @@
-package com.example.back.controller.dto;
+package com.example.back.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

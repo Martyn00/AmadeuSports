@@ -1,6 +1,6 @@
 package com.example.back.service;
 
-import com.example.back.controller.dto.MatchDto;
+import com.example.back.controllers.dto.MatchDto;
 
 import java.util.List;
 
