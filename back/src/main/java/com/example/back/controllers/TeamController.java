@@ -1,4 +1,4 @@
-package com.example.back.controllers;
+package com.example.back.controller;
 
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.service.TeamService;
@@ -19,4 +19,5 @@ public class TeamController {
     public List<MatchEntity> getMatchesHistory(@PathVariable Long id) {
         return teamService.getMatchesHistory(id);
     }
+
 }

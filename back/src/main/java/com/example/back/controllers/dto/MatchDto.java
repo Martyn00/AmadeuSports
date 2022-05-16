@@ -14,7 +14,7 @@ public class MatchDto {
     String team2;
     String sport;
     String score;
-    @JsonProperty(value = "league")
+//    @JsonProperty(value = "league")
     String country;
     String details;
     Boolean isFavorite;

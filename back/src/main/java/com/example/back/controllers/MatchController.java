@@ -1,7 +1,6 @@
-package com.example.back.controllers;
+package com.example.back.controller;
 
-
-import com.example.back.controllers.dto.MatchDto;
+import com.example.back.controller.dto.MatchDto;
 import com.example.back.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class MatchController {
 
     @GetMapping(path = "/{data}")
     public List<MatchDto> getMatchByDate(@PathVariable Integer data) {
-
         return matchService.getMatchByDate(data);
     }
+
 }
