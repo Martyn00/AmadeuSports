@@ -45,7 +45,8 @@ public class User implements UserDetails {
     @OneToMany
     private Set<Bet> betHistory = new HashSet<>();
 
-
+    @OneToMany(mappedBy = "me")
+    private Collection<Friends> friends = new ArrayList<>();
 
     public User(String username,
                 String email,
