@@ -4,6 +4,7 @@ INSERT INTO user (id, wallet, confirmed, email, first_name, last_name, password,
     (2,0,1,'tibi.alex@yahoo.com', 'tibi', 'alex', '$2a$10$W2isItDMcZqcNezYQC4jcuF4JwdSO94NPLMqmnr0aytelRDiJKIpG', 'ADMIN', 'Martin');
 INSERT INTO user (id, wallet, confirmed, email, first_name, last_name, password, role, username) values
     (3,0,1,'tibi.alex@yahoo.com', 'tibi', 'alex', '$2a$10$W2isItDMcZqcNezYQC4jcuF4JwdSO94NPLMqmnr0aytelRDiJKIpG', 'ADMIN', 'Stefa');
+
 INSERT INTO team (id,country, name) values
     (4,'Romania', 'FCSB');
 INSERT INTO team (id,country, name) values

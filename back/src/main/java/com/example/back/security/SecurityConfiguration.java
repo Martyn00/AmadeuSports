@@ -37,7 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/AmadeusSports/register",
                         "/AmadeusSports/confirmToken",
                         "/AmadeusSports/login",
-                        "/AmadeusSports/forgotPassword", "/AmadeusSports").permitAll()
+                        "/AmadeusSports/forgotPassword",
+                        "/AmadeusSports").permitAll()
 //                .antMatchers().authenticated()
 //                .antMatchers().hasAuthority("ADMIN")
                 .and().exceptionHandling()

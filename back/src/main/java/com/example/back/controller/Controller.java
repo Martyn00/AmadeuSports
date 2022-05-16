@@ -1,6 +1,7 @@
 package com.example.back.controller;
 
 import com.example.back.controller.dto.MatchDto;
+import com.example.back.controller.dto.UserDto;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
@@ -9,11 +10,10 @@ import com.example.back.models.requestsAndResponses.ForgotPassRequest;
 import com.example.back.models.requestsAndResponses.RegisterRequest;
 import com.example.back.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,8 +27,6 @@ public class Controller {
     private final MatchService matchService;
     private final UserService userService;
     private final TeamService teamService;
-
-
 
     @PostMapping(path = "/register")
     public String registerNewUser(@RequestBody RegisterRequest registerRequest) {
@@ -73,5 +71,20 @@ public class Controller {
     @GetMapping(path = "/team/{id}/matches")
     public List<MatchEntity> getMatchesHistory(@PathVariable Long id) {
         return teamService.getMatchesHistory(id);
+    }
+
+    @GetMapping(path= "/user/all")
+    public ArrayList<UserDto> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping(path = "/user/friends")
+    public void getAllFriends() {
+
+    }
+
+    @PostMapping(path = "user/{userId}/add-friend")
+    public String addFriend(@PathVariable Long userId) {
+        return userService.addFriend(userId);
     }
 }
