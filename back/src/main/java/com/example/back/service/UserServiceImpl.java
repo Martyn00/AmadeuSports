@@ -85,9 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String addFriend(Long friend_id) {
-        System.out.println(friend_id);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal.toString());
         if (principal instanceof UserDetails) {
             Long me_id = ((User)principal).getId();
             if(!Objects.equals(me_id, friend_id)) {
@@ -107,5 +105,47 @@ public class UserServiceImpl implements UserService {
             return "you cannot be friends with yourself";
         }
         return "you are not logged in";
+    }
+
+    @Override
+    public String removeFriend(Long friend_id) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Long me_id = ((User)principal).getId();
+            if(!Objects.equals(me_id, friend_id)) {
+                Optional<User> me = userRepo.findById(me_id);
+                Optional<User> friend = userRepo.findById(friend_id);
+
+                if(me.isPresent() && friend.isPresent()) {
+                    Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
+                    if(isRelation.isPresent()) {
+                        friendsRepo.delete(isRelation.get());
+                        return "you are no longer friends";
+                    }
+                    return "you are not friends";
+                }
+                return "one of the users don't exist";
+            }
+            return "you cannot remove yourself from friends";
+        }
+        return "you are not logged in";
+    }
+
+    @Override
+    public ArrayList<UserDto> getAllFriends() {
+        ArrayList<UserDto> result = new ArrayList<>();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Long me_id = ((User) principal).getId();
+            Optional<User> me = userRepo.findById(me_id);
+            if (me.isPresent()) {
+                for (User user : friendsRepo.findAllFriends(me.get())) {
+                    result.add(new UserDto(user.getId(), user.getUsername()));
+                }
+                return result;
+            }
+            return null;
+        }
+        return null;
     }
 }
