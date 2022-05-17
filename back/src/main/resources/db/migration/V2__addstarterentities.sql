@@ -32,3 +32,8 @@ INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, te
     (15, 'super', 0, '0-0', DATE_SUB(DATE_SUB(DATE_SUB(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 8);
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id ) values
     (16, 'super', 1, '???', DATE_ADD(DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 9);
+
+INSERT INTO league (country, name, sport_id) VALUES ('Romania', 'Liga 1', 1);
+INSERT INTO league (country, name, sport_id) VALUES ('Spain', 'La Liga', 1);
+INSERT INTO league (country, name, sport_id) VALUES ('England', 'EFL', 1);
+INSERT INTO league (country, name, sport_id) VALUES ('Europe', 'Champions League', 1);
