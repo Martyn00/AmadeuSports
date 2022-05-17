@@ -20,4 +20,14 @@ public class MatchController {
         return matchService.getMatchByDate(data);
     }
 
+    @PostMapping(path = "/{matchID}/favorites-add")
+    public String addMatchToFavorites(@PathVariable Long matchID) {
+        return matchService.addMatchToFavorites(matchID);
+    }
+
+    @PostMapping(path = "/{matchID}/favorites-remove")
+    public String removeMatchFromFavorites(@PathVariable Long matchID) {
+        return matchService.removeMatchFromFavorites(matchID);
+    }
+
 }
