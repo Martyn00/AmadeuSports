@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatMenu } from '@angular/material/menu';
+import { BetService } from '../service/bet.service';
 import { PrincipalComponentLoaderService } from '../service/principal-component-loader.service';
 @Component({
   selector: 'app-upper-bar',
@@ -8,12 +9,16 @@ import { PrincipalComponentLoaderService } from '../service/principal-component-
   styleUrls: ['./upper-bar.component.css']
 })
 export class UpperBarComponent implements OnInit {
-
-  constructor(private loader:PrincipalComponentLoaderService) { }
+  coins!: number;
+  constructor(private loader: PrincipalComponentLoaderService, private betService: BetService) { }
 
   ngOnInit(): void {
+    this.betService.coinsLoaded.subscribe((data) => {
+      this.coins = data;
+    });
+    this.betService.getCoins();
   }
-  changeState(component:string) {
+  changeState(component: string) {
     this.loader.changeState(component);
   }
 }

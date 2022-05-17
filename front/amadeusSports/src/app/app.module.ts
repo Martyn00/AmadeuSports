@@ -29,6 +29,12 @@ import { FavoritesComponent } from './favorites/favorites.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor';
+import { BetService } from './service/bet.service';
+import { BetsComponent } from './bets/bets.component';
+import { FriendsComponent } from './friends/friends.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,14 +44,17 @@ import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor
     MatchTabsComponent,
     MatchesTableComponent,
     UpperBarComponent,
-    FavoritesComponent
+    FavoritesComponent,
+    BetsComponent,
+    FriendsComponent
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
-      // { path: 'matches-table', component: MatchesTableComponent },
+      { path: 'bets', component: BetsComponent },
       { path: 'match-tabs', component: MatchTabsComponent },
+      { path: 'friends', component: FriendsComponent },
       {path:'favorites', component: FavoritesComponent}
 
     ]),
@@ -66,9 +75,11 @@ import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor
     MatIconModule,
     MatMenuModule,
     MatSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDividerModule,
+    MatAutocompleteModule
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, UserEmulationInterceptor],
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, UserEmulationInterceptor],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
