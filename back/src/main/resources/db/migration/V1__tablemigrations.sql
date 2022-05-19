@@ -66,6 +66,7 @@ create table match_entity
     start_time  datetime,
     team1_id    bigint,
     team2_id    bigint,
+    league_id   bigint,
     primary key (id)
 ) engine=MyISAM;
 
@@ -177,6 +178,11 @@ alter table bet
     add constraint FKe7ucumi746eukm7rwg65qe3oc
         foreign key (user2_id)
             references user (id);
+
+alter table match_entity
+    add constraint KDghkdshflncoasd7ewfs
+        foreign key (league_id)
+            references league (id);
 
 alter table confirmation_token
     add constraint FKhjrtky9wbd6lbk7mu9tuddqgn

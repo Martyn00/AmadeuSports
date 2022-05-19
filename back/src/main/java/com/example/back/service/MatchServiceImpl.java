@@ -37,9 +37,25 @@ public class MatchServiceImpl implements MatchService {
                 .map(this::mapToMatchDto).collect(Collectors.toList());
     }
 
+    private String getWinner(MatchEntity match) {
+        if (!match.isUpcoming()) {
+            String[] arrOfGoals = match.getResult().split("-");
+            if (Integer.parseInt(arrOfGoals[0]) > Integer.parseInt(arrOfGoals[1])) {
+                return match.getTeam1().getName();
+            }
+            if (Integer.parseInt(arrOfGoals[0]) < Integer.parseInt(arrOfGoals[1])) {
+                return match.getTeam2().getName();
+            }
+
+            return "Draw";
+        }
+
+        return "Upcoming";
+    }
+
     private MatchDto mapToMatchDto(MatchEntity matchEntity) {
         MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
-//        findLeagueByteam
+        matchDto.setLeague(matchEntity.getLeague().getName());
         matchDto.setCountry(matchEntity.getTeam1().getCountry());
         matchDto.setTeam1(matchEntity.getTeam1().getName());
         matchDto.setTeam2(matchEntity.getTeam2().getName());
@@ -47,6 +63,7 @@ public class MatchServiceImpl implements MatchService {
         matchDto.setScore(matchEntity.getResult());
         matchDto.setIsFavorite(false);
         matchDto.setSport("football");
+        matchDto.setWinner(getWinner(matchEntity));
 
         matchDto.setTime(matchEntity.getStartTime().getHour() + ":" + matchEntity.getStartTime().getMinute() );
         return matchDto;
