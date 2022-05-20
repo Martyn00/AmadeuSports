@@ -1,6 +1,7 @@
 package com.example.back.controllers;
 
 import com.example.back.controllers.dto.LeagueDto;
+import com.example.back.controllers.dto.MatchDto;
 import com.example.back.service.LeagueServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,18 @@ public class LeagueController {
         return leagueService.removeLeagueFromFavorites(leagueId);
     }
 
-    @GetMapping(path = "favorites")
-    public ArrayList<LeagueDto> getFavoriteTeams() {
+    @GetMapping(path = "/favorites")
+    public ArrayList<LeagueDto> getFavoriteLeagues() {
         return leagueService.getFavoriteLeagues();
+    }
+
+    @GetMapping(path = "/upcoming/{leagueId}")
+    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(@PathVariable Long leagueId) {
+        return leagueService.getUpcomingMatchesByLeagueId(leagueId);
+    }
+
+    @GetMapping(path = "/past/{leagueId}")
+    public ArrayList<MatchDto> getPastMatchesByLeagueId(@PathVariable Long leagueId) {
+        return leagueService.getPastMatchesByLeagueId(leagueId);
     }
 }
