@@ -3,6 +3,7 @@ package com.example.back.controllers;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.service.MatchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,12 @@ public class MatchController {
     }
 
     @PostMapping(path = "/{matchID}/favorites-add")
-    public String addMatchToFavorites(@PathVariable Long matchID) {
+    public ResponseEntity<String> addMatchToFavorites(@PathVariable Long matchID) {
         return matchService.addMatchToFavorites(matchID);
     }
 
     @PostMapping(path = "/{matchID}/favorites-remove")
-    public String removeMatchFromFavorites(@PathVariable Long matchID) {
+    public ResponseEntity<String> removeMatchFromFavorites(@PathVariable Long matchID) {
         return matchService.removeMatchFromFavorites(matchID);
     }
 

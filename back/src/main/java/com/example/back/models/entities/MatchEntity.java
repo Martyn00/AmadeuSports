@@ -19,6 +19,9 @@ public class MatchEntity {
     @ManyToOne
     private Team team2;
 
+    @OneToOne
+    private League league;
+
     private boolean isUpcoming;
     private String result;
     private LocalDateTime startTime;

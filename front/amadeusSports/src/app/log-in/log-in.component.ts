@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../service/user.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class LogInComponent implements OnInit {
   username = new FormControl('');
   password = new FormControl('');
 
-  constructor(private userService:UserService) {
+  constructor(private userService: UserService, private _snackBar: MatSnackBar) {
     this.firstNameAutofilled = false;
     this.lastNameAutofilled = false;
   }
@@ -22,7 +23,9 @@ export class LogInComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
   submitData() {
     this.userService.logIn(this.username.value, this.password.value);
   }

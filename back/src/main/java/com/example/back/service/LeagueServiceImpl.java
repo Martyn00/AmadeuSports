@@ -1,15 +1,18 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.LeagueDto;
+import com.example.back.handlers.*;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.LeagueRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
@@ -19,52 +22,70 @@ public class LeagueServiceImpl implements LeagueService {
     private final UserRepo userRepo;
 
     @Override
-    public String addLeagueToFavorites(Long leagueId) {
-        Optional<League> league = leagueRepo.findById(leagueId);
+    public ResponseEntity<String> addLeagueToFavorites(Long leagueId) {
+        League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
+            throw new LeagueNotFoundException();
+        });
 
-        if(league.isPresent()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if(principal instanceof UserDetails) {
-                Optional<User> user = userRepo.findById(((User) principal).getId());
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
 
-                if(user.isPresent()) {
-                    if(!user.get().getFavoriteLeagues().contains(league.get())) {
-                        user.get().getFavoriteLeagues().add(league.get());
-                        userRepo.save(user.get());
-                        return "The league " + leagueId + " has been added as favorites to user " + user.get().getUsername();
-                    }
-                    return "The league is already at favorites";
-                }
-                return "The user does not exist";
+            if(user.getFavoriteLeagues().contains(league)) {
+                throw new LeagueInFavoritesException();
             }
-            return "You are not logged in";
+
+            user.getFavoriteLeagues().add(league);
+            userRepo.save(user);
+            return ResponseEntity.ok("League " + league.getName() + " has been added to favorites!");
+
         }
-        return "The league does not exist";
+        throw new NotLoggedInException();
     }
 
     @Override
-    public String removeLeagueFromFavorites(Long leagueId) {
-        Optional<League> league = leagueRepo.findById(leagueId);
+    public ResponseEntity<String> removeLeagueFromFavorites(Long leagueId) {
+        League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
+            throw new LeagueNotFoundException();
+        });
 
-        if(league.isPresent()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if(principal instanceof UserDetails) {
-                Optional<User> user = userRepo.findById(((User) principal).getId());
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
 
-                if(user.isPresent()) {
-                    if(user.get().getFavoriteLeagues().contains(league.get())) {
-                        user.get().getFavoriteLeagues().remove(league.get());
-                        userRepo.save(user.get());
-                        return "The league " + leagueId + " has been removed from favorites from user " + user.get().getUsername();
-                    }
-                    return "The league is not at favorites";
-                }
-                return "The user does not exist";
+            if(user.getFavoriteLeagues().contains(league)) {
+                user.getFavoriteLeagues().remove(league);
+                userRepo.save(user);
+                return ResponseEntity.ok("League " + league.getName() + " removed from favorites!");
             }
-            return "You are not logged in";
+
+            throw new LeagueNotInFavoritesException();
         }
-        return "The league does not exist";
+        throw new NotLoggedInException();
+    }
+
+    public ArrayList<LeagueDto> getFavoriteLeagues() {
+        ArrayList<LeagueDto> result = new ArrayList<>();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            for (League league : user.getFavoriteLeagues()) {
+                result.add(new LeagueDto(league.getName(), league.getId(), true));
+            }
+            return result;
+        }
+        throw new NotLoggedInException();
     }
 }

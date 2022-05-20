@@ -1,9 +1,7 @@
 package com.example.back.service;
 
 import com.example.back.controllers.dto.UserDto;
-import com.example.back.handlers.MatchAlreadyExistsInFavoritesException;
-import com.example.back.handlers.MatchNotFoundException;
-import com.example.back.handlers.UserNotFoundException;
+import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
 import com.example.back.repositories.FriendsRepo;
 import com.example.back.repositories.MatchRepo;
@@ -84,108 +82,70 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addFriend(Long friend_id) {
+    public ResponseEntity<String> addFriend(Long friend_id) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Long me_id = ((User)principal).getId();
+            if(!Objects.equals(me_id, friend_id)) {
+                User me = userRepo.findById(me_id).orElseThrow(() -> {
+                    throw new UserNotFoundException();
+                });
+                User friend = userRepo.findById(friend_id).orElseThrow(() -> {
+                    throw new UserNotFoundException();
+                });
+
+                if (me.getFriends().contains(friend)) {
+                    throw new YouAreAlreadyFriendsException();
+                }
+
+                me.getFriends().add(friend);
+                userRepo.save(me);
+                return ResponseEntity.ok("You are now friends!");
+            }
+            throw new FriendWithYourselfException();
+        }
+        throw new NotLoggedInException();
+    }
+
+    @Override
+    public ResponseEntity<String> removeFriend(Long friend_id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             Long me_id = ((User)principal).getId();
-            if(!Objects.equals(me_id, friend_id)) {
-                Optional<User> me = userRepo.findById(me_id);
-                Optional<User> friend = userRepo.findById(friend_id);
 
-                return add(me, friend);
+            User me = userRepo.findById(me_id).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+            User friend = userRepo.findById(friend_id).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (me.getFriends().contains(friend)) {
+                me.getFriends().remove(friend);
+                userRepo.save(me);
+                return ResponseEntity.ok("User " + friend.getUsername() + " removed from friends!");
             }
-            return "you cannot be friends with yourself";
+
+            throw new NotFriendsException();
         }
-        return "you are not logged in";
-    }
-
-    @Override
-    public String removeFriend(Long friend_id) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            Long me_id = ((User)principal).getId();
-            if(!Objects.equals(me_id, friend_id)) {
-                Optional<User> me = userRepo.findById(me_id);
-                Optional<User> friend = userRepo.findById(friend_id);
-
-                return remove(me, friend);
-            }
-            return "you cannot remove yourself from friends";
-        }
-        return "you are not logged in";
-    }
-
-    @Override
-    public String addFriendByUserName(String userName) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String me_username = ((User)principal).getUsername();
-            if(!Objects.equals(userName, me_username)) {
-                Optional<User> me = userRepo.findByUsername(me_username);
-                Optional<User> friend = userRepo.findByUsername(userName);
-
-                return add(me, friend);
-            }
-            return "you cannot be friends with yourself";
-        }
-        return "you are not logged in";
-    }
-
-    @Override
-    public String removeFriendByUserName(String userName) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String me_username = ((User)principal).getUsername();
-            if(!Objects.equals(me_username, userName)) {
-                Optional<User> me = userRepo.findByUsername(me_username);
-                Optional<User> friend = userRepo.findByUsername(userName);
-
-                return remove(me, friend);
-            }
-            return "you cannot remove yourself from friends";
-        }
-        return "you are not logged in";
+        throw new NotLoggedInException();
     }
 
     @Override
     public ArrayList<UserDto> getAllFriends() {
         ArrayList<UserDto> result = new ArrayList<>();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
+        if (principal instanceof User) {
             Long me_id = ((User) principal).getId();
-            Optional<User> me = userRepo.findById(me_id);
-            if (me.isPresent()) {
-                for (User user : friendsRepo.findAllFriends(me.get())) {
-                    result.add(new UserDto(user.getId(), user.getUsername()));
-                }
-                return result;
-            }
-            return null;
-        }
-        return null;
-    }
+            User me = userRepo.findById(me_id).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
 
-    public String remove(Optional<User> me, Optional<User> friend) {
-        if(me.isPresent() && friend.isPresent()) {
-            Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
-            if(isRelation.isPresent()) {
-                friendsRepo.delete(isRelation.get());
-                return "you are no longer friends";
+            for (User user : me.getFriends()) {
+                result.add(new UserDto(user.getId(), user.getUsername()));
             }
-            return "you are not friends";
+            return result;
         }
-        return "one of the users don't exist";
-    }
-
-    public String add(Optional<User> me, Optional<User> friend) {
-        if(me.isPresent() && friend.isPresent()) {
-            Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
-            if(isRelation.isEmpty()) {
-                friendsRepo.save(new Friends(me.get(), friend.get()));
-                return "you are friends now";
-            }
-            return "you are already friends";
-        }
-        return "one of the users don't exist";
+        throw new NotLoggedInException();
     }
 }

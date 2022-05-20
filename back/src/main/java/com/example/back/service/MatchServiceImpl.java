@@ -1,12 +1,22 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
+import com.example.back.handlers.*;
+import com.example.back.models.entities.League;
+import com.example.back.controllers.dto.TeamDto;
+import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
+import com.example.back.models.entities.Team;
+import com.example.back.models.entities.User;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -43,68 +53,116 @@ public class MatchServiceImpl implements MatchService {
                 .map(this::mapToMatchDto).collect(Collectors.toList());
     }
 
-    @Override
-    public String addMatchToFavorites(Long matchID) {
-        Optional<MatchEntity> match = matchRepo.findById(matchID);
-
-        if(match.isPresent()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if(principal instanceof UserDetails) {
-                    Optional<User> user = userRepo.findById(((User) principal).getId());
-
-                    if(user.isPresent()) {
-                        if(!user.get().getFavoriteMatches().contains(match.get())) {
-                            user.get().getFavoriteMatches().add(match.get());
-                            userRepo.save(user.get());
-                            return "The match " + matchID + " has been added as favorites to user " + user.get().getUsername();
-                        }
-                        return "The match is already at favorites";
-                    }
-                    return "The user does not exist";
+    private String getWinner(MatchEntity match) {
+        if (!match.isUpcoming()) {
+            String[] arrOfGoals = match.getResult().split("-");
+            if (Integer.parseInt(arrOfGoals[0]) > Integer.parseInt(arrOfGoals[1])) {
+                return match.getTeam1().getName();
             }
-            return "You are not logged in";
+            if (Integer.parseInt(arrOfGoals[0]) < Integer.parseInt(arrOfGoals[1])) {
+                return match.getTeam2().getName();
+            }
+
+            return "Draw";
         }
-        return "The match does not exist";
+
+        return "Upcoming";
     }
 
     @Override
-    public String removeMatchFromFavorites(Long matchID) {
-        Optional<MatchEntity> match = matchRepo.findById(matchID);
+    public ResponseEntity<String> addMatchToFavorites(Long matchID) {
+        MatchEntity match = matchRepo.findById(matchID).orElseThrow(() -> {
+            throw new MatchNotFoundException();
+        });
 
-        if(match.isPresent()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if(principal instanceof UserDetails) {
-                Optional<User> user = userRepo.findById(((User) principal).getId());
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
 
-                if(user.isPresent()) {
-                    if(user.get().getFavoriteMatches().contains(match.get())) {
-                        user.get().getFavoriteMatches().remove(match.get());
-                        userRepo.save(user.get());
-                        return "The match " + matchID + " has been removed from favorites from user " + user.get().getUsername();
-                    }
-                    return "The match is not at favorites";
-                }
-                return "The user does not exist";
+            if(user.getFavoriteMatches().contains(match)) {
+                throw new MatchAlreadyExistsInFavoritesException();
             }
-            return "You are not logged in";
+
+            user.getFavoriteMatches().add(match);
+            userRepo.save(user);
+            return ResponseEntity.ok("Match has been added to favorites!");
+
         }
-        return "The match does not exist";
+        throw new NotLoggedInException();
+    }
+
+    @Override
+    public ResponseEntity<String> removeMatchFromFavorites(Long matchID) {
+        MatchEntity match = matchRepo.findById(matchID).orElseThrow(() -> {
+            throw new LeagueNotFoundException();
+        });
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if(user.getFavoriteMatches().contains(match)) {
+                user.getFavoriteMatches().remove(match);
+                userRepo.save(user);
+                return ResponseEntity.ok("Match removed from favorites!");
+            }
+
+            throw new MatchNotInFavoritesException();
+        }
+        throw new NotLoggedInException();
     }
 
     private MatchDto mapToMatchDto(MatchEntity matchEntity) {
         MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
-//        findLeagueByteam
+        matchDto.setLeague(createLeagueDto(matchEntity.getLeague()));
         matchDto.setCountry(matchEntity.getTeam1().getCountry());
-        matchDto.setTeam1(matchEntity.getTeam1().getName());
-        matchDto.setTeam2(matchEntity.getTeam2().getName());
+        createTeamDto(matchEntity.getTeam1());
+        matchDto.setTeam1(createTeamDto(matchEntity.getTeam1()));
+        matchDto.setTeam2(createTeamDto(matchEntity.getTeam2()));
         matchDto.setDetails(matchEntity.getData());
         matchDto.setScore(matchEntity.getResult());
-        matchDto.setIsFavorite(false);
+        Boolean isMatchFavorite = getUserFromContext().getFavoriteMatches().contains(matchEntity);
+        matchDto.setIsFavorite(isMatchFavorite);
         matchDto.setSport("football");
+        matchDto.setWinner(getWinner(matchEntity));
 
-        matchDto.setTime(matchEntity.getStartTime().getHour() + ":" + matchEntity.getStartTime().getMinute() );
+        matchDto.setTime(matchEntity.getStartTime().getHour() + ":" + matchEntity.getStartTime().getMinute());
         return matchDto;
+    }
+
+    private TeamDto createTeamDto(Team team1) {
+        TeamDto teamDto = new TeamDto();
+        teamDto.setId(team1.getId());
+        teamDto.setName(team1.getName());
+        Boolean isTeamFavorite = getUserFromContext().getFavoriteTeams().contains(team1);
+        teamDto.setIsFavorite(isTeamFavorite);
+        return teamDto;
+    }
+
+    private LeagueDto createLeagueDto(League league) {
+        LeagueDto leagueDto = new LeagueDto();
+        leagueDto.setId(league.getId());
+        leagueDto.setName(league.getName());
+        Boolean isLeagueFavorite = getUserFromContext().getFavoriteLeagues().contains(league);
+        leagueDto.setIsFavorite(isLeagueFavorite);
+        return leagueDto;
+    }
+
+    User getUserFromContext() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Optional<User> user = userRepo.findById(((User) principal).getId());
+            return user.get();
+        } else {
+            return null;
+        }
     }
 }
