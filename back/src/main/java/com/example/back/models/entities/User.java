@@ -45,18 +45,8 @@ public class User implements UserDetails {
     @OneToMany
     private Set<Bet> betHistory = new HashSet<>();
 
-    @OneToMany(mappedBy = "me")
-    private Collection<Friends> friends = new ArrayList<>();
-
-    public User(String username,
-                String email,
-                String password,
-                Role role) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    @ManyToMany
+    private Set<User> friends;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -65,14 +55,11 @@ public class User implements UserDetails {
         return Collections.singletonList(authority);
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
+    public User(String username, String email, String password, Role role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     @Override

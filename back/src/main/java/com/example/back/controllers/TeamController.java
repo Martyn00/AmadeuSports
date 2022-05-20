@@ -3,6 +3,7 @@ package com.example.back.controllers;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.service.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +22,12 @@ public class TeamController {
     }
 
     @PostMapping(path = "/{teamId}/favorites-add")
-    public String addTeamToFavorites(@PathVariable Long teamId) {
+    public ResponseEntity<String> addTeamToFavorites(@PathVariable Long teamId) {
         return teamService.addTeamToFavorites(teamId);
     }
 
     @PostMapping(path = "/{teamId}/favorites-remove")
-    public String removeTeamFromFavorites(@PathVariable Long teamId) {
+    public ResponseEntity<String> removeTeamFromFavorites(@PathVariable Long teamId) {
         return teamService.removeTeamFromFavorites(teamId);
     }
 }
