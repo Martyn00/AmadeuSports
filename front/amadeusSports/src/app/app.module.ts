@@ -30,11 +30,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor';
 import { BetService } from './service/bet.service';
-import { BetsComponent } from './bets/bets.component';
+import { BetsComponent } from './bet/bets/bets.component';
 import { FriendsComponent } from './friends/friends.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FriendService } from './service/friend.service';
+import { BetTableComponent } from './bet/bet-table/bet-table.component';
+import { BetHistoryTableComponent } from './bet/bet-history-table/bet-history-table.component';
+import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet-table.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,17 +50,21 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     UpperBarComponent,
     FavoritesComponent,
     BetsComponent,
-    FriendsComponent
+    FriendsComponent,
+    BetTableComponent,
+    BetHistoryTableComponent,
+    UpcomingBetTableComponent
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
-      { path: 'bets', component: BetsComponent },
+      {
+        path: 'bets', component: BetsComponent
+      },
       { path: 'match-tabs', component: MatchTabsComponent },
       { path: 'friends', component: FriendsComponent },
-      {path:'favorites', component: FavoritesComponent}
-
+      { path: 'favorites', component: FavoritesComponent },
     ]),
     MatFormFieldModule,
     BrowserModule,
@@ -77,9 +85,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatSelectModule,
     MatButtonToggleModule,
     MatDividerModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSnackBarModule
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, UserEmulationInterceptor],
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, UserEmulationInterceptor, FriendService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

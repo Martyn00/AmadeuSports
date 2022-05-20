@@ -4,7 +4,13 @@ import { PrincipalComponentLoaderService } from './principal-component-loader.se
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 const URL = "http://localhost:8080/AmadeusSports"
-
+const httpOptions = {
+  headers: new HttpHeaders(
+    {
+      'Content-Type': 'application/json',
+    }
+  )
+};
 @Injectable({
   providedIn: 'root'
 })
@@ -22,8 +28,10 @@ export class MatchTableLoaderService{
     });
   }
   changeFavoriteState(element: MatchDto) {
-    // url = URL + "/match/" + element.Id+"favorite" + element.isFavorite;
-    // this.http.post<>(url);
+    let url = URL + "/match/" + element.id+"/favorite/" + element.isFavorite;
+    this.http.post<any>(url, null, httpOptions).subscribe(response => {
+      
+    });
   }
 
   populatMatchtableWithFavorites(path: string) {

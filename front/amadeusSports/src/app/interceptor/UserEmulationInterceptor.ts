@@ -13,10 +13,10 @@ export class UserEmulationInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
             const modReq = req.clone({
                 setHeaders: {
-                    'Authorization': 'Bearer' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             });
-            return next.handle(modReq);
-        return next.handle(req);
+        return next.handle(modReq);
+        // return next.handle(req);
     }
 }
