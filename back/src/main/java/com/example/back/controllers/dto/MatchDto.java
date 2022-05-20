@@ -18,4 +18,6 @@ public class MatchDto {
     String country;
     String details;
     Boolean isFavorite;
+    String league;
+    String winner;
 }
