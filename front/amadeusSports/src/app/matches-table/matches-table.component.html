@@ -9,7 +9,7 @@
     <ng-container matColumnDef="team1">
         <th mat-header-cell *matHeaderCellDef>team1</th>
         <td mat-cell *matCellDef="let element">
-            <button mat-button [matMenuTriggerFor]="menu">{{element.team1.name}}</button>
+            <button mat-button [matMenuTriggerFor]="menut1">{{element.team1.name}}</button>
         </td>
     </ng-container>
 
@@ -17,7 +17,7 @@
     <ng-container matColumnDef="team2">
         <th mat-header-cell *matHeaderCellDef>team2</th>
         <td mat-cell *matCellDef="let element">
-            <button mat-button [matMenuTriggerFor]="menu">{{element.team2.name}}</button>
+            <button mat-button [matMenuTriggerFor]="menut2">{{element.team2.name}}</button>
         </td>
     </ng-container>
     <ng-container matColumnDef="score">
@@ -28,7 +28,7 @@
     <ng-container matColumnDef="league">
         <th mat-header-cell *matHeaderCellDef>League</th>
         <td mat-cell *matCellDef="let element">
-            <button mat-button [matMenuTriggerFor]="menu">{{element.league.name}}</button>
+            <button mat-button [matMenuTriggerFor]="menul">{{element.league.name}}</button>
         </td>
     </ng-container>
     <ng-container matColumnDef="sport">
@@ -63,6 +63,12 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<mat-menu #menu="matMenu">
-    <button mat-menu-item >add to favorites</button>
+<mat-menu #menut1="matMenu">
+    <button mat-menu-item (click)="favoritesTeam1()">add to favorites</button>
+</mat-menu>
+<mat-menu #menut2="matMenu">
+    <button mat-menu-item (click)="favoritesTeam2()">add to favorites</button>
+</mat-menu>
+<mat-menu #menul="matMenu">
+    <button mat-menu-item (click)="favoritesLeague()" >add to favorites</button>
 </mat-menu>

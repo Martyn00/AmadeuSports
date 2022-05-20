@@ -26,4 +26,14 @@ export class MatchesTableComponent implements OnInit {
     element.isFavorite = !element.isFavorite;
     this.matchTableService.changeFavoriteState(element);
   }
+
+  favoritesLeague() {
+
+  }
+  favoritesTeam1() {
+
+  }
+  favoritesTeam2() {
+
+  }
 }
