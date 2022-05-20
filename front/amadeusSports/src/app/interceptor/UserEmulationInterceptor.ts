@@ -10,13 +10,22 @@ export class UserEmulationInterceptor implements HttpInterceptor {
     constructor() {
     }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-            const modReq = req.clone({
-                setHeaders: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const skipIntercept = request.headers.has('skip');
+        if (skipIntercept) {
+            request = request.clone({
+                headers: request.headers.delete('skip')
             });
-        return next.handle(modReq);
-        // return next.handle(req);
+            return next.handle(request);
+        }
+        let token = localStorage.getItem("token");
+        if (token) {
+            // If we have a token, we set it to the header
+            request = request.clone({
+                setHeaders: { "Authorization": "Bearer " + token }
+            });
+        }
+
+        return next.handle(request);
     }
 }

@@ -136,22 +136,26 @@ public class MatchServiceImpl implements MatchService {
         teamDto.setId(team1.getId());
         teamDto.setName(team1.getName());
         Boolean isTeamFavorite = getUserFromContext().getFavoriteTeams().contains(team1);
-         teamDto.setIsFavorite(isTeamFavorite);
+        teamDto.setIsFavorite(isTeamFavorite);
         return teamDto;
     }
 
     private LeagueDto createLeagueDto(League league) {
         LeagueDto leagueDto = new LeagueDto();
         leagueDto.setId(league.getId());
-        leagueDto.setName(leagueDto.getName());
+        leagueDto.setName(league.getName());
         Boolean isLeagueFavorite = getUserFromContext().getFavoriteLeagues().contains(league);
         leagueDto.setIsFavorite(isLeagueFavorite);
         return leagueDto;
     }
 
     User getUserFromContext() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepo.findByUsername(userDetails.getUsername()).get();
-
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Optional<User> user = userRepo.findById(((User) principal).getId());
+            return user.get();
+        } else {
+            return null;
+        }
     }
 }
