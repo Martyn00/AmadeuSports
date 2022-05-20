@@ -53,4 +53,15 @@ public class UserController {
     public String removeFriend(@PathVariable Long userId) {
         return userService.removeFriend(userId);
     }
+
+    @PostMapping(path = "/{userName}/add-friend-by-username")
+    public String addFriendbyUserName(@PathVariable String userName) {
+        return userService.addFriendByUserName(userName);
+    }
+
+    @PostMapping(path = "/{userName}/remove-friend-by-username")
+    public String removeFriendByUserName(@PathVariable String userName) {
+        return userService.removeFriendByUserName(userName);
+    }
+
 }

@@ -25,5 +25,9 @@ public interface UserService {
 
     String removeFriend(Long id);
 
+    String addFriendByUserName(String userName);
+
+    String removeFriendByUserName(String userName);
+
     ArrayList<UserDto> getAllFriends();
 }

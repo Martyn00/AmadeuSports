@@ -92,15 +92,7 @@ public class UserServiceImpl implements UserService {
                 Optional<User> me = userRepo.findById(me_id);
                 Optional<User> friend = userRepo.findById(friend_id);
 
-                if(me.isPresent() && friend.isPresent()) {
-                    Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
-                    if(isRelation.isEmpty()) {
-                        friendsRepo.save(new Friends(me.get(), friend.get()));
-                        return "you are friends now";
-                    }
-                    return "you are already friends";
-                }
-                return "one of the users don't exist";
+                return add(me, friend);
             }
             return "you cannot be friends with yourself";
         }
@@ -116,15 +108,39 @@ public class UserServiceImpl implements UserService {
                 Optional<User> me = userRepo.findById(me_id);
                 Optional<User> friend = userRepo.findById(friend_id);
 
-                if(me.isPresent() && friend.isPresent()) {
-                    Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
-                    if(isRelation.isPresent()) {
-                        friendsRepo.delete(isRelation.get());
-                        return "you are no longer friends";
-                    }
-                    return "you are not friends";
-                }
-                return "one of the users don't exist";
+                return remove(me, friend);
+            }
+            return "you cannot remove yourself from friends";
+        }
+        return "you are not logged in";
+    }
+
+    @Override
+    public String addFriendByUserName(String userName) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String me_username = ((User)principal).getUsername();
+            if(!Objects.equals(userName, me_username)) {
+                Optional<User> me = userRepo.findByUsername(me_username);
+                Optional<User> friend = userRepo.findByUsername(userName);
+
+                return add(me, friend);
+            }
+            return "you cannot be friends with yourself";
+        }
+        return "you are not logged in";
+    }
+
+    @Override
+    public String removeFriendByUserName(String userName) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String me_username = ((User)principal).getUsername();
+            if(!Objects.equals(me_username, userName)) {
+                Optional<User> me = userRepo.findByUsername(me_username);
+                Optional<User> friend = userRepo.findByUsername(userName);
+
+                return remove(me, friend);
             }
             return "you cannot remove yourself from friends";
         }
@@ -147,5 +163,29 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return null;
+    }
+
+    public String remove(Optional<User> me, Optional<User> friend) {
+        if(me.isPresent() && friend.isPresent()) {
+            Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
+            if(isRelation.isPresent()) {
+                friendsRepo.delete(isRelation.get());
+                return "you are no longer friends";
+            }
+            return "you are not friends";
+        }
+        return "one of the users don't exist";
+    }
+
+    public String add(Optional<User> me, Optional<User> friend) {
+        if(me.isPresent() && friend.isPresent()) {
+            Optional<Friends> isRelation = friendsRepo.findByMeAndFriends(me.get(), friend.get());
+            if(isRelation.isEmpty()) {
+                friendsRepo.save(new Friends(me.get(), friend.get()));
+                return "you are friends now";
+            }
+            return "you are already friends";
+        }
+        return "one of the users don't exist";
     }
 }

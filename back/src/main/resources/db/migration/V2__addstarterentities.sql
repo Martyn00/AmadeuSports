@@ -37,3 +37,10 @@ INSERT INTO league (country, name, sport_id) VALUES ('Romania', 'Liga 1', 1);
 INSERT INTO league (country, name, sport_id) VALUES ('Spain', 'La Liga', 1);
 INSERT INTO league (country, name, sport_id) VALUES ('England', 'EFL', 1);
 INSERT INTO league (country, name, sport_id) VALUES ('Europe', 'Champions League', 1);
+
+INSERT INTO friends (friends_id, me_id) VALUES (1, 2);
+INSERT INTO friends (friends_id, me_id) VALUES (1, 3);
+INSERT INTO friends (friends_id, me_id) VALUES (2, 1);
+INSERT INTO friends (friends_id, me_id) VALUES (2, 3);
+INSERT INTO friends (friends_id, me_id) VALUES (3, 1);
+INSERT INTO friends (friends_id, me_id) VALUES (3, 2);
