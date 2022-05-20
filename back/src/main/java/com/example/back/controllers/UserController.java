@@ -6,6 +6,7 @@ import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
 import com.example.back.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -45,12 +46,12 @@ public class UserController {
     }
 
     @PostMapping(path = "/{userId}/add-friend")
-    public String addFriend(@PathVariable Long userId) {
+    public ResponseEntity<String> addFriend(@PathVariable Long userId) {
         return userService.addFriend(userId);
     }
 
     @PostMapping(path = "/{userId}/remove-friend")
-    public String removeFriend(@PathVariable Long userId) {
+    public ResponseEntity<String> removeFriend(@PathVariable Long userId) {
         return userService.removeFriend(userId);
     }
 }

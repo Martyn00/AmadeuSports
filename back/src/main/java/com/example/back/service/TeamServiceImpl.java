@@ -1,18 +1,19 @@
 package com.example.back.service;
 
+import com.example.back.handlers.*;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.TeamRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -30,52 +31,53 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public String addTeamToFavorites(Long teamId) {
-        Optional<Team> team = teamRepo.findById(teamId);
+    public ResponseEntity<String> addTeamToFavorites(Long teamId) {
+        Team team = teamRepo.findById(teamId).orElseThrow(() -> {
+            throw new MatchNotFoundException();
+        });
 
-        if(team.isPresent()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if(principal instanceof UserDetails) {
-                Optional<User> user = userRepo.findById(((User) principal).getId());
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
 
-                if(user.isPresent()) {
-                    if(!user.get().getFavoriteTeams().contains(team.get())) {
-                        user.get().getFavoriteTeams().add(team.get());
-                        userRepo.save(user.get());
-                        return "The team " + teamId + " has been added as favorites to user " + user.get().getUsername();
-                    }
-                    return "The team is already at favorites";
-                }
-                return "The user does not exist";
+            if(user.getFavoriteTeams().contains(team)) {
+                throw new TeamInFavoritesException();
             }
-            return "You are not logged in";
+
+            user.getFavoriteTeams().add(team);
+            userRepo.save(user);
+            return ResponseEntity.ok("Team " + team.getName() + " has been added to favorites!");
+
         }
-        return "The team does not exist";
+        throw new NotLoggedInException();
     }
 
     @Override
-    public String removeTeamFromFavorites(Long teamId) {
-        Optional<Team> team = teamRepo.findById(teamId);
+    public ResponseEntity<String> removeTeamFromFavorites(Long teamId) {
+        Team team = teamRepo.findById(teamId).orElseThrow(() -> {
+            throw new MatchNotFoundException();
+        });
 
-        if(team.isPresent()) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            if(principal instanceof UserDetails) {
-                Optional<User> user = userRepo.findById(((User) principal).getId());
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
 
-                if(user.isPresent()) {
-                    if(user.get().getFavoriteTeams().contains(team.get())) {
-                        user.get().getFavoriteTeams().remove(team.get());
-                        userRepo.save(user.get());
-                        return "The team " + teamId + " has been removed from favorites from user " + user.get().getUsername();
-                    }
-                    return "The team is not at favorites";
-                }
-                return "The user does not exist";
+            if(user.getFavoriteTeams().contains(team)) {
+                user.getFavoriteTeams().remove(team);
+                userRepo.save(user);
+                return ResponseEntity.ok("Team " + team.getName() + " removed from favorites!");
             }
-            return "You are not logged in";
+
+            throw new TeamNotInFavoritesException();
         }
-        return "The team does not exist";
+        throw new NotLoggedInException();
     }
 }
