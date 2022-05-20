@@ -1,10 +1,27 @@
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 <mat-toolbar color="primary">
     <span>AmadeusSports</span>
     <span class="example-spacer"></span>
-
-    <button class="settings-btn"mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-        <mat-icon>more_vert</mat-icon>
+    <button class="settings-btn" mat-icon-button>
+        {{coins}}<mat-icon>monetization_on</mat-icon>
     </button>
+    <div class="settings-btn">
+        <button  mat-icon-button [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <button mat-icon-button (click)="changeState('/friends')"
+            aria-label="Example icon-button with a menu">
+            <span class="material-symbols-outlined">
+                group
+            </span>
+        </button>
+
+    </div>
+
+
     <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="changeState('/log-in')">log in</button>
         <button mat-menu-item (click)="changeState('/register')">sign up</button>

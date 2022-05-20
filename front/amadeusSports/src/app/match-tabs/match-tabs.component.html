@@ -1,4 +1,10 @@
 <mat-tab-group (selectedIndexChange)="tabChange($event)">
+    <mat-tab label="{{ppDate | date}}">
+        <app-matches-table></app-matches-table>
+    </mat-tab>
+    <mat-tab label="{{pDate | date}}">
+        <app-matches-table></app-matches-table>
+    </mat-tab>
     <mat-tab label="Yesterday">
         <app-matches-table></app-matches-table>
     </mat-tab>
@@ -6,6 +12,12 @@
         <app-matches-table></app-matches-table>
     </mat-tab>
     <mat-tab label="Tomorrow">
+        <app-matches-table></app-matches-table>
+    </mat-tab>
+    <mat-tab label="{{fDate | date}}">
+        <app-matches-table></app-matches-table>
+    </mat-tab>
+    <mat-tab label="{{ffDate | date}}">
         <app-matches-table></app-matches-table>
     </mat-tab>
 </mat-tab-group>

@@ -1,21 +1,8 @@
 <form>
-    <mat-form-field appearance="fill">
-        <mat-label>What are you searching?</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let type of types" [value]="type">
-                {{type}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-        <mat-label>when?</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let period of periods" [value]="period">
-                {{period}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-</form>
+<mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color">
+    <mat-button-toggle value="favorite-matches" (change)="onValChange('favorite-matches')">matches</mat-button-toggle>
+    <mat-button-toggle value="favorite-teams" (change)="onValChange('favorite-teams')">teams</mat-button-toggle>
+    <mat-button-toggle value="favorite-leagues"(change)="onValChange('favorite-leagues')">leagues</mat-button-toggle>
+</mat-button-toggle-group>
 
 <app-matches-table></app-matches-table>
