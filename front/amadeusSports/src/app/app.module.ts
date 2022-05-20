@@ -29,6 +29,16 @@ import { FavoritesComponent } from './favorites/favorites.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor';
+import { BetService } from './service/bet.service';
+import { BetsComponent } from './bet/bets/bets.component';
+import { FriendsComponent } from './friends/friends.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FriendService } from './service/friend.service';
+import { BetTableComponent } from './bet/bet-table/bet-table.component';
+import { BetHistoryTableComponent } from './bet/bet-history-table/bet-history-table.component';
+import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet-table.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,16 +48,23 @@ import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor
     MatchTabsComponent,
     MatchesTableComponent,
     UpperBarComponent,
-    FavoritesComponent
+    FavoritesComponent,
+    BetsComponent,
+    FriendsComponent,
+    BetTableComponent,
+    BetHistoryTableComponent,
+    UpcomingBetTableComponent
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
-      // { path: 'matches-table', component: MatchesTableComponent },
+      {
+        path: 'bets', component: BetsComponent
+      },
       { path: 'match-tabs', component: MatchTabsComponent },
-      {path:'favorites', component: FavoritesComponent}
-
+      { path: 'friends', component: FriendsComponent },
+      { path: 'favorites', component: FavoritesComponent },
     ]),
     MatFormFieldModule,
     BrowserModule,
@@ -66,9 +83,12 @@ import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor
     MatIconModule,
     MatMenuModule,
     MatSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDividerModule,
+    MatAutocompleteModule,
+    MatSnackBarModule
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, UserEmulationInterceptor],
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, UserEmulationInterceptor, FriendService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

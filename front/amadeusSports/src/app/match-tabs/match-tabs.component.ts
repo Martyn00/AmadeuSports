@@ -8,14 +8,24 @@ import { MatchTableLoaderService } from '../service/match-table-loader.service';
 })
 export class MatchTabsComponent implements OnInit {
 
-  constructor(private matchTableLoaderService:MatchTableLoaderService) { }
-
-
+  constructor(private matchTableLoaderService: MatchTableLoaderService) { }
+  todayDate: Date = new Date();
+  pDate: Date = new Date();
+  ppDate: Date = new Date();
+  fDate: Date = new Date();
+  ffDate: Date = new Date();
   ngOnInit(): void {
     this.matchTableLoaderService.populateMatchTable(0);
+    this.pDate.setDate(this.todayDate.getDate() - 2);
+    this.ppDate.setDate(this.todayDate.getDate() - 3);
+    this.fDate.setDate(this.todayDate.getDate() + 2);
+    this.ffDate.setDate(this.todayDate.getDate() + 3);
+
   }
 
   tabChange(index: number) {
-    this.matchTableLoaderService.populateMatchTable(index);
+
+    console.log(index - 3);
+    this.matchTableLoaderService.populateMatchTable(index - 3);
   }
 }
