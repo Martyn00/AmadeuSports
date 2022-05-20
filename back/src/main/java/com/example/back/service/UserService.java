@@ -25,5 +25,9 @@ public interface UserService {
 
     ResponseEntity<String> removeFriend(Long id);
 
+    ResponseEntity<String> addFriendByUserName(String userName);
+
+    ResponseEntity<String> removeFriendByUserName(String userName);
+
     ArrayList<UserDto> getAllFriends();
 }
