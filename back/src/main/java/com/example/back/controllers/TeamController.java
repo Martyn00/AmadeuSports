@@ -20,4 +20,13 @@ public class TeamController {
         return teamService.getMatchesHistory(id);
     }
 
+    @PostMapping(path = "/{teamId}/favorites-add")
+    public String addTeamToFavorites(@PathVariable Long teamId) {
+        return teamService.addTeamToFavorites(teamId);
+    }
+
+    @PostMapping(path = "/{teamId}/favorites-remove")
+    public String removeTeamFromFavorites(@PathVariable Long teamId) {
+        return teamService.removeTeamFromFavorites(teamId);
+    }
 }
