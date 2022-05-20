@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserRegisterComponent } from './user-register/user-register.component';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { UserService } from './service/user.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -88,7 +88,11 @@ import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet
     MatAutocompleteModule,
     MatSnackBarModule
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, UserEmulationInterceptor, FriendService],
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, FriendService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: UserEmulationInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

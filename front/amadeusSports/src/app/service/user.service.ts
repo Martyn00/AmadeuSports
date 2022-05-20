@@ -8,7 +8,7 @@ const URL = "http://localhost:8080/AmadeusSports"
 
 const httpOptions = {
     headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', 'skip': 'true'
     })
 };
 
@@ -33,10 +33,11 @@ export class UserService {
     logIn(username: string, password: string) {
         this.son = JSON.stringify({ username, password });
         this.http.post<any>(URL + '/login', this.son, httpOptions).subscribe(response => {
+            console.log(response);
+            localStorage.clear();
             localStorage.setItem("token", response.jwt);
-            console.log(response.jwt);
         });
-        this.loader.changeState("/match-tabs")
+        this.loader.changeState("/match-tabs");
     }
     getUsers() {
         return this.http.get<UserDto[]>(URL + '/user/all')
