@@ -24,6 +24,7 @@ export class MatchesTableComponent implements OnInit {
   }
   clickedFavorite(element: MatchDto) {
     element.isFavorite = !element.isFavorite;
+    console.log(element);
     this.matchTableService.changeFavoriteState(element);
   }
 
