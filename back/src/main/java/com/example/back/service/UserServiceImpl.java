@@ -1,19 +1,20 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.BetDto;
 import com.example.back.controllers.dto.UserDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
 import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -21,6 +22,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final MatchRepo matchRepo;
+    private final ModelMapper modelMapper;
+    private final MatchServiceImpl matchService;
 
     @Override
     public List<MatchEntity> getFavoriteMatchesByUserId(Long id) {
@@ -194,5 +197,39 @@ public class UserServiceImpl implements UserService {
             return result;
         }
         throw new NotLoggedInException();
+    }
+
+    @Override
+    public List<BetDto> getBetsByUserId(Long id) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Long me_id = ((User) principal).getId();
+            User me = userRepo.findById(me_id).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            List<Bet> bets = new LinkedList<>(me.getBetHistory());
+
+            return bets.stream()
+                    .map(this::mapToBetDto).collect(Collectors.toList());
+
+        }
+        throw new NotLoggedInException();
+    }
+
+    private BetDto mapToBetDto(Bet bet) {
+        BetDto betDto = modelMapper.map(bet, BetDto.class);
+        UserDto user1 = new UserDto(bet.getUser1().getId(),
+                bet.getUser1().getUsername());
+        UserDto user2 = new UserDto(bet.getUser2().getId(),
+                bet.getUser2().getUsername());
+
+        betDto.setMatch(matchService.mapToMatchDto(bet.getMatch()));
+        betDto.setBetChoiceUser1(bet.betChoiceUser1);
+        betDto.setBetChoiceUser2(bet.betChoiceUser2);
+        betDto.setUser1(user1);
+        betDto.setUser2(user2);
+
+        return betDto;
     }
 }

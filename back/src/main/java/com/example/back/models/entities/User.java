@@ -42,7 +42,7 @@ public class User implements UserDetails {
     @OneToMany
     private Set<MatchEntity> favoriteMatches = new HashSet<>();
 
-    @OneToMany
+    @ManyToMany
     private Set<Bet> betHistory = new HashSet<>();
 
     @ManyToMany
