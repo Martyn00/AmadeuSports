@@ -25,7 +25,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { PrincipalComponentLoaderService } from './service/principal-component-loader.service';
-import { FavoritesComponent } from './favorites/favorites.component';
+import { FavoritesComponent } from './favoriteComponent/favorites/favorites.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserEmulationInterceptor } from './interceptor/UserEmulationInterceptor';
@@ -39,6 +39,11 @@ import { FriendService } from './service/friend.service';
 import { BetTableComponent } from './bet/bet-table/bet-table.component';
 import { BetHistoryTableComponent } from './bet/bet-history-table/bet-history-table.component';
 import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet-table.component';
+import { FavoriteMatchesComponent } from './favoriteComponent/favorite-matches/favorite-matches.component';
+import { FavoriteTeamsComponent } from './favoriteComponent/favorite-teams/favorite-teams.component';
+import { FavoriteLeaguesComponent } from './favoriteComponent/favorite-leagues/favorite-leagues.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +58,10 @@ import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet
     FriendsComponent,
     BetTableComponent,
     BetHistoryTableComponent,
-    UpcomingBetTableComponent
+    UpcomingBetTableComponent,
+    FavoriteMatchesComponent,
+    FavoriteTeamsComponent,
+    FavoriteLeaguesComponent
   ],
   imports: [
     RouterModule.forRoot([
@@ -64,7 +72,19 @@ import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet
       },
       { path: 'match-tabs', component: MatchTabsComponent },
       { path: 'friends', component: FriendsComponent },
-      { path: 'favorites', component: FavoritesComponent },
+      {
+        path: 'favorites', component: FavoritesComponent, children: [
+          {
+            path: 'matches', component: FavoriteMatchesComponent
+          },
+          {
+            path: 'teams', component: FavoriteTeamsComponent
+          },
+          {
+            path: 'leagues', component: FavoriteLeaguesComponent
+          }
+        ]
+      },
     ]),
     MatFormFieldModule,
     BrowserModule,
@@ -86,7 +106,8 @@ import { UpcomingBetTableComponent } from './bet/upcoming-bet-table/upcoming-bet
     MatButtonToggleModule,
     MatDividerModule,
     MatAutocompleteModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatExpansionModule
   ],
   providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, FriendService, {
     provide: HTTP_INTERCEPTORS,

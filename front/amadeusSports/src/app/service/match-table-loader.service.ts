@@ -15,6 +15,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class MatchTableLoaderService {
+
   public matchesLoaded = new EventEmitter<MatchDto[]>();
   sendMatches: MatchDto[] = [];
   constructor(private http: HttpClient) { }
@@ -29,15 +30,29 @@ export class MatchTableLoaderService {
     });
   }
   changeFavoriteState(element: MatchDto) {
-    let url = URL + "/match/" + element.id + "/favorite/" + element.isFavorite;
+    let url;
+    if (element.isFavorite) {
+      url = URL + "/match/" + element.id + "/favorites-add";
+
+    } else {
+      url = URL + "/match/" + element.id + "/favorites-remove";
+    }
+
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
 
     });
   }
 
   populatMatchtableWithFavorites(path: string) {
-    this.http.get<MatchDto[]>(URL + "/user/" + path, httpOptions).subscribe(response => {
+    this.http.get<MatchDto[]>(URL + path, httpOptions).subscribe(response => {
       this.sendMatches = response;
+      this.matchesLoaded.emit(this.sendMatches);
+    });
+  }
+  populatMatchtableWithFavoriteMatches() {
+    this.http.get<MatchDto[]>(URL + "/match/favorites", httpOptions).subscribe(response => {
+      this.sendMatches = response;
+      console.log(this.sendMatches);
       this.matchesLoaded.emit(this.sendMatches);
     });
   }
