@@ -42,8 +42,8 @@ public class User implements UserDetails {
     @OneToMany
     private Set<MatchEntity> favoriteMatches = new HashSet<>();
 
-    @OneToMany
-    private Set<Bet> betHistory = new HashSet<>();
+    @ManyToMany
+    private Set<Bet> bets = new HashSet<>();
 
     @ManyToMany
     private Set<User> friends;

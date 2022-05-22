@@ -28,4 +28,6 @@ public class League {
 
     private String name;
     private String country;
+    @ManyToOne
+    private Sport sport;
 }

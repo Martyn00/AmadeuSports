@@ -2,6 +2,7 @@ package com.example.back.controllers;
 
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
+import com.example.back.service.LeagueService;
 import com.example.back.service.LeagueServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 @CrossOrigin(origins = "http://localhost:4200")
 public class LeagueController {
 
-    private final LeagueServiceImpl leagueService;
+    private final LeagueService leagueService;
 
     @PostMapping(path = "/{leagueId}/favorites-add")
     public ResponseEntity<String> addLeagueToFavorites(@PathVariable Long leagueId) {

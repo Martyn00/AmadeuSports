@@ -15,7 +15,6 @@ public class Sport {
     private Long id;
 
     @OneToMany
-    @JoinColumn(name = "sport_id")
     private Set<League> leagues = new HashSet<>();
 
     private String name;
