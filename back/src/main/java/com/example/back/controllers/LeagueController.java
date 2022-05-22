@@ -18,12 +18,12 @@ public class LeagueController {
     private final LeagueServiceImpl leagueService;
 
     @PostMapping(path = "/{leagueId}/favorites-add")
-    public ResponseEntity<String> addTeamToFavorites(@PathVariable Long leagueId) {
+    public ResponseEntity<String> addLeagueToFavorites(@PathVariable Long leagueId) {
         return leagueService.addLeagueToFavorites(leagueId);
     }
 
     @PostMapping(path = "/{leagueId}/favorites-remove")
-    public ResponseEntity<String> removeTeamFromFavorites(@PathVariable Long leagueId) {
+    public ResponseEntity<String> removeLeagueFromFavorites(@PathVariable Long leagueId) {
         return leagueService.removeLeagueFromFavorites(leagueId);
     }
 
