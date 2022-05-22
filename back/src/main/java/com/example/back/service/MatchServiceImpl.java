@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,19 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepo matchRepo;
     private final ModelMapper modelMapper;
     private final UserRepo userRepo;
+
+    public List<MatchDto> getFavoriteMatches() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
+        }
+        throw new NotLoggedInException();
+    }
 
     @Override
     public List<MatchDto> getMatchByDate(Integer numberOfDays) {
@@ -118,7 +132,7 @@ public class MatchServiceImpl implements MatchService {
         throw new NotLoggedInException();
     }
 
-    protected MatchDto mapToMatchDto(MatchEntity matchEntity) {
+    public MatchDto mapToMatchDto(MatchEntity matchEntity) {
         MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
         matchDto.setLeague(createLeagueDto(matchEntity.getLeague()));
         matchDto.setId(matchEntity.getId());

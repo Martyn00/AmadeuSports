@@ -31,5 +31,10 @@ public class MatchController {
         return matchService.removeMatchFromFavorites(matchID);
     }
 
+    @GetMapping(path = "/favorites")
+    public List<MatchDto> getFavoriteMatches() {
+        return matchService.getFavoriteMatches();
+    }
+
 
 }
