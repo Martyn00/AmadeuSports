@@ -18,7 +18,7 @@
 
     <ng-container matColumnDef="friend">
         <th mat-header-cell *matHeaderCellDef>
-        <td mat-cell *matCellDef="let element"><button mat-button>unfriend</button></td>
+        <td mat-cell *matCellDef="let element"><button mat-button (click)="unfriend(element)">unfriend</button></td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

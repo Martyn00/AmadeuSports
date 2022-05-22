@@ -31,4 +31,5 @@ public class MatchController {
         return matchService.removeMatchFromFavorites(matchID);
     }
 
+
 }

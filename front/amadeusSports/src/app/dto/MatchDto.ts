@@ -1,15 +1,18 @@
+import { LeagueDto } from "./LeagueDto";
+import { TeamDto } from "./TeamDto";
+
 export class MatchDto {
     id!: number;
     time!: string;
-    team1!: string;
-    team2!: string;
+    team1!: TeamDto;
+    team2!: TeamDto;
     sport!: string;
     score!: string;
-    league!: string;
+    league!: LeagueDto;
     details!: string;
     isFavorite!: boolean;
 
-    constructor(id:number, time: string, team1: string, team2: string, score:string, sport: string, league: string,
+    constructor(id: number, time: string, team1: TeamDto, team2: TeamDto, score:string, sport: string, league: LeagueDto,
         details: string, isFavorite:boolean) {
         this.time = time;
         this.details = details;

@@ -48,11 +48,18 @@ export class FriendsComponent implements OnInit {
     this.userService.getUsers().subscribe((data) => {
       this.options = data;
     });
-    this.options.forEach((elem) => console.log(elem));
+    // this.options.forEach((elem) => console.log(elem));
   }
   submitData() {
     this.friendService.addFriend(this.myControl.value);
     this.friendService.populateFriendsTable();
+    this.ngOnInit();
+  }
+
+  unfriend(element: UserDto) {
+    this.friendService.deleteFriend(element.username);
+    this.friendService.populateFriendsTable();
+    this.ngOnInit();
   }
 }
 

@@ -2,6 +2,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { MatchDto } from '../dto/MatchDto';
 import { PrincipalComponentLoaderService } from './principal-component-loader.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TeamDto } from '../dto/TeamDto';
+import { LeagueDto } from '../dto/LeagueDto';
 
 const URL = "http://localhost:8080/AmadeusSports"
 const httpOptions = {
@@ -56,4 +58,5 @@ export class MatchTableLoaderService {
       this.matchesLoaded.emit(this.sendMatches);
     });
   }
+
 }
