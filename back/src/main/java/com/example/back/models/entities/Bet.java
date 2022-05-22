@@ -10,6 +10,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Bet {
 
@@ -30,6 +31,17 @@ public class Bet {
     private int amount;
     private String status;
     private int result;
+
+    public Bet(MatchEntity match, User user1, User user2, BetType betChoiceUser1, BetType betChoiceUser2, int amount, String status, int result) {
+        this.match = match;
+        this.user1 = user1;
+        this.user2 = user2;
+        this.betChoiceUser1 = betChoiceUser1;
+        this.betChoiceUser2 = betChoiceUser2;
+        this.amount = amount;
+        this.status = status;
+        this.result = result;
+    }
 
     @Override
     public boolean equals(Object o) {
