@@ -1,5 +1,6 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.BetDto;
 import com.example.back.controllers.dto.UserDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
@@ -129,6 +130,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<String> addFriendByUserName(String userName) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<String> removeFriendByUserName(String userName) {
+        return null;
+    }
+
+    @Override
     public ArrayList<UserDto> getAllFriends() {
         ArrayList<UserDto> result = new ArrayList<>();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -144,5 +155,10 @@ public class UserServiceImpl implements UserService {
             return result;
         }
         throw new NotLoggedInException();
+    }
+
+    @Override
+    public List<BetDto> getBetsByUserId(Long id) {
+        return null;
     }
 }
