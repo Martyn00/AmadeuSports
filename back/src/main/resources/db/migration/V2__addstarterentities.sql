@@ -9,11 +9,11 @@ INSERT INTO sport (id, name) values
     (17, 'Football');
 
 INSERT INTO league (id, country, name, sport_id) values
-    (18, 'Spania', 'La Liga', 1);
+    (18, 'Spania', 'La Liga', 17);
 INSERT INTO league (id, country, name, sport_id) values
-    (19, 'Romania', 'Liga I', 1);
+    (19, 'Romania', 'Liga I', 17);
 INSERT INTO league (id, country, name, sport_id) values
-    (20, 'Europa', 'Liga Campionilor', 1);
+    (20, 'Europa', 'Liga Campionilor', 17);
 
 INSERT INTO team (id,country, name) values
     (4,'Romania', 'FCSB');
@@ -70,3 +70,20 @@ INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, te
     (15, 'super', 0, '0-0', DATE_SUB(DATE_SUB(DATE_SUB(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 8, 20);
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
     (16, 'super', 1, '???', DATE_ADD(DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 9, 18);
+
+INSERT INTO user_friends (user_id, friends_id) VALUES (1, 2);
+INSERT INTO user_friends (user_id, friends_id) VALUES (1, 3);
+INSERT INTO user_friends (user_id, friends_id) VALUES (2, 1);
+INSERT INTO user_friends (user_id, friends_id) VALUES (2, 3);
+INSERT INTO user_friends (user_id, friends_id) VALUES (3, 1);
+INSERT INTO user_friends (user_id, friends_id) VALUES (3, 2);
+
+INSERT INTO bet (bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id) VALUES
+    (0, 2, 10, 1, 2);
+INSERT INTO bet (bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id) VALUES
+    (1, 0, 11, 1, 3);
+
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (1, 1);
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (1, 2);
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (2, 1);
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (3, 2);
