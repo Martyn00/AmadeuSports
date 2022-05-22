@@ -1,5 +1,6 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.TeamDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -79,5 +81,29 @@ public class TeamServiceImpl implements TeamService {
             throw new TeamNotInFavoritesException();
         }
         throw new NotLoggedInException();
+    }
+
+    @Override
+    public List<TeamDto> getFavoriteTeams() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            return user.getFavoriteTeams().stream().map(this::mapTeamTOTeamDtoFavorite).collect(Collectors.toList());
+
+        }
+        throw new NotLoggedInException();
+    }
+
+    private TeamDto mapTeamTOTeamDtoFavorite(Team team){
+        TeamDto teamDto = new TeamDto();
+        teamDto.setName(team.getName());
+        teamDto.setIsFavorite(true);
+        teamDto.setId(team.getId());
+        return teamDto;
     }
 }
