@@ -118,7 +118,7 @@ public class MatchServiceImpl implements MatchService {
         throw new NotLoggedInException();
     }
 
-    private MatchDto mapToMatchDto(MatchEntity matchEntity) {
+    protected MatchDto mapToMatchDto(MatchEntity matchEntity) {
         MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
         matchDto.setLeague(createLeagueDto(matchEntity.getLeague()));
         matchDto.setId(matchEntity.getId());
@@ -137,7 +137,7 @@ public class MatchServiceImpl implements MatchService {
         return matchDto;
     }
 
-    private TeamDto createTeamDto(Team team1) {
+    protected TeamDto createTeamDto(Team team1) {
         TeamDto teamDto = new TeamDto();
         teamDto.setId(team1.getId());
         teamDto.setName(team1.getName());
@@ -146,7 +146,7 @@ public class MatchServiceImpl implements MatchService {
         return teamDto;
     }
 
-    private LeagueDto createLeagueDto(League league) {
+    protected LeagueDto createLeagueDto(League league) {
         LeagueDto leagueDto = new LeagueDto();
         leagueDto.setId(league.getId());
         leagueDto.setName(league.getName());

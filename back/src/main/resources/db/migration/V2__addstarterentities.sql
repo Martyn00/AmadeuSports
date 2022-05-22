@@ -62,3 +62,13 @@ INSERT INTO user_friends (user_id, friends_id) VALUES (2, 1);
 INSERT INTO user_friends (user_id, friends_id) VALUES (2, 3);
 INSERT INTO user_friends (user_id, friends_id) VALUES (3, 1);
 INSERT INTO user_friends (user_id, friends_id) VALUES (3, 2);
+
+INSERT INTO bet (bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id) VALUES
+    (0, 2, 10, 1, 2);
+INSERT INTO bet (bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id) VALUES
+    (1, 0, 11, 1, 3);
+
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (1, 1);
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (1, 2);
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (2, 1);
+INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (3, 2);
