@@ -19,10 +19,22 @@ const httpOptions = {
 export class MatchTableLoaderService {
 
   public matchesLoaded = new EventEmitter<MatchDto[]>();
+  public favoriteMatchesLoaded = new EventEmitter<MatchDto[]>();
   sendMatches: MatchDto[] = [];
   constructor(private http: HttpClient) { }
 
-  populateMatchTable(pos: number) {
+  populateMatchTable(type: string, id:number) {
+    let url = URL + "/match/" + id;
+    if (type === "matches") {
+      url = ;
+    }
+    console.log(httpOptions.headers);
+    this.http.get<MatchDto[]>(url, httpOptions).subscribe(response => {
+      this.sendMatches = response;
+      this.matchesLoaded.emit(this.sendMatches);
+    });
+  }
+  populateFavoritesMatchTable(pos: number) {
     let url = URL + "/match/" + pos;
 
     console.log(httpOptions.headers);

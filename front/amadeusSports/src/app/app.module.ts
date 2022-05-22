@@ -43,6 +43,7 @@ import { FavoriteMatchesComponent } from './favoriteComponent/favorite-matches/f
 import { FavoriteTeamsComponent } from './favoriteComponent/favorite-teams/favorite-teams.component';
 import { FavoriteLeaguesComponent } from './favoriteComponent/favorite-leagues/favorite-leagues.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { FavoritesTableComponent } from './favoriteComponent/favorites-table/favorites-table.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     UpcomingBetTableComponent,
     FavoriteMatchesComponent,
     FavoriteTeamsComponent,
-    FavoriteLeaguesComponent
+    FavoriteLeaguesComponent,
+    FavoritesTableComponent
   ],
   imports: [
     RouterModule.forRoot([
