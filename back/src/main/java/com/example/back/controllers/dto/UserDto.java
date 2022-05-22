@@ -1,10 +1,12 @@
 package com.example.back.controllers.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserDto {
     Long id;
     String username;
