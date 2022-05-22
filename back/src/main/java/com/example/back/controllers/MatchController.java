@@ -36,4 +36,5 @@ public class MatchController {
         return matchService.getFavoriteMatches();
     }
 
+
 }
