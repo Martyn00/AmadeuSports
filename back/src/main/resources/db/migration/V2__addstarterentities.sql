@@ -41,6 +41,21 @@ INSERT INTO league_teams(league_id, teams_id) values
 INSERT INTO league_teams(league_id, teams_id) values
     (18, 9);
 
+INSERT INTO league_matches(league_id, matches_id) values
+    (19, 10);
+INSERT INTO league_matches(league_id, matches_id) values
+    (20, 11);
+INSERT INTO league_matches(league_id, matches_id) values
+    (20, 12);
+INSERT INTO league_matches(league_id, matches_id) values
+    (20, 13);
+INSERT INTO league_matches(league_id, matches_id) values
+    (20, 14);
+INSERT INTO league_matches(league_id, matches_id) values
+    (20, 15);
+INSERT INTO league_matches(league_id, matches_id) values
+    (18, 16);
+
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
     (10, 'super', 1, '???', LOCALTIMESTAMP(), 4, 5, 19);
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
@@ -56,19 +71,10 @@ INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, te
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
     (16, 'super', 1, '???', DATE_ADD(DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 9, 18);
 
-INSERT INTO user_friends (user_id, friends_id) VALUES (1, 2);
-INSERT INTO user_friends (user_id, friends_id) VALUES (1, 3);
-INSERT INTO user_friends (user_id, friends_id) VALUES (2, 1);
-INSERT INTO user_friends (user_id, friends_id) VALUES (2, 3);
-INSERT INTO user_friends (user_id, friends_id) VALUES (3, 1);
-INSERT INTO user_friends (user_id, friends_id) VALUES (3, 2);
+INSERT INTO bet (id, bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id, amount, status, result) values
+    (21, 0, 2, 10, 1, 2, 100, 'history', 1);
 
-INSERT INTO bet (bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id) VALUES
-    (0, 2, 10, 1, 2);
-INSERT INTO bet (bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id) VALUES
-    (1, 0, 11, 1, 3);
-
-INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (1, 1);
-INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (1, 2);
-INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (2, 1);
-INSERT INTO user_bet_history (user_id, bet_history_id) VALUES (3, 2);
+INSERT INTO user_bets(user_id, bets_id) values
+    (1, 21);
+INSERT INTO user_bets(user_id, bets_id) values
+    (2, 21);

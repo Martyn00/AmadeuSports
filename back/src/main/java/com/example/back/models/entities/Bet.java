@@ -20,13 +20,16 @@ public class Bet {
     @OneToOne
     private MatchEntity match;
 
-    @OneToOne
+    @ManyToOne
     private User user1;
-    @OneToOne
+    @ManyToOne
     private User user2;
 
-    public BetType betChoiceUser1;
-    public BetType betChoiceUser2;
+    private BetType betChoiceUser1;
+    private BetType betChoiceUser2;
+    private int amount;
+    private String status;
+    private int result;
 
     @Override
     public boolean equals(Object o) {

@@ -1,12 +1,17 @@
 package com.example.back.models.entities;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class League {
     @Id
@@ -14,11 +19,15 @@ public class League {
     private Long id;
 
     @OneToMany
+    @ToString.Exclude
     private Set<Team> teams = new HashSet<>();
 
     @OneToMany
+    @ToString.Exclude
     private Set<MatchEntity> matches = new HashSet<>();
 
     private String name;
     private String country;
+    @ManyToOne
+    private Sport sport;
 }
