@@ -3,7 +3,6 @@ package com.example.back.service;
 import com.example.back.controllers.dto.UserDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
-import com.example.back.repositories.FriendsRepo;
 import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
@@ -15,14 +14,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
-    private final FriendsRepo friendsRepo;
     private final MatchRepo matchRepo;
 
     @Override
