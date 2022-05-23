@@ -2,9 +2,11 @@ package com.example.back.service;
 
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
+import com.example.back.controllers.dto.TeamDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
+import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.LeagueRepo;
 import com.example.back.repositories.MatchRepo;
@@ -124,5 +126,27 @@ public class LeagueServiceImpl implements LeagueService {
         }
 
         return result;
+    }
+
+    @Override
+    public ResponseEntity<LeagueDto> getLeagueByName(String leagueName) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+            League league = leagueRepo.findByName(leagueName).orElseThrow(() -> {
+                throw new LeagueNotFoundException();
+            });
+
+            LeagueDto leagueDto = new LeagueDto(league.getName(),
+                    league.getId(),
+                    user.getFavoriteLeagues().contains(league));
+
+            return ResponseEntity.ok(leagueDto);
+        }
+        throw new NotLoggedInException();
     }
 }

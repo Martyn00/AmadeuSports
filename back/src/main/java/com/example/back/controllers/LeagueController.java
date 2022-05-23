@@ -42,4 +42,9 @@ public class LeagueController {
     public ArrayList<MatchDto> getPastMatchesByLeagueId(@PathVariable Long leagueId) {
         return leagueService.getPastMatchesByLeagueId(leagueId);
     }
+
+    @GetMapping(path = "/{leagueName}/getLeagueByName")
+    public ResponseEntity<LeagueDto> getPastMatchesByLeagueId(@PathVariable String leagueName) {
+        return leagueService.getLeagueByName(leagueName);
+    }
 }
