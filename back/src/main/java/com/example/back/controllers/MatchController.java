@@ -42,4 +42,9 @@ public class MatchController {
         return matchService.addMatch(team1Name, team2Name, startTime, result);
     }
 
+    @PostMapping(path = "/add-event/{matchId}/{goal}/{min}")
+    public ResponseEntity<String> addEvent(@PathVariable Long matchId, @PathVariable int goal, @PathVariable int min) {
+        return matchService.addEvent(matchId, goal, min);
+    }
+
 }

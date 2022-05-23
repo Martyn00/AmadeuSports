@@ -4,17 +4,11 @@ import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.handlers.*;
 import com.example.back.models.Role;
-import com.example.back.models.entities.League;
+import com.example.back.models.entities.*;
 import com.example.back.controllers.dto.TeamDto;
 import com.example.back.models.entities.League;
-import com.example.back.models.entities.MatchEntity;
-import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
-import com.example.back.models.entities.User;
-import com.example.back.repositories.LeagueRepo;
-import com.example.back.repositories.MatchRepo;
-import com.example.back.repositories.TeamRepo;
-import com.example.back.repositories.UserRepo;
+import com.example.back.repositories.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +35,7 @@ public class MatchServiceImpl implements MatchService {
     private final UserRepo userRepo;
     private final TeamRepo teamRepo;
     private final LeagueRepo leagueRepo;
+    private final MatchEventRepo matchEventRepo;
 
     public List<MatchDto> getFavoriteMatches() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -180,6 +175,41 @@ public class MatchServiceImpl implements MatchService {
             return ResponseEntity.ok("A new match has been added!");
 
         }
+        throw new NotLoggedInException();
+    }
+
+    public ResponseEntity<String> addEvent(Long matchId, int goal, int min) {
+        MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
+            throw new MatchNotFoundException();
+        });
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (user.getRole() != Role.ADMIN) {
+                throw new AdminPrivilegiesException();
+            }
+
+            if (min < 0 || min > 90) {
+                throw new WrongNumOfMinException();
+            }
+            if (goal != 0 && goal != 1) {
+                throw new GoalException();
+            }
+
+            MatchEvent event = new MatchEvent(goal, min);
+            matchEventRepo.save(event);
+            match.getEvents().add(event);
+            matchRepo.save(match);
+
+            return ResponseEntity.ok("A new event has been added for this match!");
+        }
+
         throw new NotLoggedInException();
     }
 

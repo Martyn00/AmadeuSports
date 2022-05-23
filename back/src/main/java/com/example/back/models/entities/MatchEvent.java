@@ -24,4 +24,9 @@ public class MatchEvent {
 
     private int goal;
     private int min;
+
+    public MatchEvent(int goal, int min) {
+        this.goal = goal;
+        this.min = min;
+    }
 }
