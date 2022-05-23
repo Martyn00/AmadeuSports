@@ -1,0 +1,13 @@
+INSERT INTO team_matches ( team_id, matches_id) values(5, 10);
+INSERT INTO team_matches ( team_id, matches_id) values(4, 10);
+INSERT INTO team_matches ( team_id, matches_id) values(7, 11);
+INSERT INTO team_matches ( team_id, matches_id) values(8, 11);
+INSERT INTO team_matches ( team_id, matches_id) values(5, 12);
+INSERT INTO team_matches ( team_id, matches_id) values(7, 12);
+INSERT INTO team_matches ( team_id, matches_id) values(9, 13);
+INSERT INTO team_matches ( team_id, matches_id) values(5, 14);
+INSERT INTO team_matches ( team_id, matches_id) values(6, 14);
+INSERT INTO team_matches ( team_id, matches_id) values(6, 15);
+INSERT INTO team_matches ( team_id, matches_id) values(8, 15);
+INSERT INTO team_matches ( team_id, matches_id) values(6, 16);
+INSERT INTO team_matches ( team_id, matches_id) values(9, 16);

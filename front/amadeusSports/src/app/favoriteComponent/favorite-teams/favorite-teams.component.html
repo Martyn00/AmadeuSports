@@ -1,0 +1,13 @@
+<mat-accordion multi=false>
+    <mat-expansion-panel *ngFor="let element of teams let indexOfelement=index;" (opened)="openGroup(element)">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{element.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+                <button mat-button color="warn" (click)="removeFromFavorites(element)">Remove</button>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-favorites-table></app-favorites-table>
+    </mat-expansion-panel>
+</mat-accordion>

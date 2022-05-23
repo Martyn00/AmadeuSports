@@ -1,5 +1,5 @@
 export class LeagueDto {
-    id?: number;
+    id!: number;
     name: string = '';
     isFavorite: boolean = false
     constructor(id: number, name: string, isFavorite: boolean) {

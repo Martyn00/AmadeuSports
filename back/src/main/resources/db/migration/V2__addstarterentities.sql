@@ -15,18 +15,18 @@ INSERT INTO league (id, country, name, sport_id) values
 INSERT INTO league (id, country, name, sport_id) values
     (20, 'Europa', 'Liga Campionilor', 17);
 
-INSERT INTO team (id,country, name) values
-    (4,'Romania', 'FCSB');
-INSERT INTO team (id,country, name) values
-    (5,'Romania', 'FC U Craiova');
-INSERT INTO team (id,country, name) values
-    (6,'Spnia', 'FC Barcelona');
-INSERT INTO team (id,country, name) values
-    (7,'Spania', 'Real Madrid');
-INSERT INTO team (id,country, name) values
-    (8,'Romania', 'FC Rapid');
-INSERT INTO team (id,country, name) values
-    (9,'Spania', 'Atletico Madrid');
+INSERT INTO team (id,country, name, home_league_id) values
+    (4,'Romania', 'FCSB', 19);
+INSERT INTO team (id,country, name, home_league_id) values
+    (5,'Romania', 'FC U Craiova', 19);
+INSERT INTO team (id,country, name, home_league_id) values
+    (6,'Spnia', 'FC Barcelona', 18);
+INSERT INTO team (id,country, name, home_league_id) values
+    (7,'Spania', 'Real Madrid', 18);
+INSERT INTO team (id,country, name, home_league_id) values
+    (8,'Romania', 'FC Rapid', 19);
+INSERT INTO team (id,country, name, home_league_id) values
+    (9,'Spania', 'Atletico Madrid', 18);
 
 INSERT INTO league_teams(league_id, teams_id) values
     (19, 4);
@@ -56,20 +56,20 @@ INSERT INTO league_matches(league_id, matches_id) values
 INSERT INTO league_matches(league_id, matches_id) values
     (18, 16);
 
-INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
-    (10, 'super', 1, '???', LOCALTIMESTAMP(), 4, 5, 19);
+INSERT INTO match_entity (id,data, is_upcoming, start_time, team1_id, team2_id, league_id) values
+    (10, 'super', 1, LOCALTIMESTAMP(), 4, 5, 19);
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
     (11, 'super', 0, '1-1', DATE_SUB(LOCALTIMESTAMP(), INTERVAL 1 DAY), 7, 8, 20);
-INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
-    (12, 'super', 1, '???', DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), 5, 7, 20);
+INSERT INTO match_entity (id,data, is_upcoming, start_time, team1_id, team2_id, league_id) values
+    (12, 'super', 1, DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), 5, 7, 20);
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
     (13, 'super', 0, '2-3', DATE_SUB(DATE_SUB(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), 9, 4, 20);
-INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
-    (14, 'super', 1, '???', DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), 5, 6, 20);
+INSERT INTO match_entity (id,data, is_upcoming, start_time, team1_id, team2_id, league_id) values
+    (14, 'super', 1, DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), 5, 6, 20);
 INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
     (15, 'super', 0, '0-0', DATE_SUB(DATE_SUB(DATE_SUB(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 8, 20);
-INSERT INTO match_entity (id,data, is_upcoming, result, start_time, team1_id, team2_id, league_id) values
-    (16, 'super', 1, '???', DATE_ADD(DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 9, 18);
+INSERT INTO match_entity (id,data, is_upcoming, start_time, team1_id, team2_id, league_id) values
+    (16, 'super', 1, DATE_ADD(DATE_ADD(DATE_ADD(LOCALTIMESTAMP(), INTERVAL 1 DAY), INTERVAL 1 DAY), INTERVAL 1 DAY), 6, 9, 18);
 
 INSERT INTO bet (id, bet_choice_user1, bet_choice_user2, match_id, user1_id, user2_id, amount, status, result) values
     (21, 0, 2, 10, 1, 2, 100, 'history', 1);

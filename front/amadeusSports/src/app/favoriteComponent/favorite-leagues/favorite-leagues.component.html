@@ -1,0 +1,15 @@
+<mat-accordion multi="false">
+    <mat-expansion-panel hideToggle>
+    </mat-expansion-panel>
+    <mat-expansion-panel *ngFor="let league of leagues"  (opened)="openGroup(league)">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{league.name}}
+            </mat-panel-title>
+            <mat-panel-description>
+                <button mat-button color="warn" (click)="removeFromFavorites(league)">Remove</button>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-favorites-table></app-favorites-table>
+    </mat-expansion-panel>
+</mat-accordion>

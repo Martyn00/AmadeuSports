@@ -2,14 +2,24 @@
     <mat-form-field class="example-full-width" appearance="fill">
         <mat-label>Search for new friend</mat-label>
         <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                {{option.username}}
+                {{option}}
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
     <button mat-raised-button (click)="submitData()">Add</button>
 </form>
+<!-- <form class="example-form">
+    <input type="text" placeholder="Search for a street" [formControl]="myControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+        </mat-option>
+    </mat-autocomplete>
+    <button mat-raised-button (click)="submitData()">Add</button>
+</form> -->
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
     <ng-container matColumnDef="username">
         <th mat-header-cell *matHeaderCellDef>username
@@ -18,7 +28,7 @@
 
     <ng-container matColumnDef="friend">
         <th mat-header-cell *matHeaderCellDef>
-        <td mat-cell *matCellDef="let element"><button mat-button>unfriend</button></td>
+        <td mat-cell *matCellDef="let element"><button mat-button (click)="unfriend(element)">unfriend</button></td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

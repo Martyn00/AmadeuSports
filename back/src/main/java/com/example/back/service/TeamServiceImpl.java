@@ -8,6 +8,7 @@ import com.example.back.models.entities.User;
 import com.example.back.repositories.TeamRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -83,7 +85,7 @@ public class TeamServiceImpl implements TeamService {
         throw new NotLoggedInException();
     }
 
-    @Override
+   @Override
     public ResponseEntity<TeamDto> getTeamByName(String teamName) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -104,5 +106,29 @@ public class TeamServiceImpl implements TeamService {
             return ResponseEntity.ok(teamDto);
         }
         throw new NotLoggedInException();
+    }
+
+    @Override
+    public List<TeamDto> getFavoriteTeams() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            return user.getFavoriteTeams().stream().map(this::mapTeamTOTeamDtoFavorite).collect(Collectors.toList());
+
+        }
+        throw new NotLoggedInException();
+    }
+
+    private TeamDto mapTeamTOTeamDtoFavorite(Team team){
+        TeamDto teamDto = new TeamDto();
+        teamDto.setName(team.getName());
+        teamDto.setIsFavorite(true);
+        teamDto.setId(team.getId());
+        return teamDto;
     }
 }
