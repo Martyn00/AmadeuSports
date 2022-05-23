@@ -20,4 +20,5 @@ public class BetDto {
     private int amount;
     private String status;
     private int result;
+    private UserBetChoiceDto userBetChoiceDto;
 }

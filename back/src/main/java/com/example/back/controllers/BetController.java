@@ -40,4 +40,9 @@ public class BetController {
     public ResponseEntity<String> acceptBet(@PathVariable Long betId, @PathVariable int betType) {
         return betService.acceptBet(betId, betType);
     }
+
+    @PostMapping(path = "/cancel-bet/{betId}")
+    public ResponseEntity<String> cancelBet(@PathVariable Long betId) {
+        return betService.cancelBet(betId);
+    }
 }
