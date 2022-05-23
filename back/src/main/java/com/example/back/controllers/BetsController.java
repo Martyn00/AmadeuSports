@@ -13,10 +13,10 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class BetsController {
 
-    private final UserServiceImpl userService;
-
-    @GetMapping(path = "/{userId}")
-    public List<BetDto> getBetByUserId(@PathVariable long userId) {
-        return userService.getBetsByUserId(userId);
-    }
+//    private final UserServiceImpl userService;
+//
+//    @GetMapping(path = "/{userId}")
+//    public List<BetDto> getBetByUserId(@PathVariable long userId) {
+//        return userService.getBetsByUserId(userId);
+//    }
 }
