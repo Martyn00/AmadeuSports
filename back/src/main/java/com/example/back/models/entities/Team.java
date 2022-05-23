@@ -23,6 +23,9 @@ public class Team {
     @ToString.Exclude
     private Set<MatchEntity> matches = new HashSet<>();
 
+    @ManyToOne
+    private League homeLeague;
+
     private String name;
     private String country;
 }

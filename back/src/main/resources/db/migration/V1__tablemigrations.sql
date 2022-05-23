@@ -4,9 +4,11 @@ create table league (id bigint not null auto_increment, country varchar(255), na
 create table league_matches (league_id bigint not null, matches_id bigint not null, primary key (league_id, matches_id)) engine=MyISAM;
 create table league_teams (league_id bigint not null, teams_id bigint not null, primary key (league_id, teams_id)) engine=MyISAM;
 create table match_entity (id bigint not null auto_increment, data varchar(255), is_upcoming bit not null, result varchar(255), start_time datetime, league_id bigint, team1_id bigint, team2_id bigint, primary key (id)) engine=MyISAM;
+create table match_entity_events (match_entity_id bigint not null, events_id bigint not null, primary key (match_entity_id, events_id)) engine=MyISAM;
+create table match_event (id bigint not null auto_increment, goal integer not null, min integer not null, primary key (id)) engine=MyISAM;
 create table sport (id bigint not null auto_increment, name varchar(255), primary key (id)) engine=MyISAM;
 create table sport_leagues (sport_id bigint not null, leagues_id bigint not null, primary key (sport_id, leagues_id)) engine=MyISAM;
-create table team (id bigint not null auto_increment, country varchar(255), name varchar(255), primary key (id)) engine=MyISAM;
+create table team (id bigint not null auto_increment, country varchar(255), name varchar(255), home_league_id bigint, primary key (id)) engine=MyISAM;
 create table team_matches (team_id bigint not null, matches_id bigint not null, primary key (team_id, matches_id)) engine=MyISAM;
 create table user (id bigint not null auto_increment, wallet integer not null, confirmed bit, email varchar(255), first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (id)) engine=MyISAM;
 create table user_bets (user_id bigint not null, bets_id bigint not null, primary key (user_id, bets_id)) engine=MyISAM;
@@ -16,6 +18,7 @@ create table user_favorite_teams (user_id bigint not null, favorite_teams_id big
 create table user_friends (user_id bigint not null, friends_id bigint not null, primary key (user_id, friends_id)) engine=MyISAM;
 alter table league_matches add constraint UK_bw2qjvedqigcjdxmu2hq9e8sa unique (matches_id);
     alter table league_teams add constraint UK_rdfn86g37n356sf9l8vep4f76 unique (teams_id);
+    alter table match_entity_events add constraint UK_dhaa7yu597l81trxwtp6lmkxn unique (events_id);
     alter table sport_leagues add constraint UK_fplrrpcs9ncrlyw6nygky2g0s unique (leagues_id);
     alter table team_matches add constraint UK_ca2prqkp1fs3h2l49re9ytvgt unique (matches_id);
     alter table user_favorite_leagues add constraint UK_lhko7iqf4rt6q9b2sauq33cc1 unique (favorite_leagues_id);
@@ -33,8 +36,11 @@ alter table league_matches add constraint UK_bw2qjvedqigcjdxmu2hq9e8sa unique (m
     alter table match_entity add constraint FKnu3auj5ptltmktbhb2n7ect24 foreign key (league_id) references league (id);
     alter table match_entity add constraint FKm9mttyiibvk7hd91y56iwt431 foreign key (team1_id) references team (id);
     alter table match_entity add constraint FK1hapjugyi8g527gjv5cs3qt8d foreign key (team2_id) references team (id);
+    alter table match_entity_events add constraint FKs91sr52uysb66gi6nblgft4ba foreign key (events_id) references match_event (id);
+    alter table match_entity_events add constraint FKh9onbceb6dq03dou26j5ha7o foreign key (match_entity_id) references match_entity (id);
     alter table sport_leagues add constraint FKd7unnnf2kc4scytsvkoklr19y foreign key (leagues_id) references league (id);
     alter table sport_leagues add constraint FKsbnxwryiqx830liyo2pc2f0dm foreign key (sport_id) references sport (id);
+    alter table team add constraint FKi3imc87enyfbhxaa1l1h30eik foreign key (home_league_id) references league (id);
     alter table team_matches add constraint FKbx9w4c2gdh1kuhs8wtk2bi89p foreign key (matches_id) references match_entity (id);
     alter table team_matches add constraint FKd9dx2hnof5j3nkoh6qvo78ok8 foreign key (team_id) references team (id);
     alter table user_bets add constraint FKtd4469rwpg7c6kxs5ww6kee7j foreign key (bets_id) references bet (id);

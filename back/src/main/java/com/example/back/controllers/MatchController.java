@@ -36,4 +36,20 @@ public class MatchController {
         return matchService.getFavoriteMatches();
     }
 
+    @PostMapping(path = "/add-match/{team1Name}/{team2Name}/{startTime}/{result}")
+    public ResponseEntity<String> addMatch(@PathVariable String team1Name, @PathVariable String team2Name,
+                                           @PathVariable String startTime, @PathVariable String result) {
+        return matchService.addMatch(team1Name, team2Name, startTime, result);
+    }
+
+    @PostMapping(path = "/add-event/{matchId}/{goal}/{min}")
+    public ResponseEntity<String> addEvent(@PathVariable Long matchId, @PathVariable int goal, @PathVariable int min) {
+        return matchService.addEvent(matchId, goal, min);
+    }
+
+    @GetMapping(path = "/update-match/{matchId}")
+    public MatchDto updateMatch(@PathVariable Long matchId) {
+        return matchService.updateMatch(matchId);
+    }
+
 }

@@ -5,11 +5,12 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 public class MatchEntity {
@@ -27,8 +28,22 @@ public class MatchEntity {
     @OneToOne
     private League league;
 
+    @OneToMany
+    private Set<MatchEvent> events;
+
     private boolean isUpcoming;
     private String result;
     private LocalDateTime startTime;
     private String data;
+
+    public MatchEntity(Team team1, Team team2, League league, Set<MatchEvent> events, boolean isUpcoming, String result, LocalDateTime startTime, String data) {
+        this.team1 = team1;
+        this.team2 = team2;
+        this.league = league;
+        this.events = events;
+        this.isUpcoming = isUpcoming;
+        this.result = result;
+        this.startTime = startTime;
+        this.data = data;
+    }
 }
