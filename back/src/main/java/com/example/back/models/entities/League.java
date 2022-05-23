@@ -12,6 +12,7 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@EqualsAndHashCode
 @Entity
 public class League {
     @Id

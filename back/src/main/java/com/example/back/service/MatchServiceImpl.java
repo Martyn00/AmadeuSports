@@ -3,6 +3,7 @@ package com.example.back.service;
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.handlers.*;
+import com.example.back.models.Role;
 import com.example.back.models.entities.League;
 import com.example.back.controllers.dto.TeamDto;
 import com.example.back.models.entities.League;
@@ -10,7 +11,9 @@ import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
 import com.example.back.models.entities.User;
+import com.example.back.repositories.LeagueRepo;
 import com.example.back.repositories.MatchRepo;
+import com.example.back.repositories.TeamRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +39,8 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepo matchRepo;
     private final ModelMapper modelMapper;
     private final UserRepo userRepo;
+    private final TeamRepo teamRepo;
+    private final LeagueRepo leagueRepo;
 
     public List<MatchDto> getFavoriteMatches() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -130,6 +136,49 @@ public class MatchServiceImpl implements MatchService {
             }
 
             throw new MatchNotInFavoritesException();
+        }
+        throw new NotLoggedInException();
+    }
+
+    public ResponseEntity<String> addMatch(String team1Name, String team2Name, String startTime, String result) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (user.getRole() != Role.ADMIN) {
+                throw new AdminPrivilegiesException();
+            }
+
+            Team team1 = teamRepo.findByName(team1Name).orElseThrow(() -> {
+                throw new TeamNotFoundException();
+            });
+            Team team2 = teamRepo.findByName(team2Name).orElseThrow(() -> {
+                throw new TeamNotFoundException();
+            });
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime startDate = LocalDateTime.parse(startTime, formatter);
+
+            League league;
+            if (team1.getHomeLeague() == team2.getHomeLeague()) {
+                league = team1.getHomeLeague();
+            } else {
+                league = leagueRepo.findByName("Liga Campionilor").orElseThrow(() -> {
+                    throw new LeagueNotFoundException();
+                });
+            }
+
+            boolean isUpcoming = startDate.isAfter(LocalDateTime.now());
+
+            MatchEntity match = new MatchEntity(team1, team2, league, null, isUpcoming, result, startDate, null);
+            matchRepo.save(match);
+
+            return ResponseEntity.ok("A new match has been added!");
+
         }
         throw new NotLoggedInException();
     }

@@ -15,18 +15,18 @@ INSERT INTO league (id, country, name, sport_id) values
 INSERT INTO league (id, country, name, sport_id) values
     (20, 'Europa', 'Liga Campionilor', 17);
 
-INSERT INTO team (id,country, name) values
-    (4,'Romania', 'FCSB');
-INSERT INTO team (id,country, name) values
-    (5,'Romania', 'FC U Craiova');
-INSERT INTO team (id,country, name) values
-    (6,'Spnia', 'FC Barcelona');
-INSERT INTO team (id,country, name) values
-    (7,'Spania', 'Real Madrid');
-INSERT INTO team (id,country, name) values
-    (8,'Romania', 'FC Rapid');
-INSERT INTO team (id,country, name) values
-    (9,'Spania', 'Atletico Madrid');
+INSERT INTO team (id,country, name, home_league_id) values
+    (4,'Romania', 'FCSB', 19);
+INSERT INTO team (id,country, name, home_league_id) values
+    (5,'Romania', 'FC U Craiova', 19);
+INSERT INTO team (id,country, name, home_league_id) values
+    (6,'Spnia', 'FC Barcelona', 18);
+INSERT INTO team (id,country, name, home_league_id) values
+    (7,'Spania', 'Real Madrid', 18);
+INSERT INTO team (id,country, name, home_league_id) values
+    (8,'Romania', 'FC Rapid', 19);
+INSERT INTO team (id,country, name, home_league_id) values
+    (9,'Spania', 'Atletico Madrid', 18);
 
 INSERT INTO league_teams(league_id, teams_id) values
     (19, 4);
