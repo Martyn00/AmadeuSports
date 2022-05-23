@@ -1,0 +1,10 @@
+<form>
+    <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color">
+        <mat-button-toggle value="favorite-matches" routerLink="/favorites/matches">matches
+        </mat-button-toggle>
+        <mat-button-toggle value="favorite-teams" routerLink="/favorites/teams">teams</mat-button-toggle>
+        <mat-button-toggle value="favorite-leagues" routerLink="/favorites/leagues">leagues
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <router-outlet></router-outlet>

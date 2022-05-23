@@ -14,8 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -259,6 +257,7 @@ public class MatchServiceImpl implements MatchService {
     public MatchDto mapToMatchDto(MatchEntity matchEntity) {
         MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
         matchDto.setLeague(createLeagueDto(matchEntity.getLeague()));
+        matchDto.setId(matchEntity.getId());
         matchDto.setCountry(matchEntity.getTeam1().getCountry());
         createTeamDto(matchEntity.getTeam1());
         matchDto.setTeam1(createTeamDto(matchEntity.getTeam1()));

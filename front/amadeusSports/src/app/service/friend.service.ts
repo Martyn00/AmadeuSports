@@ -22,8 +22,6 @@ export class FriendService {
 
   populateFriendsTable() {
     let url = URL + '/user/friends';
-    console.log(url);
-    console.log("token=" + localStorage.getItem("token"));
     this.http.get<UserDto[]>(url).subscribe(response => {
       this.sendUsers = response;
       console.log("friends " + this.sendUsers);
@@ -31,8 +29,16 @@ export class FriendService {
     });
   }
   addFriend(username: string) {
-    let url = URL + 'user/' + username + '/add-friend'
+    console.log("aici" + username);
+    let url = URL + '/user/' + username + '/add-friend-by-username'
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
     });
+    this.populateFriendsTable();
+  }
+  deleteFriend(username: string) {
+    let url = URL + '/user/' + username + '/remove-friend-by-username'
+    this.http.post<any>(url, null, httpOptions).subscribe(response => {
+    });
+    this.populateFriendsTable();
   }
 }

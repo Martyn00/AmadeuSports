@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MatchDto {
+    Long id;
     String time;
     TeamDto team1;
     TeamDto team2;

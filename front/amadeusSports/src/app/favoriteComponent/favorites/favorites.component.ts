@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatButtonToggle } from '@angular/material/button-toggle';
-import { MatchTableLoaderService } from '../service/match-table-loader.service';
+import { MatchTableLoaderService } from '../../service/match-table-loader.service';
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.component.html',
@@ -8,11 +8,15 @@ import { MatchTableLoaderService } from '../service/match-table-loader.service';
 })
   
 export class FavoritesComponent implements OnInit {
+  path: string =  "/match/favorites";
   constructor(private matchTableService: MatchTableLoaderService) { }
   ngOnInit(): void {
-    this.matchTableService.populatMatchtableWithFavorites('favorite-matches');
+
   }
   onValChange(path: string) {
-    this.matchTableService.populatMatchtableWithFavorites(path);
+    this.path = path;
+    if (path === "/favorites/matches") {
+      this.matchTableService.populatMatchtableWithFavorites("matches", 0);
+    }
   }
 }
