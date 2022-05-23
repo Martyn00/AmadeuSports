@@ -23,18 +23,22 @@ export class MatchTableLoaderService {
   sendMatches: MatchDto[] = [];
   constructor(private http: HttpClient) { }
 
-  populateMatchTable(type: string, id:number) {
-    let url = URL + "/match/" + id;
+  populatMatchtableWithFavorites(type: string, id:number) {
+    let url = URL;
     if (type === "matches") {
-      url = ;
+      url = url + "/match/favorites";
+    } else if (type === "teams") {
+      url = url + "/team/" + id  + "/matches";
+    } else if (type === "leagues") {
+      url = url + "/league/upcoming/" + id ;
     }
-    console.log(httpOptions.headers);
+
     this.http.get<MatchDto[]>(url, httpOptions).subscribe(response => {
       this.sendMatches = response;
-      this.matchesLoaded.emit(this.sendMatches);
+      this.favoriteMatchesLoaded.emit(this.sendMatches);
     });
   }
-  populateFavoritesMatchTable(pos: number) {
+  populateMatchTable( pos:number) {
     let url = URL + "/match/" + pos;
 
     console.log(httpOptions.headers);
@@ -54,20 +58,6 @@ export class MatchTableLoaderService {
 
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
 
-    });
-  }
-
-  populatMatchtableWithFavorites(path: string) {
-    this.http.get<MatchDto[]>(URL + path, httpOptions).subscribe(response => {
-      this.sendMatches = response;
-      this.matchesLoaded.emit(this.sendMatches);
-    });
-  }
-  populatMatchtableWithFavoriteMatches() {
-    this.http.get<MatchDto[]>(URL + "/match/favorites", httpOptions).subscribe(response => {
-      this.sendMatches = response;
-      console.log(this.sendMatches);
-      this.matchesLoaded.emit(this.sendMatches);
     });
   }
 

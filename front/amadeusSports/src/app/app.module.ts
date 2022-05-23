@@ -44,6 +44,10 @@ import { FavoriteTeamsComponent } from './favoriteComponent/favorite-teams/favor
 import { FavoriteLeaguesComponent } from './favoriteComponent/favorite-leagues/favorite-leagues.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FavoritesTableComponent } from './favoriteComponent/favorites-table/favorites-table.component';
+import { BetDialogComponent } from './bet/bet-dialog/bet-dialog.component';
+import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 @NgModule({
   declarations: [
@@ -63,7 +67,8 @@ import { FavoritesTableComponent } from './favoriteComponent/favorites-table/fav
     FavoriteMatchesComponent,
     FavoriteTeamsComponent,
     FavoriteLeaguesComponent,
-    FavoritesTableComponent
+    FavoritesTableComponent,
+    BetDialogComponent,
   ],
   imports: [
     RouterModule.forRoot([
@@ -109,13 +114,16 @@ import { FavoritesTableComponent } from './favoriteComponent/favorites-table/fav
     MatDividerModule,
     MatAutocompleteModule,
     MatSnackBarModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDialogModule,
+    MatCheckboxModule
   ],
   providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, FriendService, {
     provide: HTTP_INTERCEPTORS,
     useClass: UserEmulationInterceptor,
     multi: true
-  }],
+  },
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

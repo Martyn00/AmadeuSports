@@ -1,4 +1,6 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { BetDialogComponent } from '../bet/bet-dialog/bet-dialog.component';
 import { MatchDto } from '../dto/MatchDto';
 import { LeaguesService } from '../service/leagues.service';
 import { MatchTableLoaderService } from '../service/match-table-loader.service';
@@ -14,7 +16,12 @@ export class MatchesTableComponent implements OnInit {
   dataSource!: MatchDto[];
   isChecked!: boolean;
   favoriteText!: string;
-  constructor(private matchTableService: MatchTableLoaderService, private teamService: TeamsService, private leagueService:LeaguesService) {
+
+  @ViewChild('dialogRef')
+  dialogRef!: TemplateRef<any>;
+  myFooList = ['Some Item', 'Item Second', 'Other In Row', 'What to write', 'Blah To Do']
+
+  constructor(private matchTableService: MatchTableLoaderService, private teamService: TeamsService, private leagueService: LeaguesService, public dialog: MatDialog ) {
   }
 
   ngOnInit(): void {
@@ -43,6 +50,15 @@ export class MatchesTableComponent implements OnInit {
     this.teamService.changeFavoriteStateTeam(element.team2, );
     let updatedELement: MatchDto = element;
     updatedELement.team2.isFavorite != element.team2.isFavorite;
+  }
+  clickedBet(element: MatchDto) {
+    console.log(element.time);
+    const myTempDialog = this.dialog.open(BetDialogComponent, { data: element.id });
+    myTempDialog.afterClosed().subscribe((res) => {
+
+      // Data back from dialog
+      console.log({ res });
+    });
   }
 
 }
