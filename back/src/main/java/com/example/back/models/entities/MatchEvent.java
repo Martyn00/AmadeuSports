@@ -24,6 +24,7 @@ public class MatchEvent {
 
     private int goal;
     private int min;
+    private boolean isUpdated;
 
     public MatchEvent(int goal, int min) {
         this.goal = goal;

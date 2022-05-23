@@ -20,7 +20,7 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping(path = "/{id}/matches")
-    public List<MatchEntity> getMatchesHistory(@PathVariable Long id) {
+    public List<MatchDto> getMatchesHistory(@PathVariable Long id) {
         return teamService.getMatchesHistory(id);
     }
 

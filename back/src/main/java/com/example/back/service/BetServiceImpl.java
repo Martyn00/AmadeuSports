@@ -16,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -64,6 +61,11 @@ public class BetServiceImpl implements BetService {
             User user1 = userRepo.findById(userId1).orElseThrow(() -> {
                 throw new UserNotFoundException();
             });
+
+            matchService.updateMatch(matchId);
+            if (!Objects.equals(match.getStatus(), "upcoming")) {
+                throw new OutgoingMatchBetException();
+            }
 
             for (Bet bet : user1.getBets()) {
                 if (Objects.equals(bet.getMatch().getId(), matchId) && Objects.equals(bet.getUser2().getId(), userId)) {
@@ -129,9 +131,8 @@ public class BetServiceImpl implements BetService {
             bet.setBetChoiceUser2(BetType.values()[betType]);
 
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime matchFinish = bet.getMatch().getStartTime().plusHours(2);
-            if (now.isAfter(matchFinish)) {
-                bet.setStatus("history");
+            if (now.isAfter(bet.getMatch().getStartTime())) {
+                throw new AcceptBetAfterMatchStartsException();
             } else {
                 bet.setStatus("current");
             }

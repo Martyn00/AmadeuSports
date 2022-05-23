@@ -1,5 +1,6 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.MatchDto;
 import com.example.back.controllers.dto.TeamDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.MatchEntity;
@@ -8,14 +9,15 @@ import com.example.back.models.entities.User;
 import com.example.back.repositories.TeamRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -24,19 +26,31 @@ public class TeamServiceImpl implements TeamService {
 
     private final TeamRepo teamRepo;
     private final UserRepo userRepo;
+    private final MatchService matchService;
 
     @Override
-    public List<MatchEntity> getMatchesHistory(Long id) {
-        if (teamRepo.findById(id).isPresent()) {
-            return new ArrayList<>(teamRepo.findById(id).get().getMatches());
+    public List<MatchDto> getMatchesHistory(Long id) {
+        Team team = teamRepo.findById(id).orElseThrow(() -> {
+            throw new TeamNotFoundException();
+        });
+
+        matchService.updateListOfMatches(team.getMatches());
+        ArrayList<MatchDto> result = new ArrayList<>();
+        for (MatchEntity match : team.getMatches()) {
+            if (Objects.equals(match.getResult(), "finished")) {
+                matchService.updateMatch(match.getId());
+                result.add(matchService.mapToMatchDto(match));
+            }
         }
-        return null;
+
+        matchService.sortDescendingByDate(result);
+        return result;
     }
 
     @Override
     public ResponseEntity<String> addTeamToFavorites(Long teamId) {
         Team team = teamRepo.findById(teamId).orElseThrow(() -> {
-            throw new MatchNotFoundException();
+            throw new TeamNotFoundException();
         });
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

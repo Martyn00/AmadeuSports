@@ -1,5 +1,6 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.BetDto;
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.handlers.*;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,11 +106,13 @@ public class LeagueServiceImpl implements LeagueService {
 
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
-            if (match.isUpcoming()) {
+            if (!Objects.equals(match.getStatus(), "finished")) {
+                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
 
+        matchService.sortAscendingByDate(result);
         return result;
     }
 
@@ -118,11 +123,13 @@ public class LeagueServiceImpl implements LeagueService {
 
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
-            if (!match.isUpcoming()) {
+            if (Objects.equals(match.getStatus(), "finished")) {
+                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
 
+        matchService.sortDescendingByDate(result);
         return result;
     }
 }

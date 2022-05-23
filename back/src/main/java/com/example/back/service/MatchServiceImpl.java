@@ -40,6 +40,7 @@ public class MatchServiceImpl implements MatchService {
                 throw new UserNotFoundException();
             });
 
+            updateListOfMatches(user.getFavoriteMatches());
             return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
         }
         throw new NotLoggedInException();
@@ -50,7 +51,7 @@ public class MatchServiceImpl implements MatchService {
 
         LocalDateTime dateTime = LocalDateTime.now().plusDays(numberOfDays);
 
-        List<MatchEntity> matches = new LinkedList<>();
+        Set<MatchEntity> matches = new HashSet<>();
         for (MatchEntity match : matchRepo.findAll()) {
             if (match.getStartTime().getYear() == dateTime.getYear() &&
                     match.getStartTime().getMonth() == dateTime.getMonth() &&
@@ -59,12 +60,13 @@ public class MatchServiceImpl implements MatchService {
             }
         }
 
+        updateListOfMatches(matches);
         return matches.stream()
                 .map(this::mapToMatchDto).collect(Collectors.toList());
     }
 
     private String getWinner(MatchEntity match) {
-        if (!match.isUpcoming()) {
+        if (Objects.equals(match.getStatus(), "finished")) {
             String[] arrOfGoals = match.getResult().split("-");
             if (Integer.parseInt(arrOfGoals[0]) > Integer.parseInt(arrOfGoals[1])) {
                 return match.getTeam1().getName();
@@ -162,9 +164,17 @@ public class MatchServiceImpl implements MatchService {
                 });
             }
 
-            boolean isUpcoming = startDate.isAfter(LocalDateTime.now());
+            LocalDateTime now = LocalDateTime.now();
+            String status;
+            if (startDate.plusMinutes(90).isBefore(now)) {
+                status = "finished";
+            } else if (startDate.isBefore(now)) {
+                status = "going";
+            } else {
+                status = "upcoming";
+            }
 
-            MatchEntity match = new MatchEntity(team1, team2, league, null, isUpcoming, result, startDate, null);
+            MatchEntity match = new MatchEntity(team1, team2, league, null, status, result, startDate, null);
             matchRepo.save(match);
 
             return ResponseEntity.ok("A new match has been added!");
@@ -198,6 +208,7 @@ public class MatchServiceImpl implements MatchService {
             }
 
             MatchEvent event = new MatchEvent(goal, min);
+            event.setUpdated(false);
             matchEventRepo.save(event);
             match.getEvents().add(event);
             matchRepo.save(match);
@@ -226,9 +237,10 @@ public class MatchServiceImpl implements MatchService {
 
             LocalDateTime now = LocalDateTime.now();
             if (match.getStartTime().isBefore(now)) {
-                if (match.getResult() == null) {
+                if (Objects.equals(match.getResult(), "-")) {
                     match.setResult("0-0");
                 }
+
                 List<String> goalsStr = new ArrayList<>(Arrays.asList(match.getResult().split("-")));
                 List<Integer> goals = new ArrayList<>();
                 goals.add(Integer.parseInt(goalsStr.get(0)));
@@ -236,21 +248,32 @@ public class MatchServiceImpl implements MatchService {
 
                 int minutesPlayed = now.getMinute() - match.getStartTime().getMinute();
                 for (MatchEvent event : match.getEvents()) {
-                    if (minutesPlayed > event.getMin()) {
+                    if (minutesPlayed > event.getMin() && !event.isUpdated()) {
                         goals.set(event.getGoal(), goals.get(event.getGoal()) + 1);
+                        event.setUpdated(true);
+                        matchEventRepo.save(event);
                     }
                 }
 
-                match.setUpcoming(false);
+                if (match.getStartTime().plusMinutes(90).isAfter(now)) {
+                    match.setStatus("going");
+                } else {
+                    match.setStatus("finished");
+                }
                 match.setResult(goals.get(0) + "-" + goals.get(1));
                 matchRepo.save(match);
             }
 
             return mapToMatchDto(match);
-
         }
 
         throw new NotLoggedInException();
+    }
+
+    public void updateListOfMatches(Set<MatchEntity> matches) {
+        for (MatchEntity match : matches) {
+            updateMatch(match.getId());
+        }
     }
 
 
@@ -299,4 +322,11 @@ public class MatchServiceImpl implements MatchService {
             return null;
         }
     }
+    public void sortAscendingByDate(ArrayList<MatchDto> result) {
+        result.sort(Comparator.comparing(MatchDto::getTime));
+    }
+    public void sortDescendingByDate(ArrayList<MatchDto> result) {
+        result.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
+    }
+
 }

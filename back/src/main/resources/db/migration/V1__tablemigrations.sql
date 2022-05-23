@@ -3,9 +3,9 @@ create table confirmation_token (id bigint not null auto_increment, confirmed_at
 create table league (id bigint not null auto_increment, country varchar(255), name varchar(255), sport_id bigint, primary key (id)) engine=MyISAM;
 create table league_matches (league_id bigint not null, matches_id bigint not null, primary key (league_id, matches_id)) engine=MyISAM;
 create table league_teams (league_id bigint not null, teams_id bigint not null, primary key (league_id, teams_id)) engine=MyISAM;
-create table match_entity (id bigint not null auto_increment, data varchar(255), is_upcoming bit not null, result varchar(255), start_time datetime, league_id bigint, team1_id bigint, team2_id bigint, primary key (id)) engine=MyISAM;
+create table match_entity (id bigint not null auto_increment, data varchar(255), status varchar(255), result varchar(255), start_time datetime, league_id bigint, team1_id bigint, team2_id bigint, primary key (id)) engine=MyISAM;
 create table match_entity_events (match_entity_id bigint not null, events_id bigint not null, primary key (match_entity_id, events_id)) engine=MyISAM;
-create table match_event (id bigint not null auto_increment, goal integer not null, min integer not null, primary key (id)) engine=MyISAM;
+create table match_event (id bigint not null auto_increment, goal integer not null, min integer not null, is_updated bit, primary key (id)) engine=MyISAM;
 create table sport (id bigint not null auto_increment, name varchar(255), primary key (id)) engine=MyISAM;
 create table sport_leagues (sport_id bigint not null, leagues_id bigint not null, primary key (sport_id, leagues_id)) engine=MyISAM;
 create table team (id bigint not null auto_increment, country varchar(255), name varchar(255), home_league_id bigint, primary key (id)) engine=MyISAM;
