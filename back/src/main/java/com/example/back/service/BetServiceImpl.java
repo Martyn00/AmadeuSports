@@ -3,6 +3,7 @@ package com.example.back.service;
 import com.example.back.controllers.dto.BetDto;
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.TeamDto;
+import com.example.back.controllers.dto.UserBetChoiceDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
 import com.example.back.repositories.BetRepo;
@@ -200,12 +201,15 @@ public class BetServiceImpl implements BetService {
                     isFavorite = user.getFavoriteLeagues().contains(match.getLeague());
                     LeagueDto leagueDto = new LeagueDto(match.getLeague().getName(), match.getLeague().getId(), isFavorite);
 
+                    UserBetChoiceDto userBetChoiceDto = new UserBetChoiceDto(bet.getUser1().getId(), bet.getUser2().getId(),
+                                                            bet.getBetChoiceUser1().ordinal(), bet.getBetChoiceUser2().ordinal());
+
                     if (Objects.equals(status, "pending") && Objects.equals(user.getId(), bet.getUser1().getId())) {
                         result.add(new BetDto(bet.getId(), match.getStartTime().toString(), team1, team2, match.getResult(),
-                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), "toBeAccepted", bet.getResult()));
+                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), "toBeAccepted", bet.getResult(), userBetChoiceDto));
                     } else {
                         result.add(new BetDto(bet.getId(), match.getStartTime().toString(), team1, team2, match.getResult(),
-                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), bet.getStatus(), bet.getResult()));
+                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), bet.getStatus(), bet.getResult(), userBetChoiceDto));
                     }
                 }
             }
