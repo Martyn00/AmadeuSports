@@ -146,8 +146,7 @@ public class MatchServiceImpl implements MatchService {
         matchDto.setIsFavorite(isMatchFavorite);
         matchDto.setSport("football");
         matchDto.setWinner(getWinner(matchEntity));
-
-        matchDto.setTime(matchEntity.getStartTime().getHour() + ":" + matchEntity.getStartTime().getMinute());
+        matchDto.setTime(matchEntity.getStartTime().toString());
         return matchDto;
     }
 

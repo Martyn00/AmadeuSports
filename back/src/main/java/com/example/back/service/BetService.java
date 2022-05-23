@@ -11,4 +11,5 @@ public interface BetService {
     ArrayList<BetDto> getCurrentBets();
     ResponseEntity<String> addBet(Long matchId, Long userId, int betType, int amount);
     ResponseEntity<String> acceptBet(Long betId, int betType);
+    ResponseEntity<String> cancelBet(Long betId);
 }

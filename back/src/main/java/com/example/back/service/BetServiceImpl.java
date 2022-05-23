@@ -3,6 +3,7 @@ package com.example.back.service;
 import com.example.back.controllers.dto.BetDto;
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.TeamDto;
+import com.example.back.controllers.dto.UserBetChoiceDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
 import com.example.back.repositories.BetRepo;
@@ -146,6 +147,41 @@ public class BetServiceImpl implements BetService {
         throw new NotLoggedInException();
     }
 
+    public ResponseEntity<String> cancelBet(Long betId) {
+        Bet bet = betRepo.findById(betId).orElseThrow(() -> {
+            throw new BetNotFoundException();
+        });
+
+        if (!(Objects.equals(bet.getStatus(), "pending"))) {
+            throw new CancelNonPendingBetException();
+        }
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof User) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (user == bet.getUser1()) {
+                user.setWallet(user.getWallet() + bet.getAmount());
+            } else if (user != bet.getUser2()) {
+                throw new NotUsersBetException();
+            }
+
+
+            bet.getUser1().getBets().remove(bet);
+            bet.getUser2().getBets().remove(bet);
+            betRepo.delete(bet);
+            userRepo.save(bet.getUser1());
+            userRepo.save(bet.getUser2());
+
+            return ResponseEntity.ok("You canceled this bet.");
+        }
+        throw new NotLoggedInException();
+    }
+
     private ArrayList<BetDto> getBetsByStatus(String status) {
         ArrayList<BetDto> result = new ArrayList<>();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -165,12 +201,15 @@ public class BetServiceImpl implements BetService {
                     isFavorite = user.getFavoriteLeagues().contains(match.getLeague());
                     LeagueDto leagueDto = new LeagueDto(match.getLeague().getName(), match.getLeague().getId(), isFavorite);
 
+                    UserBetChoiceDto userBetChoiceDto = new UserBetChoiceDto(bet.getUser1().getId(), bet.getUser2().getId(),
+                                                            bet.getBetChoiceUser1().ordinal(), bet.getBetChoiceUser2().ordinal());
+
                     if (Objects.equals(status, "pending") && Objects.equals(user.getId(), bet.getUser1().getId())) {
                         result.add(new BetDto(bet.getId(), match.getStartTime().toString(), team1, team2, match.getResult(),
-                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), "toBeAccepted", bet.getResult()));
+                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), "toBeAccepted", bet.getResult(), userBetChoiceDto));
                     } else {
                         result.add(new BetDto(bet.getId(), match.getStartTime().toString(), team1, team2, match.getResult(),
-                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), bet.getStatus(), bet.getResult()));
+                                match.getLeague().getSport().getName(), leagueDto, bet.getAmount(), bet.getStatus(), bet.getResult(), userBetChoiceDto));
                     }
                 }
             }
