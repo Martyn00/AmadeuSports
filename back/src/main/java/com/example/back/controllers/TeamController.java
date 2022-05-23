@@ -1,5 +1,6 @@
 package com.example.back.controllers;
 
+import com.example.back.controllers.dto.TeamDto;
 import com.example.back.models.entities.MatchEntity;
 import com.example.back.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,10 @@ public class TeamController {
     @PostMapping(path = "/{teamId}/favorites-remove")
     public ResponseEntity<String> removeTeamFromFavorites(@PathVariable Long teamId) {
         return teamService.removeTeamFromFavorites(teamId);
+    }
+
+    @GetMapping(path = "{teamName}/getTeamByName")
+    public ResponseEntity<TeamDto> getTeamByName(@PathVariable String teamName) {
+        return teamService.getTeamByName(teamName);
     }
 }
