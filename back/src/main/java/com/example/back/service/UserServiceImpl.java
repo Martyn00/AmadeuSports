@@ -131,12 +131,54 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> addFriendByUserName(String userName) {
-        return null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Long me_id = ((User)principal).getId();
+            User me = userRepo.findById(me_id).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if(!Objects.equals(me.getUsername(), userName)) {
+
+                User friend = userRepo.findByUsername(userName).orElseThrow(() -> {
+                    throw new UserNotFoundException();
+                });
+
+                if (me.getFriends().contains(friend)) {
+                    throw new YouAreAlreadyFriendsException();
+                }
+
+                me.getFriends().add(friend);
+                userRepo.save(me);
+                return ResponseEntity.ok("You are now friends!");
+            }
+            throw new FriendWithYourselfException();
+        }
+        throw new NotLoggedInException();
     }
 
     @Override
     public ResponseEntity<String> removeFriendByUserName(String userName) {
-        return null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            Long me_id = ((User)principal).getId();
+
+            User me = userRepo.findById(me_id).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+            User friend = userRepo.findByUsername(userName).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (me.getFriends().contains(friend)) {
+                me.getFriends().remove(friend);
+                userRepo.save(me);
+                return ResponseEntity.ok("User " + friend.getUsername() + " removed from friends!");
+            }
+
+            throw new NotFriendsException();
+        }
+        throw new NotLoggedInException();
     }
 
     @Override
@@ -155,10 +197,5 @@ public class UserServiceImpl implements UserService {
             return result;
         }
         throw new NotLoggedInException();
-    }
-
-    @Override
-    public List<BetDto> getBetsByUserId(Long id) {
-        return null;
     }
 }

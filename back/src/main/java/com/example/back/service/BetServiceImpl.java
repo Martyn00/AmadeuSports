@@ -146,6 +146,41 @@ public class BetServiceImpl implements BetService {
         throw new NotLoggedInException();
     }
 
+    public ResponseEntity<String> cancelBet(Long betId) {
+        Bet bet = betRepo.findById(betId).orElseThrow(() -> {
+            throw new BetNotFoundException();
+        });
+
+        if (!(Objects.equals(bet.getStatus(), "pending"))) {
+            throw new CancelNonPendingBetException();
+        }
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof User) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (user == bet.getUser1()) {
+                user.setWallet(user.getWallet() + bet.getAmount());
+            } else if (user != bet.getUser2()) {
+                throw new NotUsersBetException();
+            }
+
+
+            bet.getUser1().getBets().remove(bet);
+            bet.getUser2().getBets().remove(bet);
+            betRepo.delete(bet);
+            userRepo.save(bet.getUser1());
+            userRepo.save(bet.getUser2());
+
+            return ResponseEntity.ok("You canceled this bet.");
+        }
+        throw new NotLoggedInException();
+    }
+
     private ArrayList<BetDto> getBetsByStatus(String status) {
         ArrayList<BetDto> result = new ArrayList<>();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

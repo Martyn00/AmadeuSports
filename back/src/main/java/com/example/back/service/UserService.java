@@ -32,6 +32,4 @@ public interface UserService {
     ResponseEntity<String> removeFriendByUserName(String userName);
 
     ArrayList<UserDto> getAllFriends();
-
-    List<BetDto> getBetsByUserId(Long id);
 }
