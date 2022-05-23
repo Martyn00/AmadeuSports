@@ -55,14 +55,14 @@ public class UserController {
         return userService.removeFriend(userId);
     }
 
-    @PostMapping(path = "/{userName}/add-friend-by-username")
-    public ResponseEntity<String> addFriendbyUserName(@PathVariable String userName) {
-        return userService.addFriendByUserName(userName);
-    }
-
-    @PostMapping(path = "/{userName}/remove-friend-by-username")
-    public ResponseEntity<String> removeFriendByUserName(@PathVariable String userName) {
-        return userService.removeFriendByUserName(userName);
-    }
+//    @PostMapping(path = "/{userName}/add-friend-by-username")
+//    public ResponseEntity<String> addFriendbyUserName(@PathVariable String userName) {
+//        return userService.addFriendByUserName(userName);
+//    }
+//
+//    @PostMapping(path = "/{userName}/remove-friend-by-username")
+//    public ResponseEntity<String> removeFriendByUserName(@PathVariable String userName) {
+//        return userService.removeFriendByUserName(userName);
+//    }
 
 }
