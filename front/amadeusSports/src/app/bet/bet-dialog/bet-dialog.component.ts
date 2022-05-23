@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserDto } from 'src/app/dto/UserDto';
 import { FriendService } from 'src/app/service/friend.service';
@@ -15,6 +16,7 @@ export class BetDialogComponent implements OnInit {
   checkBoxesDisabled!: boolean[];
   checkedBoxes!: boolean[];
   friends!: UserDto[];
+  form = new FormControl();
   constructor(
     public dialogRef: MatDialogRef<BetDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public mydata: any,

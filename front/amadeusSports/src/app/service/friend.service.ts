@@ -29,13 +29,16 @@ export class FriendService {
     });
   }
   addFriend(username: string) {
+    console.log("aici" + username);
     let url = URL + '/user/' + username + '/add-friend-by-username'
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
     });
+    this.populateFriendsTable();
   }
   deleteFriend(username: string) {
     let url = URL + '/user/' + username + '/remove-friend-by-username'
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
     });
+    this.populateFriendsTable();
   }
 }

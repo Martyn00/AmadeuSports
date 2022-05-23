@@ -12,8 +12,8 @@ import { UserService } from '../service/user.service';
 })
 export class FriendsComponent implements OnInit {
   myControl = new FormControl();
-  options!: UserDto[];
-  filteredOptions!: Observable<UserDto[]>;
+  options: string[] = [];
+  filteredOptions!: Observable<string[]>;
   displayedColumns = ['username', 'friend'];
   dataSource!: UserDto[];
   constructor(private friendService: FriendService, private userService: UserService) {
@@ -24,31 +24,25 @@ export class FriendsComponent implements OnInit {
       .subscribe((data) => { this.dataSource = data; });
     this.friendService.populateFriendsTable();
     this.getUsers();
-
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      map(value => (typeof value === 'string' ? value : value.user)),
-      map(name => (name ? this._filter(name) : this.options.slice())),
+      map(value => this._filter(value)),
     );
   }
 
-  displayFn(user: UserDto): string {
-    return user && user.username ? user.username : '';
+  private _filter(value: string): string[] {
+    const filterValue = this._normalizeValue(value);
+    return this.options.filter(option => this._normalizeValue(option).includes(filterValue));
   }
 
-  private _filter(name: string): UserDto[] {
-    const filterValue = name.toLowerCase();
-
-    let users = this.options.filter(option => option.username.toLowerCase().includes(filterValue));
-    // let slicedUsers = users.slice(0, 3);
-    return users;
+  private _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
   }
 
   getUsers() {
     this.userService.getUsers().subscribe((data) => {
-      this.options = data;
+      this.options = data.map(user => user.username);
     });
-    // this.options.forEach((elem) => console.log(elem));
   }
   submitData() {
     this.friendService.addFriend(this.myControl.value);

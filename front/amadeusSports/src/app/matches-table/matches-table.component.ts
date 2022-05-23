@@ -1,5 +1,7 @@
+import { formatDate } from '@angular/common';
 import { Component, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BetDialogComponent } from '../bet/bet-dialog/bet-dialog.component';
 import { MatchDto } from '../dto/MatchDto';
 import { LeaguesService } from '../service/leagues.service';
@@ -21,7 +23,7 @@ export class MatchesTableComponent implements OnInit {
   dialogRef!: TemplateRef<any>;
   myFooList = ['Some Item', 'Item Second', 'Other In Row', 'What to write', 'Blah To Do']
 
-  constructor(private matchTableService: MatchTableLoaderService, private teamService: TeamsService, private leagueService: LeaguesService, public dialog: MatDialog ) {
+  constructor(private matchTableService: MatchTableLoaderService, private teamService: TeamsService, private leagueService: LeaguesService, public dialog: MatDialog, private _snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -52,7 +54,14 @@ export class MatchesTableComponent implements OnInit {
     updatedELement.team2.isFavorite != element.team2.isFavorite;
   }
   clickedBet(element: MatchDto) {
-    console.log(element.time);
+
+    let matchDate = formatDate(element.time, 'yyyy-MM-ddThh:mm;ss', 'en_US');
+    let now = formatDate(new Date(), 'yyyy-MM-ddThh:mm;ss', 'en_US');
+    if (matchDate < now) {
+      this._snackBar.open("You cannot bet on this match!", "Dismiss");
+      return;
+    }
+
     const myTempDialog = this.dialog.open(BetDialogComponent, { data: element.id });
     myTempDialog.afterClosed().subscribe((res) => {
 

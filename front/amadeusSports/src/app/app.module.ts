@@ -116,7 +116,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSnackBarModule,
     MatExpansionModule,
     MatDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
   ],
   providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, FriendService, {
     provide: HTTP_INTERCEPTORS,
