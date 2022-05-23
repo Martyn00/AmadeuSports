@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -212,6 +209,52 @@ public class MatchServiceImpl implements MatchService {
 
         throw new NotLoggedInException();
     }
+    public MatchDto updateMatch(Long matchId) {
+        MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
+            throw new MatchNotFoundException();
+        });
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+
+            if (user.getRole() != Role.ADMIN) {
+                throw new AdminPrivilegiesException();
+            }
+
+            LocalDateTime now = LocalDateTime.now();
+            if (match.getStartTime().isBefore(now)) {
+                if (match.getResult() == null) {
+                    match.setResult("0-0");
+                }
+                List<String> goalsStr = new ArrayList<>(Arrays.asList(match.getResult().split("-")));
+                List<Integer> goals = new ArrayList<>();
+                goals.add(Integer.parseInt(goalsStr.get(0)));
+                goals.add(Integer.parseInt(goalsStr.get(1)));
+
+                int minutesPlayed = now.getMinute() - match.getStartTime().getMinute();
+                for (MatchEvent event : match.getEvents()) {
+                    if (minutesPlayed > event.getMin()) {
+                        goals.set(event.getGoal(), goals.get(event.getGoal()) + 1);
+                    }
+                }
+
+                match.setUpcoming(false);
+                match.setResult(goals.get(0) + "-" + goals.get(1));
+                matchRepo.save(match);
+            }
+
+            return mapToMatchDto(match);
+
+        }
+
+        throw new NotLoggedInException();
+    }
+
 
     public MatchDto mapToMatchDto(MatchEntity matchEntity) {
         MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);

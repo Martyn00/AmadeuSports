@@ -47,4 +47,9 @@ public class MatchController {
         return matchService.addEvent(matchId, goal, min);
     }
 
+    @GetMapping(path = "/update-match/{matchId}")
+    public MatchDto updateMatch(@PathVariable Long matchId) {
+        return matchService.updateMatch(matchId);
+    }
+
 }

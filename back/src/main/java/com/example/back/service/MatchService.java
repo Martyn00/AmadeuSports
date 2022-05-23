@@ -20,4 +20,5 @@ public interface MatchService {
     ResponseEntity<String> addMatch(String team1Name, String team2Name,
                                     String startTime, String result);
     ResponseEntity<String> addEvent(Long matchId, int goal, int min);
+    MatchDto updateMatch(Long matchId);
 }
