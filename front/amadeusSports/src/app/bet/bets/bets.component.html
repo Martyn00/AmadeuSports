@@ -1,11 +1,11 @@
-<mat-tab-group>
-    <mat-tab (click)="changeState('/bets/bet-history')" label="History">
+<mat-tab-group (selectedIndexChange)="tabChange($event)">
+    <mat-tab  label="History">
         <app-bet-history-table></app-bet-history-table>
     </mat-tab>
-    <mat-tab (click)="changeState('/bets/current-bets')" label="Current Bets">
+    <mat-tab label="Current Bets">
         <app-bet-table></app-bet-table>
     </mat-tab>
-    <mat-tab (click)="changeState('/bets/upcoming-bets')" label="Pending Bets">
+    <mat-tab label="Pending Bets">
         <app-upcoming-bet-table></app-upcoming-bet-table>
     </mat-tab>
 </mat-tab-group>

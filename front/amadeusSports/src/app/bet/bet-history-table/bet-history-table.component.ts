@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { BetDto } from 'src/app/dto/BetDto';
+import { BetService } from 'src/app/service/bet.service';
 
 @Component({
   selector: 'app-bet-history-table',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BetHistoryTableComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private betService: BetService) { }
+  dataSource!: BetDto[];
+  displayedColumns: string[] = ['time', 'team1', 'team2', 'result', 'league', 'status', 'coins'];
   ngOnInit(): void {
+    this.betService.betsHistoryLoaded.subscribe(data => {
+      this.dataSource = data;
+      console.log(this.dataSource);
+    })
   }
 
+  favoritesTeam1(element: BetDto) {
+
+  }
+
+  favoritesTeam2(element: BetDto) {
+
+  }
+  favoritesLeague(element: BetDto) {
+
+  }
 }
