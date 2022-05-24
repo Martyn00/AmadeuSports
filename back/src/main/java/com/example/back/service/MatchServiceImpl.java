@@ -1,5 +1,6 @@
 package com.example.back.service;
 
+import com.example.back.controllers.dto.AddMatchDto;
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.handlers.*;
@@ -13,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,19 +31,14 @@ public class MatchServiceImpl implements MatchService {
     private final TeamRepo teamRepo;
     private final LeagueRepo leagueRepo;
     private final MatchEventRepo matchEventRepo;
+    private final UserService userService;
 
     public List<MatchDto> getFavoriteMatches() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof User) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
+        User user = userService.getCurrentUserInstance();
 
-            updateListOfMatches(user.getFavoriteMatches());
-            return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
-        }
-        throw new NotLoggedInException();
+        updateListOfMatches(user.getFavoriteMatches());
+
+        return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
     }
 
     @Override
@@ -87,24 +82,15 @@ public class MatchServiceImpl implements MatchService {
             throw new MatchNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if(user.getFavoriteMatches().contains(match)) {
-                throw new MatchAlreadyExistsInFavoritesException();
-            }
-
-            user.getFavoriteMatches().add(match);
-            userRepo.save(user);
-            return ResponseEntity.ok("Match has been added to favorites!");
-
+        if(user.getFavoriteMatches().contains(match)) {
+            throw new MatchAlreadyExistsInFavoritesException();
         }
-        throw new NotLoggedInException();
+
+        user.getFavoriteMatches().add(match);
+        userRepo.save(user);
+        return ResponseEntity.ok("Match has been added to favorites!");
     }
 
     @Override
@@ -113,74 +99,57 @@ public class MatchServiceImpl implements MatchService {
             throw new LeagueNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if(user.getFavoriteMatches().contains(match)) {
-                user.getFavoriteMatches().remove(match);
-                userRepo.save(user);
-                return ResponseEntity.ok("Match removed from favorites!");
-            }
-
-            throw new MatchNotInFavoritesException();
+        if(user.getFavoriteMatches().contains(match)) {
+            user.getFavoriteMatches().remove(match);
+            userRepo.save(user);
+            return ResponseEntity.ok("Match removed from favorites!");
         }
-        throw new NotLoggedInException();
+
+        throw new MatchNotInFavoritesException();
     }
 
-    public ResponseEntity<String> addMatch(String team1Name, String team2Name, String startTime, String result) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<String> addMatch(AddMatchDto addMatchDto) {
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if (user.getRole() != Role.ADMIN) {
-                throw new AdminPrivilegiesException();
-            }
-
-            Team team1 = teamRepo.findByName(team1Name).orElseThrow(() -> {
-                throw new TeamNotFoundException();
-            });
-            Team team2 = teamRepo.findByName(team2Name).orElseThrow(() -> {
-                throw new TeamNotFoundException();
-            });
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime startDate = LocalDateTime.parse(startTime, formatter);
-
-            League league;
-            if (team1.getHomeLeague() == team2.getHomeLeague()) {
-                league = team1.getHomeLeague();
-            } else {
-                league = leagueRepo.findByName("Liga Campionilor").orElseThrow(() -> {
-                    throw new LeagueNotFoundException();
-                });
-            }
-
-            LocalDateTime now = LocalDateTime.now();
-            String status;
-            if (startDate.plusMinutes(90).isBefore(now)) {
-                status = "finished";
-            } else if (startDate.isBefore(now)) {
-                status = "going";
-            } else {
-                status = "upcoming";
-            }
-
-            MatchEntity match = new MatchEntity(team1, team2, league, null, status, result, startDate, null);
-            matchRepo.save(match);
-
-            return ResponseEntity.ok("A new match has been added!");
-
+        if (user.getRole() != Role.ADMIN) {
+            throw new AdminPrivilegiesException();
         }
-        throw new NotLoggedInException();
+
+        Team team1 = teamRepo.findByName(addMatchDto.getTeam1Name()).orElseThrow(() -> {
+            throw new TeamNotFoundException();
+        });
+        Team team2 = teamRepo.findByName(addMatchDto.getTeam2Name()).orElseThrow(() -> {
+            throw new TeamNotFoundException();
+        });
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime startDate = LocalDateTime.parse(addMatchDto.getStartTime(), formatter);
+
+        League league;
+        if (team1.getHomeLeague() == team2.getHomeLeague()) {
+            league = team1.getHomeLeague();
+        } else {
+            league = leagueRepo.findByName("Liga Campionilor").orElseThrow(() -> {
+                throw new LeagueNotFoundException();
+            });
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        String status;
+        if (startDate.plusMinutes(90).isBefore(now)) {
+            status = "finished";
+        } else if (startDate.isBefore(now)) {
+            status = "going";
+        } else {
+            status = "upcoming";
+        }
+
+        MatchEntity match = new MatchEntity(team1, team2, league, null, status, addMatchDto.getScore(), startDate, null);
+        matchRepo.save(match);
+
+        return ResponseEntity.ok("A new match has been added!");
     }
 
     public ResponseEntity<String> addEvent(Long matchId, int goal, int min) {
@@ -188,86 +157,63 @@ public class MatchServiceImpl implements MatchService {
             throw new MatchNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if (user.getRole() != Role.ADMIN) {
-                throw new AdminPrivilegiesException();
-            }
-
-            if (min < 0 || min > 90) {
-                throw new WrongNumOfMinException();
-            }
-            if (goal != 0 && goal != 1) {
-                throw new GoalException();
-            }
-
-            MatchEvent event = new MatchEvent(goal, min);
-            event.setUpdated(false);
-            matchEventRepo.save(event);
-            match.getEvents().add(event);
-            matchRepo.save(match);
-
-            return ResponseEntity.ok("A new event has been added for this match!");
+        if (user.getRole() != Role.ADMIN) {
+            throw new AdminPrivilegiesException();
         }
 
-        throw new NotLoggedInException();
+        if (min < 0 || min > 90) {
+            throw new WrongNumOfMinException();
+        }
+        if (goal != 0 && goal != 1) {
+            throw new GoalException();
+        }
+
+        MatchEvent event = new MatchEvent(goal, min);
+        event.setUpdated(false);
+        matchEventRepo.save(event);
+        match.getEvents().add(event);
+        matchRepo.save(match);
+
+        return ResponseEntity.ok("A new event has been added for this match!");
     }
+
     public MatchDto updateMatch(Long matchId) {
         MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if (user.getRole() != Role.ADMIN) {
-                throw new AdminPrivilegiesException();
+        LocalDateTime now = LocalDateTime.now();
+        if (match.getStartTime().isBefore(now)) {
+            if (Objects.equals(match.getResult(), "-")) {
+                match.setResult("0-0");
             }
 
-            LocalDateTime now = LocalDateTime.now();
-            if (match.getStartTime().isBefore(now)) {
-                if (Objects.equals(match.getResult(), "-")) {
-                    match.setResult("0-0");
-                }
+            List<String> goalsStr = new ArrayList<>(Arrays.asList(match.getResult().split("-")));
+            List<Integer> goals = new ArrayList<>();
+            goals.add(Integer.parseInt(goalsStr.get(0)));
+            goals.add(Integer.parseInt(goalsStr.get(1)));
 
-                List<String> goalsStr = new ArrayList<>(Arrays.asList(match.getResult().split("-")));
-                List<Integer> goals = new ArrayList<>();
-                goals.add(Integer.parseInt(goalsStr.get(0)));
-                goals.add(Integer.parseInt(goalsStr.get(1)));
-
-                int minutesPlayed = now.getMinute() - match.getStartTime().getMinute();
-                for (MatchEvent event : match.getEvents()) {
-                    if (minutesPlayed > event.getMin() && !event.isUpdated()) {
-                        goals.set(event.getGoal(), goals.get(event.getGoal()) + 1);
-                        event.setUpdated(true);
-                        matchEventRepo.save(event);
-                    }
+            int minutesPlayed = now.getMinute() - match.getStartTime().getMinute();
+            for (MatchEvent event : match.getEvents()) {
+                if (minutesPlayed > event.getMin() && !event.isUpdated()) {
+                    goals.set(event.getGoal(), goals.get(event.getGoal()) + 1);
+                    event.setUpdated(true);
+                    matchEventRepo.save(event);
                 }
-
-                if (match.getStartTime().plusMinutes(90).isAfter(now)) {
-                    match.setStatus("going");
-                } else {
-                    match.setStatus("finished");
-                }
-                match.setResult(goals.get(0) + "-" + goals.get(1));
-                matchRepo.save(match);
             }
 
-            return mapToMatchDto(match);
+            if (match.getStartTime().plusMinutes(90).isAfter(now)) {
+                match.setStatus("going");
+            } else {
+                match.setStatus("finished");
+            }
+            match.setResult(goals.get(0) + "-" + goals.get(1));
+            matchRepo.save(match);
         }
 
-        throw new NotLoggedInException();
+        return mapToMatchDto(match);
     }
 
     public void updateListOfMatches(Set<MatchEntity> matches) {

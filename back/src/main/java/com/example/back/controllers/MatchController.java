@@ -1,5 +1,6 @@
 package com.example.back.controllers;
 
+import com.example.back.controllers.dto.AddMatchDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.service.MatchService;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,9 @@ public class MatchController {
         return matchService.getFavoriteMatches();
     }
 
-    @PostMapping(path = "/add-match/{team1Name}/{team2Name}/{startTime}/{result}")
-    public ResponseEntity<String> addMatch(@PathVariable String team1Name, @PathVariable String team2Name,
-                                           @PathVariable String startTime, @PathVariable String result) {
-        return matchService.addMatch(team1Name, team2Name, startTime, result);
+    @PostMapping(path = "/add-match")
+    public ResponseEntity<String> addMatch(@RequestBody AddMatchDto addMatchDto) {
+        return matchService.addMatch(addMatchDto);
     }
 
     @PostMapping(path = "/add-event/{matchId}/{goal}/{min}")

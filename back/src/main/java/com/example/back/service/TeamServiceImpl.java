@@ -10,12 +10,9 @@ import com.example.back.repositories.TeamRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,6 +24,7 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepo teamRepo;
     private final UserRepo userRepo;
     private final MatchService matchService;
+    private final UserService userService;
 
     @Override
     public List<MatchDto> getMatchesHistory(Long id) {
@@ -53,24 +51,15 @@ public class TeamServiceImpl implements TeamService {
             throw new TeamNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if(user.getFavoriteTeams().contains(team)) {
-                throw new TeamInFavoritesException();
-            }
-
-            user.getFavoriteTeams().add(team);
-            userRepo.save(user);
-            return ResponseEntity.ok("Team " + team.getName() + " has been added to favorites!");
-
+        if(user.getFavoriteTeams().contains(team)) {
+            throw new TeamInFavoritesException();
         }
-        throw new NotLoggedInException();
+
+        user.getFavoriteTeams().add(team);
+        userRepo.save(user);
+        return ResponseEntity.ok("Team " + team.getName() + " has been added to favorites!");
     }
 
     @Override
@@ -79,39 +68,22 @@ public class TeamServiceImpl implements TeamService {
             throw new MatchNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if(user.getFavoriteTeams().contains(team)) {
-                user.getFavoriteTeams().remove(team);
-                userRepo.save(user);
-                return ResponseEntity.ok("Team " + team.getName() + " removed from favorites!");
-            }
-
-            throw new TeamNotInFavoritesException();
+        if(user.getFavoriteTeams().contains(team)) {
+            user.getFavoriteTeams().remove(team);
+            userRepo.save(user);
+            return ResponseEntity.ok("Team " + team.getName() + " removed from favorites!");
         }
-        throw new NotLoggedInException();
+
+        throw new TeamNotInFavoritesException();
     }
 
     @Override
     public List<TeamDto> getFavoriteTeams() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            return user.getFavoriteTeams().stream().map(this::mapTeamTOTeamDtoFavorite).collect(Collectors.toList());
-
-        }
-        throw new NotLoggedInException();
+        return user.getFavoriteTeams().stream().map(this::mapTeamTOTeamDtoFavorite).collect(Collectors.toList());
     }
 
     private TeamDto mapTeamTOTeamDtoFavorite(Team team){
