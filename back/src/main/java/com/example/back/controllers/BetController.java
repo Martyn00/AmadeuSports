@@ -18,7 +18,9 @@ public class BetController {
 
     @GetMapping(path = "/history")
     public ArrayList<BetDto> getBetHistory() {
-        return betService.getBetHistory();
+        var s = betService.getBetHistory();
+        System.out.println(s);
+        return s;
     }
 
     @GetMapping(path = "/pending")

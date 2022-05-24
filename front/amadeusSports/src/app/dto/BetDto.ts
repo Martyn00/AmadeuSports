@@ -1,3 +1,5 @@
+import { UserBetChoiceDto } from "./UserBetChoiceDto";
+
 export class BetDto {
     id!: number;
     time!: string;
@@ -9,8 +11,9 @@ export class BetDto {
     amount!: number;
     status!: string;
     result!: number;
+    betChoice!: UserBetChoiceDto;
     constructor(id: number, time: string, team1: string, team2: string, score: string, sport: string, league: string,
-        amount: number, status: string, result: number) {
+        amount: number, status: string, result: number, betchoice:UserBetChoiceDto) {
         this.time = time;
         this.amount = amount;
         this.league = league;
@@ -20,5 +23,6 @@ export class BetDto {
         this.score = score;
         this.status = status;
         this.result = result;
+        this.betChoice = betchoice;
     }
 }

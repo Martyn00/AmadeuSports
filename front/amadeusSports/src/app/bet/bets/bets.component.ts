@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { even } from '@rxweb/reactive-form-validators';
+import { BetService } from 'src/app/service/bet.service';
 
+const map = new Map<number, string>([
+  [0, "history"],
+  [1, "current"],
+  [2, "pending"]
+]);
 @Component({
   selector: 'app-bets',
   templateUrl: './bets.component.html',
@@ -8,12 +15,12 @@ import { Router } from '@angular/router';
 })
 export class BetsComponent implements OnInit {
 
-  constructor(private route: Router) { }
+  constructor(private betService: BetService) { }
 
   ngOnInit(): void {
   }
-  changeState(event: string) {
-
+  tabChange(index: number) {
+    this.betService.getUserBets(map.get(index)!);
   }
 
 }
