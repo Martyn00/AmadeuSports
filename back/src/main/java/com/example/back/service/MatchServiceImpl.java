@@ -218,7 +218,7 @@ public class MatchServiceImpl implements MatchService {
                 }
             }
 
-            if (match.getStartTime().plusMinutes(footballDuration).isAfter(now)) {
+            if (match.getStartTime().plusMinutes(match.getDuration()).isAfter(now)) {
                 match.setStatus("going");
             } else {
                 match.setStatus("finished");
