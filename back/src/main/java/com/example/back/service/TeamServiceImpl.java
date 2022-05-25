@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -78,6 +79,21 @@ public class TeamServiceImpl implements TeamService {
         }
 
         throw new TeamNotInFavoritesException();
+    }
+
+   @Override
+    public ResponseEntity<TeamDto> getTeamByName(String teamName) {
+        User user = userService.getCurrentUserInstance();
+
+        Team team = teamRepo.findByName(teamName).orElseThrow(() -> {
+            throw new TeamNotFoundException();
+        });
+
+        TeamDto teamDto = new TeamDto(team.getName(),
+                                        team.getId(),
+                                        user.getFavoriteTeams().contains(team));
+
+        return ResponseEntity.ok(teamDto);
     }
 
     @Override

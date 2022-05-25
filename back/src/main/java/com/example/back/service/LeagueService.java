@@ -11,8 +11,12 @@ public interface LeagueService {
     ResponseEntity<String> addLeagueToFavorites(Long leagueId);
 
     ResponseEntity<String> removeLeagueFromFavorites(Long leagueId);
+
     ArrayList<LeagueDto> getFavoriteLeagues();
+
     ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId);
+
     ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId);
 
+    ResponseEntity<LeagueDto> getLeagueByName(String leagueName);
 }
