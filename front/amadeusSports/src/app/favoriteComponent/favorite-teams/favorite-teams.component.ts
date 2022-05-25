@@ -20,7 +20,6 @@ export class FavoriteTeamsComponent implements OnInit {
   }
 
   openGroup(team: TeamDto) {
-
     console.log(team.id);
     this.matchService.populatMatchtableWithFavorites("teams", team.id);
   }
