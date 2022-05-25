@@ -36,6 +36,7 @@ export class UpcomingBetTableComponent implements OnInit {
   favoritesLeague(element: BetDto) {
 
   }
+  
   getUsedBet(element: BetDto) {
     if (this.user.id === element.betChoice.user1Id) {
       return element.betChoice.user1Id
@@ -46,19 +47,17 @@ export class UpcomingBetTableComponent implements OnInit {
     return -1;
   }
   hasLoggedUserBet(element: BetDto) {
-    console.log(element.betChoice.user1Choice);
+    if (this.user.id == element.betChoice.user1Id) {
+      if (element.betChoice.user1Choice === -1) {
+        return false;
+      }
+    }
+    console.log(element.betChoice);
+    if (this.user.id == element.betChoice.user2Id) {
+      if (element.betChoice.user2Choice !== -1) {
+        return false;
+      }
+    }
     return true;
-    // if (this.user.id == element.betChoice.user1Id) {
-    //   if (element.betChoice.user1Choice === -1) {
-    //     return false;
-    //   }
-    // }
-    // console.log(element.betChoice);
-    // if (this.user.id == element.betChoice.user2Id) {
-    //   if (element.betChoice.user2Choice !== -1) {
-    //     return false;
-    //   }
-    // }
-    // return true;
   }
 }
