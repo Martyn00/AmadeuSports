@@ -25,10 +25,10 @@ export class BetService {
   getCoins() {
     this.coinsLoaded.emit(this.coins);
   }
-  bet(result:ResultDto) {
-    this.http.post<any>(URL + '/add-bet/'+ result.userId + '/' + result.choice + '/' +result.coins, httpOptions)
+  bet(result: ResultDto) {
+    this.http.post<any>(URL + '/add-bet/' + result.userId + '/' + result.choice + '/' + result.coins, httpOptions)
   }
-  getUserBets(type:string) {
+  getUserBets(type: string) {
     let url = URL + "/bet/" + type;
 
     this.http.get<BetDto[]>(url).subscribe(response => {
@@ -40,10 +40,9 @@ export class BetService {
       if (type === 'current') {
         this.betsCurrentLoaded.emit(this.sendBets);
       }
-      if (type === 'pending') {
+      if (type === 'history') {
         this.betsPendingLoaded.emit(this.sendBets);
       }
-
     });
   }
 }

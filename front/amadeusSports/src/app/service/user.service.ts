@@ -40,6 +40,9 @@ export class UserService {
         this.loader.changeState("/match-tabs");
     }
     getUsers() {
-        return this.http.get<UserDto[]>(URL + '/user/all')
+        return this.http.get<UserDto[]>(URL + '/user/all');
+    }
+    getLoggedInUser() {
+        return this.http.get<UserDto>(URL + '/user/logged');
     }
 }
