@@ -112,23 +112,15 @@ public class LeagueServiceImpl implements LeagueService {
 
     @Override
     public ResponseEntity<LeagueDto> getLeagueByName(String leagueName) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
+        League league = leagueRepo.findByName(leagueName).orElseThrow(() -> {
+            throw new LeagueNotFoundException();
+        });
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-            League league = leagueRepo.findByName(leagueName).orElseThrow(() -> {
-                throw new LeagueNotFoundException();
-            });
+        LeagueDto leagueDto = new LeagueDto(league.getName(),
+                league.getId(),
+                user.getFavoriteLeagues().contains(league));
 
-            LeagueDto leagueDto = new LeagueDto(league.getName(),
-                    league.getId(),
-                    user.getFavoriteLeagues().contains(league));
-
-            return ResponseEntity.ok(leagueDto);
-        }
-        throw new NotLoggedInException();
+        return ResponseEntity.ok(leagueDto);
     }
 }
