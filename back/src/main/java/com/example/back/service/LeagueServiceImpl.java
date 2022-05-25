@@ -9,18 +9,13 @@ import com.example.back.models.entities.MatchEntity;
 import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.LeagueRepo;
-import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -29,6 +24,7 @@ public class LeagueServiceImpl implements LeagueService {
     private final LeagueRepo leagueRepo;
     private final UserRepo userRepo;
     private final MatchService matchService;
+    private final UserService userService;
 
     @Override
     public ResponseEntity<String> addLeagueToFavorites(Long leagueId) {
@@ -36,24 +32,15 @@ public class LeagueServiceImpl implements LeagueService {
             throw new LeagueNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if(user.getFavoriteLeagues().contains(league)) {
-                throw new LeagueInFavoritesException();
-            }
-
-            user.getFavoriteLeagues().add(league);
-            userRepo.save(user);
-            return ResponseEntity.ok("League " + league.getName() + " has been added to favorites!");
-
+        if(user.getFavoriteLeagues().contains(league)) {
+            throw new LeagueInFavoritesException();
         }
-        throw new NotLoggedInException();
+
+        user.getFavoriteLeagues().add(league);
+        userRepo.save(user);
+        return ResponseEntity.ok("League " + league.getName() + " has been added to favorites!");
     }
 
     @Override
@@ -62,91 +49,78 @@ public class LeagueServiceImpl implements LeagueService {
             throw new LeagueNotFoundException();
         });
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-
-            if(user.getFavoriteLeagues().contains(league)) {
-                user.getFavoriteLeagues().remove(league);
-                userRepo.save(user);
-                return ResponseEntity.ok("League " + league.getName() + " removed from favorites!");
-            }
-
-            throw new LeagueNotInFavoritesException();
+        if(user.getFavoriteLeagues().contains(league)) {
+            user.getFavoriteLeagues().remove(league);
+            userRepo.save(user);
+            return ResponseEntity.ok("League " + league.getName() + " removed from favorites!");
         }
-        throw new NotLoggedInException();
+
+        throw new LeagueNotInFavoritesException();
     }
 
     public ArrayList<LeagueDto> getFavoriteLeagues() {
         ArrayList<LeagueDto> result = new ArrayList<>();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof User) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
 
-            for (League league : user.getFavoriteLeagues()) {
-                result.add(new LeagueDto(league.getName(), league.getId(), true));
-            }
-            return result;
-        }
-        throw new NotLoggedInException();
-    }
+        User user = userService.getCurrentUserInstance();
 
-    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId) {
-        League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
-            throw new LeagueNotFoundException();
-        });
-
-        ArrayList<MatchDto> result = new ArrayList<>();
-        for (MatchEntity match : league.getMatches()) {
-            if (match.isUpcoming()) {
-                result.add(matchService.mapToMatchDto(match));
-            }
+        for (League league : user.getFavoriteLeagues()) {
+            result.add(new LeagueDto(league.getName(), league.getId(), true));
         }
 
         return result;
     }
 
-    public ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId) {
+    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId) {
+        matchService.updateAllMatches();
+
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
             throw new LeagueNotFoundException();
         });
 
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
-            if (!match.isUpcoming()) {
+            if (!Objects.equals(match.getStatus(), "finished")) {
+                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
 
+        matchService.sortAscendingByDate(result);
+        return result;
+    }
+
+    public ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId) {
+        matchService.updateAllMatches();
+
+        League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
+            throw new LeagueNotFoundException();
+        });
+
+        ArrayList<MatchDto> result = new ArrayList<>();
+        for (MatchEntity match : league.getMatches()) {
+            if (Objects.equals(match.getStatus(), "finished")) {
+                matchService.updateMatch(match.getId());
+                result.add(matchService.mapToMatchDto(match));
+            }
+        }
+
+        matchService.sortDescendingByDate(result);
         return result;
     }
 
     @Override
     public ResponseEntity<LeagueDto> getLeagueByName(String leagueName) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getCurrentUserInstance();
+        League league = leagueRepo.findByName(leagueName).orElseThrow(() -> {
+            throw new LeagueNotFoundException();
+        });
 
-        if(principal instanceof UserDetails) {
-            Long userId = ((User) principal).getId();
-            User user = userRepo.findById(userId).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-            League league = leagueRepo.findByName(leagueName).orElseThrow(() -> {
-                throw new LeagueNotFoundException();
-            });
+        LeagueDto leagueDto = new LeagueDto(league.getName(),
+                league.getId(),
+                user.getFavoriteLeagues().contains(league));
 
-            LeagueDto leagueDto = new LeagueDto(league.getName(),
-                    league.getId(),
-                    user.getFavoriteLeagues().contains(league));
-
-            return ResponseEntity.ok(leagueDto);
-        }
-        throw new NotLoggedInException();
+        return ResponseEntity.ok(leagueDto);
     }
 }

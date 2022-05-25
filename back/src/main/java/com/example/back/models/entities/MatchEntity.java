@@ -31,19 +31,21 @@ public class MatchEntity {
     @OneToMany
     private Set<MatchEvent> events;
 
-    private boolean isUpcoming;
+    private String status;
     private String result;
     private LocalDateTime startTime;
     private String data;
+    private Integer duration;
 
-    public MatchEntity(Team team1, Team team2, League league, Set<MatchEvent> events, boolean isUpcoming, String result, LocalDateTime startTime, String data) {
+    public MatchEntity(Team team1, Team team2, League league, Set<MatchEvent> events, String status, String result, LocalDateTime startTime, String data, Integer duration) {
         this.team1 = team1;
         this.team2 = team2;
         this.league = league;
         this.events = events;
-        this.isUpcoming = isUpcoming;
+        this.status = status;
         this.result = result;
         this.startTime = startTime;
         this.data = data;
+        this.duration = duration;
     }
 }
