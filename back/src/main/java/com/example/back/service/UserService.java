@@ -32,4 +32,6 @@ public interface UserService {
     ResponseEntity<String> removeFriendByUserName(String userName);
 
     ArrayList<UserDto> getAllFriends();
+
+    ResponseEntity<UserDto> getLoggedInUser();
 }

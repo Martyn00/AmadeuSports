@@ -65,4 +65,9 @@ public class UserController {
         return userService.removeFriendByUserName(userName);
     }
 
+    @GetMapping(path = "/logged")
+    public ResponseEntity<UserDto> getLoggedInUser() {
+        return userService.getLoggedInUser();
+    }
+
 }
