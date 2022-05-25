@@ -41,6 +41,8 @@ public class BetServiceImpl implements BetService {
     }
 
     public ResponseEntity<String> addBet(Long matchId, Long userId, int betType, int amount) {
+        updateAllBets();
+
         MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
@@ -84,11 +86,11 @@ public class BetServiceImpl implements BetService {
     }
 
     public ResponseEntity<String> acceptBet(Long betId, int betType) {
+        updateAllBets();
+
         Bet bet = betRepo.findById(betId).orElseThrow(() -> {
             throw new BetNotFoundException();
         });
-
-        updateBet(bet);
 
         if (!(Objects.equals(bet.getStatus(), "pending"))) {
             throw new AcceptNonPendingBetException();
@@ -133,6 +135,8 @@ public class BetServiceImpl implements BetService {
     }
 
     public ResponseEntity<String> cancelBet(Long betId) {
+        updateAllBets();
+
         Bet bet = betRepo.findById(betId).orElseThrow(() -> {
             throw new BetNotFoundException();
         });
@@ -142,10 +146,6 @@ public class BetServiceImpl implements BetService {
         }
 
         User user = userService.getCurrentUserInstance();
-
-        if (!updateBet(bet)) {
-            return ResponseEntity.ok("You canceled this bet.");
-        }
 
         if (user == bet.getUser1()) {
             user.setWallet(user.getWallet() + bet.getAmount());
@@ -164,12 +164,14 @@ public class BetServiceImpl implements BetService {
     }
 
     private ArrayList<BetDto> getBetsByStatus(String status) {
+        updateAllBets();
+
         ArrayList<BetDto> result = new ArrayList<>();
 
         User user = userService.getCurrentUserInstance();
 
         for (Bet bet : user.getBets()) {
-            if (Objects.equals(bet.getStatus(), status) && updateBet(bet)) {
+            if (Objects.equals(bet.getStatus(), status)) {
                 result.add(betToBetDtoMapping(bet, user, status));
             }
         }
@@ -181,12 +183,18 @@ public class BetServiceImpl implements BetService {
         return sortBetsByDateDescending(result);
     }
 
-    private boolean updateBet(Bet bet) {
+    private void updateAllBets() {
+        for (Bet bet : betRepo.findAll()) {
+            updateBet(bet);
+        }
+    }
+
+    private void updateBet(Bet bet) {
         matchService.updateMatch(bet.getMatch().getId());
 
         if (Objects.equals(bet.getMatch().getStatus(), "going")) {
             if (deleteIfPendingBet(bet)) {
-                return false;
+                return;
             }
             bet.setStatus("current");
             betRepo.save(bet);
@@ -194,19 +202,17 @@ public class BetServiceImpl implements BetService {
 
         if (Objects.equals(bet.getMatch().getStatus(), "finished")) {
             if (deleteIfPendingBet(bet)) {
-                return false;
+                return;
             }
             if (Objects.equals(bet.getStatus(), "current")) {
                 bet.setStatus("history");
             } else {
-                return true;
+                return;
             }
 
             betFinished(bet);
             betRepo.save(bet);
         }
-
-        return true;
     }
 
     private void betFinished(Bet bet) {

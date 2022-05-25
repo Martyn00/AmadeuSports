@@ -23,7 +23,7 @@ public interface MatchService {
     ResponseEntity<String> addMatch(AddMatchDto addMatchDto);
     ResponseEntity<String> addEvent(Long matchId, int goal, int min);
     MatchDto updateMatch(Long matchId);
-    void updateListOfMatches(Set<MatchEntity> matches);
+    void updateAllMatches();
     void sortAscendingByDate(ArrayList<MatchDto> result);
     void sortDescendingByDate(ArrayList<MatchDto> result);
 }

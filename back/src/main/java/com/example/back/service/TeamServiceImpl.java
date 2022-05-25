@@ -28,11 +28,12 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<MatchDto> getMatchesHistory(Long id) {
+        matchService.updateAllMatches();
+
         Team team = teamRepo.findById(id).orElseThrow(() -> {
             throw new TeamNotFoundException();
         });
 
-        matchService.updateListOfMatches(team.getMatches());
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : team.getMatches()) {
             if (Objects.equals(match.getResult(), "finished")) {

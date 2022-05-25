@@ -32,17 +32,19 @@ public class MatchServiceImpl implements MatchService {
     private final LeagueRepo leagueRepo;
     private final MatchEventRepo matchEventRepo;
     private final UserService userService;
+    private final int footballDuration = 90;
 
     public List<MatchDto> getFavoriteMatches() {
-        User user = userService.getCurrentUserInstance();
+        updateAllMatches();
 
-        updateListOfMatches(user.getFavoriteMatches());
+        User user = userService.getCurrentUserInstance();
 
         return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
     }
 
     @Override
     public List<MatchDto> getMatchByDate(Integer numberOfDays) {
+        updateAllMatches();
 
         LocalDateTime dateTime = LocalDateTime.now().plusDays(numberOfDays);
 
@@ -55,7 +57,6 @@ public class MatchServiceImpl implements MatchService {
             }
         }
 
-        updateListOfMatches(matches);
         return matches.stream()
                 .map(this::mapToMatchDto).collect(Collectors.toList());
     }
@@ -78,6 +79,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public ResponseEntity<String> addMatchToFavorites(Long matchID) {
+        updateAllMatches();
+
         MatchEntity match = matchRepo.findById(matchID).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
@@ -95,6 +98,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public ResponseEntity<String> removeMatchFromFavorites(Long matchID) {
+        updateAllMatches();
+
         MatchEntity match = matchRepo.findById(matchID).orElseThrow(() -> {
             throw new LeagueNotFoundException();
         });
@@ -111,6 +116,8 @@ public class MatchServiceImpl implements MatchService {
     }
 
     public ResponseEntity<String> addMatch(AddMatchDto addMatchDto) {
+        updateAllMatches();
+
         User user = userService.getCurrentUserInstance();
 
         if (user.getRole() != Role.ADMIN) {
@@ -136,9 +143,14 @@ public class MatchServiceImpl implements MatchService {
             });
         }
 
+        int duration = 10;
+        if (Objects.equals(league.getSport().getName(), "Football")) {
+            duration = footballDuration;
+        }
+
         LocalDateTime now = LocalDateTime.now();
         String status;
-        if (startDate.plusMinutes(90).isBefore(now)) {
+        if (startDate.plusMinutes(duration).isBefore(now)) {
             status = "finished";
         } else if (startDate.isBefore(now)) {
             status = "going";
@@ -146,13 +158,15 @@ public class MatchServiceImpl implements MatchService {
             status = "upcoming";
         }
 
-        MatchEntity match = new MatchEntity(team1, team2, league, null, status, addMatchDto.getScore(), startDate, null);
+        MatchEntity match = new MatchEntity(team1, team2, league, null, status, addMatchDto.getScore(), startDate, null, duration);
         matchRepo.save(match);
 
         return ResponseEntity.ok("A new match has been added!");
     }
 
     public ResponseEntity<String> addEvent(Long matchId, int goal, int min) {
+        updateAllMatches();
+
         MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
@@ -163,7 +177,7 @@ public class MatchServiceImpl implements MatchService {
             throw new AdminPrivilegiesException();
         }
 
-        if (min < 0 || min > 90) {
+        if (min < 0 || min > match.getDuration()) {
             throw new WrongNumOfMinException();
         }
         if (goal != 0 && goal != 1) {
@@ -204,7 +218,7 @@ public class MatchServiceImpl implements MatchService {
                 }
             }
 
-            if (match.getStartTime().plusMinutes(90).isAfter(now)) {
+            if (match.getStartTime().plusMinutes(footballDuration).isAfter(now)) {
                 match.setStatus("going");
             } else {
                 match.setStatus("finished");
@@ -216,8 +230,8 @@ public class MatchServiceImpl implements MatchService {
         return mapToMatchDto(match);
     }
 
-    public void updateListOfMatches(Set<MatchEntity> matches) {
-        for (MatchEntity match : matches) {
+    public void updateAllMatches() {
+        for (MatchEntity match : matchRepo.findAll()) {
             updateMatch(match.getId());
         }
     }

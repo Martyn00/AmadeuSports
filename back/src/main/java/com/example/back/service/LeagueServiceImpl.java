@@ -71,6 +71,8 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId) {
+        matchService.updateAllMatches();
+
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
             throw new LeagueNotFoundException();
         });
@@ -88,6 +90,8 @@ public class LeagueServiceImpl implements LeagueService {
     }
 
     public ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId) {
+        matchService.updateAllMatches();
+
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
             throw new LeagueNotFoundException();
         });

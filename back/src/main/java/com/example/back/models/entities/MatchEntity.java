@@ -35,8 +35,9 @@ public class MatchEntity {
     private String result;
     private LocalDateTime startTime;
     private String data;
+    private Integer duration;
 
-    public MatchEntity(Team team1, Team team2, League league, Set<MatchEvent> events, String status, String result, LocalDateTime startTime, String data) {
+    public MatchEntity(Team team1, Team team2, League league, Set<MatchEvent> events, String status, String result, LocalDateTime startTime, String data, Integer duration) {
         this.team1 = team1;
         this.team2 = team2;
         this.league = league;
@@ -45,5 +46,6 @@ public class MatchEntity {
         this.result = result;
         this.startTime = startTime;
         this.data = data;
+        this.duration = duration;
     }
 }
