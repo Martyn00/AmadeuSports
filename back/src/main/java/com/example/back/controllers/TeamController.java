@@ -33,6 +33,11 @@ public class TeamController {
     public ResponseEntity<String> removeTeamFromFavorites(@PathVariable Long teamId) {
         return teamService.removeTeamFromFavorites(teamId);
     }
+
+    @GetMapping(path = "{teamName}/getTeamByName")
+    public ResponseEntity<TeamDto> getTeamByName(@PathVariable String teamName) {
+        return teamService.getTeamByName(teamName);
+      
     @GetMapping(path = "/favorites")
     public ResponseEntity<List<TeamDto>> removeMatchFromFavorites() {
         return new ResponseEntity<>(teamService.getFavoriteTeams(), HttpStatus.OK);

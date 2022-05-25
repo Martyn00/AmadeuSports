@@ -14,6 +14,8 @@ public interface TeamService {
 
     ResponseEntity<String> removeTeamFromFavorites(Long matchId);
 
+    ResponseEntity<TeamDto> getTeamByName(String teamName);
+  
     List<TeamDto> getFavoriteTeams();
 
 }
