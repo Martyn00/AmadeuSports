@@ -18,7 +18,7 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping(path = "/{data}")
-    public List<MatchDto> getMatchByDate(@PathVariable Integer data) {
+    public ResponseEntity<List<MatchDto>> getMatchByDate(@PathVariable Integer data) {
         return matchService.getMatchByDate(data);
     }
 
@@ -33,7 +33,7 @@ public class MatchController {
     }
 
     @GetMapping(path = "/favorites")
-    public List<MatchDto> getFavoriteMatches() {
+    public ResponseEntity<List<MatchDto>> getFavoriteMatches() {
         return matchService.getFavoriteMatches();
     }
 
@@ -48,7 +48,7 @@ public class MatchController {
     }
 
     @GetMapping(path = "/update-match/{matchId}")
-    public MatchDto updateMatch(@PathVariable Long matchId) {
+    public ResponseEntity<MatchDto> updateMatch(@PathVariable Long matchId) {
         return matchService.updateMatch(matchId);
     }
 

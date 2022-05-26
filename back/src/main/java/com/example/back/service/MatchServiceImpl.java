@@ -34,16 +34,16 @@ public class MatchServiceImpl implements MatchService {
     private final UserService userService;
     private final int footballDuration = 90;
 
-    public List<MatchDto> getFavoriteMatches() {
+    public ResponseEntity<List<MatchDto>> getFavoriteMatches() {
         updateAllMatches();
 
         User user = userService.getCurrentUserInstance();
 
-        return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
+        return ResponseEntity.ok(user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList()));
     }
 
     @Override
-    public List<MatchDto> getMatchByDate(Integer numberOfDays) {
+    public ResponseEntity<List<MatchDto>> getMatchByDate(Integer numberOfDays) {
         updateAllMatches();
 
         LocalDateTime dateTime = LocalDateTime.now().plusDays(numberOfDays);
@@ -57,8 +57,8 @@ public class MatchServiceImpl implements MatchService {
             }
         }
 
-        return matches.stream()
-                .map(this::mapToMatchDto).collect(Collectors.toList());
+        return ResponseEntity.ok(matches.stream()
+                .map(this::mapToMatchDto).collect(Collectors.toList()));
     }
 
     private String getWinner(MatchEntity match) {
@@ -193,7 +193,7 @@ public class MatchServiceImpl implements MatchService {
         return ResponseEntity.ok("A new event has been added for this match!");
     }
 
-    public MatchDto updateMatch(Long matchId) {
+    public ResponseEntity<MatchDto> updateMatch(Long matchId) {
         MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
@@ -227,7 +227,7 @@ public class MatchServiceImpl implements MatchService {
             matchRepo.save(match);
         }
 
-        return mapToMatchDto(match);
+        return ResponseEntity.ok(mapToMatchDto(match));
     }
 
     public void updateAllMatches() {

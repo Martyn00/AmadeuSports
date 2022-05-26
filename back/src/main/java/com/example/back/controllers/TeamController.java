@@ -20,7 +20,7 @@ public class TeamController {
     private final TeamService teamService;
 
     @GetMapping(path = "/{id}/matches")
-    public List<MatchDto> getMatchesHistory(@PathVariable Long id) {
+    public ResponseEntity<List<MatchDto>> getMatchesHistory(@PathVariable Long id) {
         return teamService.getMatchesHistory(id);
     }
 
@@ -39,9 +39,3 @@ public class TeamController {
         return teamService.getTeamByName(teamName);
     }
 }
-      
-//    @GetMapping(path = "/favorites")
-//    public ResponseEntity<List<TeamDto>> removeMatchFromFavorites() {
-//        return new ResponseEntity<>(teamService.getFavoriteTeams(), HttpStatus.OK);
-//    }
-//}

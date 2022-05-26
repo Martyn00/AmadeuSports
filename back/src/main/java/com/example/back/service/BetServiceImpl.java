@@ -27,16 +27,16 @@ public class BetServiceImpl implements BetService {
     private final UserService userService;
 
     @Override
-    public ArrayList<BetDto> getBetHistory() {
+    public ResponseEntity<ArrayList<BetDto>> getBetHistory() {
         return getBetsByStatus("history");
     }
 
     @Override
-    public ArrayList<BetDto> getPendingBets() {
+    public ResponseEntity<ArrayList<BetDto>> getPendingBets() {
         return getBetsByStatus("pending");
     }
 
-    public ArrayList<BetDto> getCurrentBets() {
+    public ResponseEntity<ArrayList<BetDto>> getCurrentBets() {
         return getBetsByStatus("current");
     }
 
@@ -163,7 +163,7 @@ public class BetServiceImpl implements BetService {
         return ResponseEntity.ok("You canceled this bet.");
     }
 
-    private ArrayList<BetDto> getBetsByStatus(String status) {
+    private ResponseEntity<ArrayList<BetDto>> getBetsByStatus(String status) {
         updateAllBets();
 
         ArrayList<BetDto> result = new ArrayList<>();
@@ -177,10 +177,10 @@ public class BetServiceImpl implements BetService {
         }
 
         if (Objects.equals(status, "pending") || Objects.equals(status, "current")) {
-            return sortBetsByDateAscending(result);
+            return ResponseEntity.ok(sortBetsByDateAscending(result));
         }
 
-        return sortBetsByDateDescending(result);
+        return ResponseEntity.ok(sortBetsByDateDescending(result));
     }
 
     private void updateAllBets() {

@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.Set;
 
 public interface MatchService {
-    List<MatchDto> getMatchByDate(Integer data);
+    ResponseEntity<List<MatchDto>> getMatchByDate(Integer data);
 
     ResponseEntity<String> addMatchToFavorites(Long matchID);
 
     ResponseEntity<String> removeMatchFromFavorites(Long matchID);
 
-    List<MatchDto> getFavoriteMatches();
+    ResponseEntity<List<MatchDto>> getFavoriteMatches();
 
     MatchDto mapToMatchDto(MatchEntity matchEntity);
     ResponseEntity<String> addMatch(AddMatchDto addMatchDto);
     ResponseEntity<String> addEvent(Long matchId, int goal, int min);
-    MatchDto updateMatch(Long matchId);
+    ResponseEntity<MatchDto> updateMatch(Long matchId);
     void updateAllMatches();
     void sortAscendingByDate(ArrayList<MatchDto> result);
     void sortDescendingByDate(ArrayList<MatchDto> result);

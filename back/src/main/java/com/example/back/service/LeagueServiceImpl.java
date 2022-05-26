@@ -60,7 +60,7 @@ public class LeagueServiceImpl implements LeagueService {
         throw new LeagueNotInFavoritesException();
     }
 
-    public ArrayList<LeagueDto> getFavoriteLeagues() {
+    public ResponseEntity<ArrayList<LeagueDto>> getFavoriteLeagues() {
         ArrayList<LeagueDto> result = new ArrayList<>();
 
         User user = userService.getCurrentUserInstance();
@@ -69,10 +69,10 @@ public class LeagueServiceImpl implements LeagueService {
             result.add(new LeagueDto(league.getName(), league.getId(), true));
         }
 
-        return result;
+        return ResponseEntity.ok(result);
     }
 
-    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getUpcomingMatchesByLeagueId(Long leagueId) {
         matchService.updateAllMatches();
 
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
@@ -88,10 +88,10 @@ public class LeagueServiceImpl implements LeagueService {
         }
 
         matchService.sortAscendingByDate(result);
-        return result;
+        return ResponseEntity.ok(result);
     }
 
-    public ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getPastMatchesByLeagueId(Long leagueId) {
         matchService.updateAllMatches();
 
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
@@ -107,7 +107,7 @@ public class LeagueServiceImpl implements LeagueService {
         }
 
         matchService.sortDescendingByDate(result);
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     @Override

@@ -17,17 +17,17 @@ public class BetController {
     private final BetService betService;
 
     @GetMapping(path = "/history")
-    public ArrayList<BetDto> getBetHistory() {
+    public ResponseEntity<ArrayList<BetDto>> getBetHistory() {
         return betService.getBetHistory();
     }
 
     @GetMapping(path = "/pending")
-    public ArrayList<BetDto> getPendingBets() {
+    public ResponseEntity<ArrayList<BetDto>> getPendingBets() {
         return betService.getPendingBets();
     }
 
     @GetMapping(path = "/current")
-    public ArrayList<BetDto> getCurrentBets() {
+    public ResponseEntity<ArrayList<BetDto>> getCurrentBets() {
         return betService.getCurrentBets();
     }
 

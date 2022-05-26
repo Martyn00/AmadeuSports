@@ -29,17 +29,17 @@ public class LeagueController {
     }
 
     @GetMapping(path = "/favorites")
-    public ArrayList<LeagueDto> getFavoriteLeagues() {
+    public ResponseEntity<ArrayList<LeagueDto>> getFavoriteLeagues() {
         return leagueService.getFavoriteLeagues();
     }
 
     @GetMapping(path = "/upcoming/{leagueId}")
-    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(@PathVariable Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getUpcomingMatchesByLeagueId(@PathVariable Long leagueId) {
         return leagueService.getUpcomingMatchesByLeagueId(leagueId);
     }
 
     @GetMapping(path = "/past/{leagueId}")
-    public ArrayList<MatchDto> getPastMatchesByLeagueId(@PathVariable Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getPastMatchesByLeagueId(@PathVariable Long leagueId) {
         return leagueService.getPastMatchesByLeagueId(leagueId);
     }
 
