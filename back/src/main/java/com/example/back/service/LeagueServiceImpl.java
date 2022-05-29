@@ -2,11 +2,9 @@ package com.example.back.service;
 
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
-import com.example.back.controllers.dto.TeamDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
-import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.LeagueRepo;
 import com.example.back.repositories.UserRepo;
@@ -82,7 +80,6 @@ public class LeagueServiceImpl implements LeagueService {
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
             if (!Objects.equals(match.getStatus(), "finished")) {
-                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
@@ -101,7 +98,6 @@ public class LeagueServiceImpl implements LeagueService {
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
             if (Objects.equals(match.getStatus(), "finished")) {
-                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }

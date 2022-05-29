@@ -26,22 +26,22 @@ public class UserController {
         return userService.getAllFriends();
     }
 
-    @PostMapping(path = "/{userId}/add-friend")
+    @PostMapping(path = "/add-friend/{userId}")
     public ResponseEntity<String> addFriend(@PathVariable Long userId) {
         return userService.addFriend(userId);
     }
 
-    @PostMapping(path = "/{userId}/remove-friend")
+    @PostMapping(path = "/remove-friend/{userId}")
     public ResponseEntity<String> removeFriend(@PathVariable Long userId) {
         return userService.removeFriend(userId);
     }
 
-    @PostMapping(path = "/{userName}/add-friend-by-username")
+    @PostMapping(path = "/add-friend-by-username/{userName}")
     public ResponseEntity<String> addFriendbyUserName(@PathVariable String userName) {
         return userService.addFriendByUserName(userName);
     }
 
-    @PostMapping(path = "/{userName}/remove-friend-by-username")
+    @PostMapping(path = "/remove-friend-by-username/{userName}")
     public ResponseEntity<String> removeFriendByUserName(@PathVariable String userName) {
         return userService.removeFriendByUserName(userName);
     }

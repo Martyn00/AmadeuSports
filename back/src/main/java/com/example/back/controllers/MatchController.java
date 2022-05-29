@@ -18,9 +18,9 @@ public class MatchController {
 
     private final MatchService matchService;
 
-    @GetMapping(path = "/{data}")
-    public ResponseEntity<List<MatchDto>> getMatchByDate(@PathVariable Integer data) {
-        return matchService.getMatchByDate(data);
+    @GetMapping(path = "/{daysPast}")
+    public ResponseEntity<List<MatchDto>> getMatchByDate(@PathVariable Integer daysPast) {
+        return matchService.getMatchByDate(daysPast);
     }
 
     @PostMapping(path = "/favorites-add/{matchID}")

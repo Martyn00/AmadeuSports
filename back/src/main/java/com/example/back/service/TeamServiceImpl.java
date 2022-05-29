@@ -38,7 +38,6 @@ public class TeamServiceImpl implements TeamService {
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : team.getMatches()) {
             if (Objects.equals(match.getResult(), "finished")) {
-                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }

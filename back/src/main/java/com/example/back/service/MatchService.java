@@ -5,6 +5,7 @@ import com.example.back.controllers.dto.AddMatchDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.models.entities.MatchEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.Comparator;

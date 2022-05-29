@@ -33,17 +33,17 @@ public class BetController {
         return betService.getCurrentBets();
     }
 
-    @PostMapping(path = "/add-bet")
+    @PostMapping(path = "/add")
     public ResponseEntity<String> addBet(@RequestBody AddBetDto addBetDto) {
         return betService.addBet(addBetDto);
     }
 
-    @PostMapping(path = "/accept-bet/{betId}/{betType}")
+    @PostMapping(path = "/accept/{betId}/{betType}")
     public ResponseEntity<String> acceptBet(@PathVariable Long betId, @PathVariable BetType betType) {
         return betService.acceptBet(betId, betType);
     }
 
-    @PostMapping(path = "/cancel-bet/{betId}")
+    @PostMapping(path = "/cancel/{betId}")
     public ResponseEntity<String> cancelBet(@PathVariable Long betId) {
         return betService.cancelBet(betId);
     }

@@ -10,12 +10,12 @@ import com.example.back.repositories.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -28,14 +28,18 @@ public class MatchServiceImpl implements MatchService {
     private final LeagueRepo leagueRepo;
     private final MatchEventRepo matchEventRepo;
     private final UserService userService;
-    private final int footballDuration = 5;
+    private final int footballDuration = 90;
 
     public ResponseEntity<List<MatchDto>> getFavoriteMatches() {
         updateAllMatches();
 
         User user = userService.getCurrentUserInstance();
+        List<MatchDto> matches = new ArrayList<>();
+        for (MatchEntity match : user.getFavoriteMatches()) {
+            matches.add(mapToMatchDto(match));
+        }
 
-        return ResponseEntity.ok(user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList()));
+        return ResponseEntity.ok(matches);
     }
 
     @Override
@@ -44,17 +48,16 @@ public class MatchServiceImpl implements MatchService {
 
         LocalDateTime dateTime = LocalDateTime.now().plusDays(numberOfDays);
 
-        Set<MatchEntity> matches = new HashSet<>();
+        List<MatchDto> matches = new LinkedList<>();
         for (MatchEntity match : matchRepo.findAll()) {
             if (match.getStartTime().getYear() == dateTime.getYear() &&
                     match.getStartTime().getMonth() == dateTime.getMonth() &&
                     match.getStartTime().getDayOfMonth() == dateTime.getDayOfMonth()) {
-                matches.add(match);
+                matches.add(mapToMatchDto(match));
             }
         }
 
-        return ResponseEntity.ok(matches.stream()
-                .map(this::mapToMatchDto).collect(Collectors.toList()));
+        return ResponseEntity.ok(matches);
     }
 
     private String getWinner(MatchEntity match) {
@@ -240,8 +243,7 @@ public class MatchServiceImpl implements MatchService {
         matchDto.setTeam2(createTeamDto(matchEntity.getTeam2()));
         matchDto.setDetails(matchEntity.getData());
         matchDto.setScore(matchEntity.getResult());
-        Boolean isMatchFavorite = userService.getCurrentUserInstance().getFavoriteMatches().contains(matchEntity);
-        matchDto.setIsFavorite(isMatchFavorite);
+        matchDto.setIsFavorite(isFavorite(matchEntity, null, null));
         matchDto.setSport("football");
         matchDto.setWinner(getWinner(matchEntity));
         matchDto.setTime(matchEntity.getStartTime().toString());
@@ -252,8 +254,7 @@ public class MatchServiceImpl implements MatchService {
         TeamDto teamDto = new TeamDto();
         teamDto.setId(team1.getId());
         teamDto.setName(team1.getName());
-        Boolean isTeamFavorite = userService.getCurrentUserInstance().getFavoriteTeams().contains(team1);
-        teamDto.setIsFavorite(isTeamFavorite);
+        teamDto.setIsFavorite(isFavorite(null, team1, null));
         return teamDto;
     }
 
@@ -261,10 +262,29 @@ public class MatchServiceImpl implements MatchService {
         LeagueDto leagueDto = new LeagueDto();
         leagueDto.setId(league.getId());
         leagueDto.setName(league.getName());
-        Boolean isLeagueFavorite = userService.getCurrentUserInstance().getFavoriteLeagues().contains(league);
-        leagueDto.setIsFavorite(isLeagueFavorite);
+        leagueDto.setIsFavorite(isFavorite(null, null, league));
         return leagueDto;
     }
+    private Boolean isFavorite(MatchEntity match, Team team, League league) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+            if (match != null) {
+                return user.getFavoriteMatches().contains(match);
+            }
+            if (team != null) {
+                return user.getFavoriteTeams().contains(team);
+            }
+            if (league != null) {
+                return user.getFavoriteLeagues().contains(league);
+            }
+        }
+        return false;
+    }
+
 
     public void sortAscendingByDate(ArrayList<MatchDto> result) {
         result.sort(Comparator.comparing(MatchDto::getTime));

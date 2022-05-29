@@ -19,22 +19,22 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @GetMapping(path = "/{id}/matches")
+    @GetMapping(path = "/matches/{id}")
     public ResponseEntity<List<MatchDto>> getMatchesHistory(@PathVariable Long id) {
         return teamService.getMatchesHistory(id);
     }
 
-    @PostMapping(path = "/{teamId}/favorites-add")
+    @PostMapping(path = "/favorites-add/{teamId}")
     public ResponseEntity<String> addTeamToFavorites(@PathVariable Long teamId) {
         return teamService.addTeamToFavorites(teamId);
     }
 
-    @PostMapping(path = "/{teamId}/favorites-remove")
+    @PostMapping(path = "/favorites-remove/{teamId}")
     public ResponseEntity<String> removeTeamFromFavorites(@PathVariable Long teamId) {
         return teamService.removeTeamFromFavorites(teamId);
     }
 
-    @GetMapping(path = "{teamName}/getTeamByName")
+    @GetMapping(path = "/getTeamByName/{teamName}")
     public ResponseEntity<TeamDto> getTeamByName(@PathVariable String teamName) {
         return teamService.getTeamByName(teamName);
     }
