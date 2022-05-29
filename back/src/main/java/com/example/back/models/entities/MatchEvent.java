@@ -22,11 +22,11 @@ public class MatchEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int goal;
-    private int min;
+    private GoalType goal;
+    private Integer min;
     private boolean isUpdated;
 
-    public MatchEvent(int goal, int min) {
+    public MatchEvent(GoalType goal, Integer min) {
         this.goal = goal;
         this.min = min;
     }

@@ -1,9 +1,6 @@
 package com.example.back.service;
 
-import com.example.back.controllers.dto.BetDto;
-import com.example.back.controllers.dto.LeagueDto;
-import com.example.back.controllers.dto.TeamDto;
-import com.example.back.controllers.dto.UserBetChoiceDto;
+import com.example.back.controllers.dto.*;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
 import com.example.back.repositories.BetRepo;
@@ -40,43 +37,43 @@ public class BetServiceImpl implements BetService {
         return getBetsByStatus("current");
     }
 
-    public ResponseEntity<String> addBet(Long matchId, Long userId, int betType, int amount) {
+    public ResponseEntity<String> addBet(AddBetDto addBetDto) {
         updateAllBets();
 
-        MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
+        MatchEntity match = matchRepo.findById(addBetDto.getMatchId()).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
 
-        User user2 = userRepo.findById(userId).orElseThrow(() -> {
+        User user2 = userRepo.findByUsername(addBetDto.getUsername()).orElseThrow(() -> {
             throw new UserNotFoundException();
         });
 
         User user1 = userService.getCurrentUserInstance();
 
-        if (Objects.equals(user1.getId(), userId)) {
+        if (user1 == user2) {
             throw new BetWithYourselfException();
         }
 
-        matchService.updateMatch(matchId);
+        matchService.updateMatch(addBetDto.getMatchId());
         if (!Objects.equals(match.getStatus(), "upcoming")) {
             throw new OutgoingMatchBetException();
         }
 
         for (Bet bet : user1.getBets()) {
-            if (Objects.equals(bet.getMatch().getId(), matchId) && Objects.equals(bet.getUser2().getId(), userId)) {
+            if (Objects.equals(bet.getMatch().getId(), addBetDto.getMatchId()) && bet.getUser2() == user2) {
                 throw new BetDuplicateException();
             }
         }
 
-        if (user1.getWallet() - amount < 0) {
+        if (user1.getWallet() - addBetDto.getAmount() < 0) {
             throw new NotEnoughMoneyException();
         }
 
-        Bet bet = new Bet(match, user1, user2, BetType.values()[betType], BetType.PENDING, amount, "pending", -1);
+        Bet bet = new Bet(match, user1, user2, addBetDto.getBetType(), BetType.PENDING, addBetDto.getAmount(), "pending", -1);
         betRepo.save(bet);
 
         user1.getBets().add(bet);
-        user1.setWallet(user1.getWallet() - amount);
+        user1.setWallet(user1.getWallet() - addBetDto.getAmount());
         user2.getBets().add(bet);
         userRepo.save(user1);
         userRepo.save(user2);
@@ -85,7 +82,7 @@ public class BetServiceImpl implements BetService {
 
     }
 
-    public ResponseEntity<String> acceptBet(Long betId, int betType) {
+    public ResponseEntity<String> acceptBet(Long betId, BetType betType) {
         updateAllBets();
 
         Bet bet = betRepo.findById(betId).orElseThrow(() -> {
@@ -98,7 +95,7 @@ public class BetServiceImpl implements BetService {
 
         User user = userService.getCurrentUserInstance();
 
-        if (BetType.values()[betType] == bet.getBetChoiceUser1()) {
+        if (betType == bet.getBetChoiceUser1()) {
             throw new SameBetTypeException();
         }
 
@@ -117,7 +114,7 @@ public class BetServiceImpl implements BetService {
             throw new NotInUserBetListException();
         }
 
-        bet.setBetChoiceUser2(BetType.values()[betType]);
+        bet.setBetChoiceUser2(betType);
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isAfter(bet.getMatch().getStartTime())) {
