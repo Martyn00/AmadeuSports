@@ -44,6 +44,7 @@ public class TeamServiceImpl implements TeamService {
         }
 
         matchService.sortDescendingByDate(result);
+        System.out.println(result);
         return result;
     }
 
