@@ -31,7 +31,7 @@ export class BetService {
     this.http.post<any>(URL + '/bet/add-bet/' + result.matchId + '/' + result.userId + '/' + result.choice + '/' + result.coins, httpOptions).subscribe(() => {
       console.log("responded");
     })
-  
+
   }
   getUserBets(type: string) {
     let url = URL + "/bet/" + type;

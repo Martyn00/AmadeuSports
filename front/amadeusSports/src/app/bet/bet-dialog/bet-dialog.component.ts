@@ -1,8 +1,6 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ResultDto } from 'src/app/dto/ResultDto';
 import { UserDto } from 'src/app/dto/UserDto';
 import { FriendService } from 'src/app/service/friend.service';
 
@@ -19,7 +17,7 @@ export class BetDialogComponent implements OnInit {
   friends!: UserDto[];
   friendForm = new FormControl();
   coinForm = new FormControl();
-  result!: ResultDto; 
+  result!: ResultDto;
   constructor(
     public dialogRef: MatDialogRef<BetDialogComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public mydata: any,
@@ -36,7 +34,7 @@ export class BetDialogComponent implements OnInit {
     })
     this.friendsService.populateFriendsTable();
     this.result.matchId = this.mydata;
-    
+
   }
   checkedABox(pos: number) {
     for (let i = 0; i < 3; i++){
