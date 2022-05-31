@@ -1,12 +1,9 @@
 package com.example.back.service;
 
-import com.example.back.controllers.dto.AddMatchDto;
-import com.example.back.controllers.dto.LeagueDto;
-import com.example.back.controllers.dto.MatchDto;
+import com.example.back.controllers.dto.*;
 import com.example.back.handlers.*;
 import com.example.back.models.Role;
 import com.example.back.models.entities.*;
-import com.example.back.controllers.dto.TeamDto;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.*;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -34,31 +30,34 @@ public class MatchServiceImpl implements MatchService {
     private final UserService userService;
     private final int footballDuration = 90;
 
-    public List<MatchDto> getFavoriteMatches() {
+    public ResponseEntity<List<MatchDto>> getFavoriteMatches() {
         updateAllMatches();
 
         User user = userService.getCurrentUserInstance();
+        List<MatchDto> matches = new ArrayList<>();
+        for (MatchEntity match : user.getFavoriteMatches()) {
+            matches.add(mapToMatchDto(match));
+        }
 
-        return user.getFavoriteMatches().stream().map(this::mapToMatchDto).collect(Collectors.toList());
+        return ResponseEntity.ok(matches);
     }
 
     @Override
-    public List<MatchDto> getMatchByDate(Integer numberOfDays) {
+    public ResponseEntity<List<MatchDto>> getMatchByDate(Integer numberOfDays) {
         updateAllMatches();
 
         LocalDateTime dateTime = LocalDateTime.now().plusDays(numberOfDays);
 
-        Set<MatchEntity> matches = new HashSet<>();
+        List<MatchDto> matches = new LinkedList<>();
         for (MatchEntity match : matchRepo.findAll()) {
             if (match.getStartTime().getYear() == dateTime.getYear() &&
                     match.getStartTime().getMonth() == dateTime.getMonth() &&
                     match.getStartTime().getDayOfMonth() == dateTime.getDayOfMonth()) {
-                matches.add(match);
+                matches.add(mapToMatchDto(match));
             }
         }
 
-        return matches.stream()
-                .map(this::mapToMatchDto).collect(Collectors.toList());
+        return ResponseEntity.ok(matches);
     }
 
     private String getWinner(MatchEntity match) {
@@ -164,10 +163,10 @@ public class MatchServiceImpl implements MatchService {
         return ResponseEntity.ok("A new match has been added!");
     }
 
-    public ResponseEntity<String> addEvent(Long matchId, int goal, int min) {
+    public ResponseEntity<String> addEvent(AddEventDto addEventDto) {
         updateAllMatches();
 
-        MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
+        MatchEntity match = matchRepo.findById(addEventDto.getMatchId()).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
 
@@ -177,14 +176,11 @@ public class MatchServiceImpl implements MatchService {
             throw new AdminPrivilegiesException();
         }
 
-        if (min < 0 || min > match.getDuration()) {
+        if (addEventDto.getMinute() <= 0 || addEventDto.getMinute() > match.getDuration()) {
             throw new WrongNumOfMinException();
         }
-        if (goal != 0 && goal != 1) {
-            throw new GoalException();
-        }
 
-        MatchEvent event = new MatchEvent(goal, min);
+        MatchEvent event = new MatchEvent(addEventDto.getGoal(), addEventDto.getMinute());
         event.setUpdated(false);
         matchEventRepo.save(event);
         match.getEvents().add(event);
@@ -193,7 +189,7 @@ public class MatchServiceImpl implements MatchService {
         return ResponseEntity.ok("A new event has been added for this match!");
     }
 
-    public MatchDto updateMatch(Long matchId) {
+    public ResponseEntity<MatchDto> updateMatch(Long matchId) {
         MatchEntity match = matchRepo.findById(matchId).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
@@ -211,8 +207,8 @@ public class MatchServiceImpl implements MatchService {
 
             int minutesPlayed = now.getMinute() - match.getStartTime().getMinute();
             for (MatchEvent event : match.getEvents()) {
-                if (minutesPlayed > event.getMin() && !event.isUpdated()) {
-                    goals.set(event.getGoal(), goals.get(event.getGoal()) + 1);
+                if (minutesPlayed >= event.getMin() && !event.isUpdated()) {
+                    goals.set(event.getGoal().ordinal(), goals.get(event.getGoal().ordinal()) + 1);
                     event.setUpdated(true);
                     matchEventRepo.save(event);
                 }
@@ -227,7 +223,7 @@ public class MatchServiceImpl implements MatchService {
             matchRepo.save(match);
         }
 
-        return mapToMatchDto(match);
+        return ResponseEntity.ok(mapToMatchDto(match));
     }
 
     public void updateAllMatches() {
@@ -247,8 +243,7 @@ public class MatchServiceImpl implements MatchService {
         matchDto.setTeam2(createTeamDto(matchEntity.getTeam2()));
         matchDto.setDetails(matchEntity.getData());
         matchDto.setScore(matchEntity.getResult());
-        Boolean isMatchFavorite = getUserFromContext().getFavoriteMatches().contains(matchEntity);
-        matchDto.setIsFavorite(isMatchFavorite);
+        matchDto.setIsFavorite(isFavorite(matchEntity, null, null));
         matchDto.setSport("football");
         matchDto.setWinner(getWinner(matchEntity));
         matchDto.setTime(matchEntity.getStartTime().toString());
@@ -259,8 +254,7 @@ public class MatchServiceImpl implements MatchService {
         TeamDto teamDto = new TeamDto();
         teamDto.setId(team1.getId());
         teamDto.setName(team1.getName());
-        Boolean isTeamFavorite = getUserFromContext().getFavoriteTeams().contains(team1);
-        teamDto.setIsFavorite(isTeamFavorite);
+        teamDto.setIsFavorite(isFavorite(null, team1, null));
         return teamDto;
     }
 
@@ -268,20 +262,30 @@ public class MatchServiceImpl implements MatchService {
         LeagueDto leagueDto = new LeagueDto();
         leagueDto.setId(league.getId());
         leagueDto.setName(league.getName());
-        Boolean isLeagueFavorite = getUserFromContext().getFavoriteLeagues().contains(league);
-        leagueDto.setIsFavorite(isLeagueFavorite);
+        leagueDto.setIsFavorite(isFavorite(null, null, league));
         return leagueDto;
     }
-
-    User getUserFromContext() {
+    private Boolean isFavorite(MatchEntity match, Team team, League league) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof User) {
-            Optional<User> user = userRepo.findById(((User) principal).getId());
-            return user.get();
-        } else {
-            return null;
+            Long userId = ((User) principal).getId();
+            User user = userRepo.findById(userId).orElseThrow(() -> {
+                throw new UserNotFoundException();
+            });
+            if (match != null) {
+                return user.getFavoriteMatches().contains(match);
+            }
+            if (team != null) {
+                return user.getFavoriteTeams().contains(team);
+            }
+            if (league != null) {
+                return user.getFavoriteLeagues().contains(league);
+            }
         }
+        return false;
     }
+
+
     public void sortAscendingByDate(ArrayList<MatchDto> result) {
         result.sort(Comparator.comparing(MatchDto::getTime));
     }

@@ -1,5 +1,6 @@
 package com.example.back.controllers;
 
+import com.example.back.controllers.dto.AddEventDto;
 import com.example.back.controllers.dto.AddMatchDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.service.MatchService;
@@ -17,23 +18,23 @@ public class MatchController {
 
     private final MatchService matchService;
 
-    @GetMapping(path = "/{data}")
-    public List<MatchDto> getMatchByDate(@PathVariable Integer data) {
-        return matchService.getMatchByDate(data);
+    @GetMapping(path = "/{daysPast}")
+    public ResponseEntity<List<MatchDto>> getMatchByDate(@PathVariable Integer daysPast) {
+        return matchService.getMatchByDate(daysPast);
     }
 
-    @PostMapping(path = "/{matchID}/favorites-add")
+    @PostMapping(path = "/favorites-add/{matchID}")
     public ResponseEntity<String> addMatchToFavorites(@PathVariable Long matchID) {
         return matchService.addMatchToFavorites(matchID);
     }
 
-    @PostMapping(path = "/{matchID}/favorites-remove")
+    @PostMapping(path = "/favorites-remove/{matchID}")
     public ResponseEntity<String> removeMatchFromFavorites(@PathVariable Long matchID) {
         return matchService.removeMatchFromFavorites(matchID);
     }
 
     @GetMapping(path = "/favorites")
-    public List<MatchDto> getFavoriteMatches() {
+    public ResponseEntity<List<MatchDto>> getFavoriteMatches() {
         return matchService.getFavoriteMatches();
     }
 
@@ -42,13 +43,13 @@ public class MatchController {
         return matchService.addMatch(addMatchDto);
     }
 
-    @PostMapping(path = "/add-event/{matchId}/{goal}/{min}")
-    public ResponseEntity<String> addEvent(@PathVariable Long matchId, @PathVariable int goal, @PathVariable int min) {
-        return matchService.addEvent(matchId, goal, min);
+    @PostMapping(path = "/add-event")
+    public ResponseEntity<String> addEvent(@RequestBody AddEventDto addEventDto) {
+        return matchService.addEvent(addEventDto);
     }
 
     @GetMapping(path = "/update-match/{matchId}")
-    public MatchDto updateMatch(@PathVariable Long matchId) {
+    public ResponseEntity<MatchDto> updateMatch(@PathVariable Long matchId) {
         return matchService.updateMatch(matchId);
     }
 

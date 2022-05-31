@@ -18,32 +18,32 @@ public class LeagueController {
 
     private final LeagueService leagueService;
 
-    @PostMapping(path = "/{leagueId}/favorites-add")
+    @PostMapping(path = "/favorites-add/{leagueId}")
     public ResponseEntity<String> addLeagueToFavorites(@PathVariable Long leagueId) {
         return leagueService.addLeagueToFavorites(leagueId);
     }
 
-    @PostMapping(path = "/{leagueId}/favorites-remove")
+    @PostMapping(path = "/favorites-remove/{leagueId}")
     public ResponseEntity<String> removeLeagueFromFavorites(@PathVariable Long leagueId) {
         return leagueService.removeLeagueFromFavorites(leagueId);
     }
 
     @GetMapping(path = "/favorites")
-    public ArrayList<LeagueDto> getFavoriteLeagues() {
+    public ResponseEntity<ArrayList<LeagueDto>> getFavoriteLeagues() {
         return leagueService.getFavoriteLeagues();
     }
 
     @GetMapping(path = "/upcoming/{leagueId}")
-    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(@PathVariable Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getUpcomingMatchesByLeagueId(@PathVariable Long leagueId) {
         return leagueService.getUpcomingMatchesByLeagueId(leagueId);
     }
 
     @GetMapping(path = "/past/{leagueId}")
-    public ArrayList<MatchDto> getPastMatchesByLeagueId(@PathVariable Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getPastMatchesByLeagueId(@PathVariable Long leagueId) {
         return leagueService.getPastMatchesByLeagueId(leagueId);
     }
 
-    @GetMapping(path = "/{leagueName}/getLeagueByName")
+    @GetMapping(path = "/getLeagueByName/{leagueName}")
     public ResponseEntity<LeagueDto> getPastMatchesByLeagueId(@PathVariable String leagueName) {
         return leagueService.getLeagueByName(leagueName);
     }
