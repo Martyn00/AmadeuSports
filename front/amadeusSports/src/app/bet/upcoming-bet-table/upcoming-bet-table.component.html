@@ -38,8 +38,8 @@
     <ng-container matColumnDef="button">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-            <button *ngIf="!hasLoggedUserBet(element)" mat-button>CANCEL</button>
-            <button *ngIf="hasLoggedUserBet(element)" mat-button>ACCEPT</button>
+            <button *ngIf="hasLoggedUserBet(element)" (click)="cancel(element)" mat-button>CANCEL</button>
+            <button *ngIf="!hasLoggedUserBet(element)"  (click)="accept(element)" mat-button>ACCEPT</button>
         </td>
     </ng-container>
     <ng-container matColumnDef="coins">

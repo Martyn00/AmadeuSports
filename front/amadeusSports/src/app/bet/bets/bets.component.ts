@@ -6,7 +6,7 @@ import { BetService } from 'src/app/service/bet.service';
 const map = new Map<number, string>([
   [0, "history"],
   [1, "current"],
-  [2, "history"]
+  [2, "pending"]
 ]);
 @Component({
   selector: 'app-bets',

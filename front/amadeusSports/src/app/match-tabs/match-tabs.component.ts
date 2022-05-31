@@ -25,8 +25,8 @@ export class MatchTabsComponent implements OnInit {
     this.ffDate.setDate(this.todayDate.getDate() + 3);
     this.teamService.favoriteChanged.subscribe(data => {
       this.matchTableLoaderService.populateMatchTable(this.currentPosition - 3);
-      console.log("intr");
     });
+    this.matchTableLoaderService.populateMatchTable(-3);
 }
 
 tabChange(index: number) {

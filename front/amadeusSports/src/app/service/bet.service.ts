@@ -14,6 +14,7 @@ const httpOptions = {
 })
 export class BetService {
 
+
   public coinsLoaded = new EventEmitter<number>();
   coins: number = 300;
   sendBets!: BetDto[];
@@ -26,7 +27,11 @@ export class BetService {
     this.coinsLoaded.emit(this.coins);
   }
   bet(result: ResultDto) {
-    this.http.post<any>(URL + '/add-bet/' + result.userId + '/' + result.choice + '/' + result.coins, httpOptions)
+    console.log(result);
+    this.http.post<any>(URL + '/bet/add-bet/' + result.matchId + '/' + result.userId + '/' + result.choice + '/' + result.coins, httpOptions).subscribe(() => {
+      console.log("responded");
+    })
+  
   }
   getUserBets(type: string) {
     let url = URL + "/bet/" + type;
@@ -40,9 +45,25 @@ export class BetService {
       if (type === 'current') {
         this.betsCurrentLoaded.emit(this.sendBets);
       }
-      if (type === 'history') {
+      if (type === 'pending') {
         this.betsPendingLoaded.emit(this.sendBets);
       }
     });
   }
+
+  acceptBet(result: number, element: BetDto) {
+    let url = URL + '/bet/accept-bet/' + element.id + "/" + result;
+    this.http.post<any>(url, httpOptions).subscribe(() => {
+      console.log("responded");
+    });
+  }
+
+  cancelBet(element: BetDto) {
+    let url = URL + '/bet/cancel-bet/' + element.id
+    console.log(url);
+    this.http.post<any>(url, httpOptions).subscribe(() => {
+      console.log("responded");
+    });
+  }
+
 }

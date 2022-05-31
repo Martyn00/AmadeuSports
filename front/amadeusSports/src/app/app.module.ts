@@ -47,6 +47,7 @@ import { FavoritesTableComponent } from './favoriteComponent/favorites-table/fav
 import { BetDialogComponent } from './bet/bet-dialog/bet-dialog.component';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AcceptBetDialogComponent } from './bet/accept-bet-dialog/accept-bet-dialog.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FavoriteLeaguesComponent,
     FavoritesTableComponent,
     BetDialogComponent,
+    AcceptBetDialogComponent,
   ],
   imports: [
     RouterModule.forRoot([

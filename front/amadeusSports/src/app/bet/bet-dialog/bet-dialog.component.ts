@@ -35,6 +35,7 @@ export class BetDialogComponent implements OnInit {
       this.friends = data;
     })
     this.friendsService.populateFriendsTable();
+    this.result.matchId = this.mydata;
     
   }
   checkedABox(pos: number) {

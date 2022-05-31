@@ -28,11 +28,12 @@ export class MatchTableLoaderService {
     if (type === "matches") {
       url = url + "/match/favorites";
     } else if (type === "teams") {
-      url = url + "/team/" + id  + "/matches";
+      url = url + "/team/" + id + "/matches";
+      console.log(url);
     } else if (type === "leagues") {
       url = url + "/league/upcoming/" + id ;
     }
-
+    
     this.http.get<MatchDto[]>(url, httpOptions).subscribe(response => {
       this.sendMatches = response;
       this.favoriteMatchesLoaded.emit(this.sendMatches);
