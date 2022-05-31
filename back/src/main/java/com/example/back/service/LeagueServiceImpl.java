@@ -2,11 +2,9 @@ package com.example.back.service;
 
 import com.example.back.controllers.dto.LeagueDto;
 import com.example.back.controllers.dto.MatchDto;
-import com.example.back.controllers.dto.TeamDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.League;
 import com.example.back.models.entities.MatchEntity;
-import com.example.back.models.entities.Team;
 import com.example.back.models.entities.User;
 import com.example.back.repositories.LeagueRepo;
 import com.example.back.repositories.UserRepo;
@@ -60,7 +58,7 @@ public class LeagueServiceImpl implements LeagueService {
         throw new LeagueNotInFavoritesException();
     }
 
-    public ArrayList<LeagueDto> getFavoriteLeagues() {
+    public ResponseEntity<ArrayList<LeagueDto>> getFavoriteLeagues() {
         ArrayList<LeagueDto> result = new ArrayList<>();
 
         User user = userService.getCurrentUserInstance();
@@ -69,10 +67,10 @@ public class LeagueServiceImpl implements LeagueService {
             result.add(new LeagueDto(league.getName(), league.getId(), true));
         }
 
-        return result;
+        return ResponseEntity.ok(result);
     }
 
-    public ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getUpcomingMatchesByLeagueId(Long leagueId) {
         matchService.updateAllMatches();
 
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
@@ -82,16 +80,15 @@ public class LeagueServiceImpl implements LeagueService {
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
             if (!Objects.equals(match.getStatus(), "finished")) {
-                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
 
         matchService.sortAscendingByDate(result);
-        return result;
+        return ResponseEntity.ok(result);
     }
 
-    public ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId) {
+    public ResponseEntity<ArrayList<MatchDto>> getPastMatchesByLeagueId(Long leagueId) {
         matchService.updateAllMatches();
 
         League league = leagueRepo.findById(leagueId).orElseThrow(() -> {
@@ -101,13 +98,12 @@ public class LeagueServiceImpl implements LeagueService {
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : league.getMatches()) {
             if (Objects.equals(match.getStatus(), "finished")) {
-                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
 
         matchService.sortDescendingByDate(result);
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     @Override

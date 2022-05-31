@@ -1,6 +1,8 @@
 package com.example.back.controllers;
 
+import com.example.back.controllers.dto.AddBetDto;
 import com.example.back.controllers.dto.BetDto;
+import com.example.back.models.entities.BetType;
 import com.example.back.service.BetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +19,31 @@ public class BetController {
     private final BetService betService;
 
     @GetMapping(path = "/history")
-    public ArrayList<BetDto> getBetHistory() {
+    public ResponseEntity<ArrayList<BetDto>> getBetHistory() {
         return betService.getBetHistory();
     }
 
     @GetMapping(path = "/pending")
-    public ArrayList<BetDto> getPendingBets() {
+    public ResponseEntity<ArrayList<BetDto>> getPendingBets() {
         return betService.getPendingBets();
     }
 
     @GetMapping(path = "/current")
-    public ArrayList<BetDto> getCurrentBets() {
+    public ResponseEntity<ArrayList<BetDto>> getCurrentBets() {
         return betService.getCurrentBets();
     }
 
-    @PostMapping(path = "/add-bet/{matchId}/{userId}/{betType}/{amount}")
-    public ResponseEntity<String> addBet(@PathVariable Long matchId, @PathVariable Long userId, @PathVariable int betType, @PathVariable int amount) {
-        return betService.addBet(matchId, userId, betType, amount);
+    @PostMapping(path = "/add")
+    public ResponseEntity<String> addBet(@RequestBody AddBetDto addBetDto) {
+        return betService.addBet(addBetDto);
     }
 
-    @PostMapping(path = "/accept-bet/{betId}/{betType}")
-    public ResponseEntity<String> acceptBet(@PathVariable Long betId, @PathVariable int betType) {
+    @PostMapping(path = "/accept/{betId}/{betType}")
+    public ResponseEntity<String> acceptBet(@PathVariable Long betId, @PathVariable BetType betType) {
         return betService.acceptBet(betId, betType);
     }
 
-    @PostMapping(path = "/cancel-bet/{betId}")
+    @PostMapping(path = "/cancel/{betId}")
     public ResponseEntity<String> cancelBet(@PathVariable Long betId) {
         return betService.cancelBet(betId);
     }

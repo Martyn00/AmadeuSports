@@ -28,7 +28,7 @@ public class TeamServiceImpl implements TeamService {
     private final UserService userService;
 
     @Override
-    public List<MatchDto> getMatchesHistory(Long id) {
+    public ResponseEntity<List<MatchDto>> getMatchesHistory(Long id) {
         matchService.updateAllMatches();
 
         Team team = teamRepo.findById(id).orElseThrow(() -> {
@@ -38,13 +38,12 @@ public class TeamServiceImpl implements TeamService {
         ArrayList<MatchDto> result = new ArrayList<>();
         for (MatchEntity match : team.getMatches()) {
             if (Objects.equals(match.getResult(), "finished")) {
-                matchService.updateMatch(match.getId());
                 result.add(matchService.mapToMatchDto(match));
             }
         }
 
         matchService.sortDescendingByDate(result);
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     @Override

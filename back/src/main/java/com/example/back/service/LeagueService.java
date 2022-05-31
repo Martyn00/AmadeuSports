@@ -12,11 +12,11 @@ public interface LeagueService {
 
     ResponseEntity<String> removeLeagueFromFavorites(Long leagueId);
 
-    ArrayList<LeagueDto> getFavoriteLeagues();
+    ResponseEntity<ArrayList<LeagueDto>> getFavoriteLeagues();
 
-    ArrayList<MatchDto> getUpcomingMatchesByLeagueId(Long leagueId);
+    ResponseEntity<ArrayList<MatchDto>> getUpcomingMatchesByLeagueId(Long leagueId);
 
-    ArrayList<MatchDto> getPastMatchesByLeagueId(Long leagueId);
+    ResponseEntity<ArrayList<MatchDto>> getPastMatchesByLeagueId(Long leagueId);
 
     ResponseEntity<LeagueDto> getLeagueByName(String leagueName);
 }

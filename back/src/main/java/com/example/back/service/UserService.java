@@ -1,6 +1,7 @@
 package com.example.back.service;
 
 import com.example.back.controllers.dto.BetDto;
+import com.example.back.controllers.dto.MatchDto;
 import com.example.back.controllers.dto.UserDto;
 import com.example.back.models.entities.*;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +11,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<MatchEntity> getFavoriteMatchesByUserId(Long id);
-
-    List<Team> getFavoriteTeamsByUserId(Long id);
-
-    List<League> getFavoriteLeaguesByUserId(Long id);
-
-    ResponseEntity<Void> addMatchToFavorites(Long userId, Long matchId);
-
-    ArrayList<UserDto> getAllUsers();
+    ResponseEntity<ArrayList<UserDto>> getAllUsers();
 
     ResponseEntity<String> addFriend(Long id);
 
@@ -28,6 +21,6 @@ public interface UserService {
 //
     ResponseEntity<String> removeFriendByUserName(String userName);
 
-    ArrayList<UserDto> getAllFriends();
+    ResponseEntity<ArrayList<UserDto>> getAllFriends();
     User getCurrentUserInstance();
 }

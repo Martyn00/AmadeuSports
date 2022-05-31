@@ -3,7 +3,6 @@ package com.example.back.service;
 import com.example.back.controllers.dto.UserDto;
 import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
-import com.example.back.repositories.MatchRepo;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,53 +18,9 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
-    private final MatchRepo matchRepo;
 
     @Override
-    public List<MatchEntity> getFavoriteMatchesByUserId(Long id) {
-        if (userRepo.findById(id).isPresent()) {
-            return new ArrayList<>(userRepo.findById(id).get().getFavoriteMatches());
-        }
-        return null;
-    }
-
-    @Override
-    public List<Team> getFavoriteTeamsByUserId(Long id) {
-        if (userRepo.findById(id).isPresent()) {
-            return new ArrayList<>(userRepo.findById(id).get().getFavoriteTeams());
-        }
-        return null;
-    }
-
-    @Override
-    public List<League> getFavoriteLeaguesByUserId(Long id) {
-        if (userRepo.findById(id).isPresent()) {
-            return new ArrayList<>(userRepo.findById(id).get().getFavoriteLeagues());
-        }
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Void> addMatchToFavorites(Long userId, Long matchId) {
-        User user =  userRepo.findById(userId).orElseThrow(() -> {
-            throw new UserNotFoundException();
-        });
-
-        MatchEntity match =  matchRepo.findById(matchId).orElseThrow(() -> {
-            throw new MatchNotFoundException();
-        });
-
-        if (user.getFavoriteMatches().contains(match)) {
-            throw new MatchAlreadyExistsInFavoritesException();
-        }
-
-        user.getFavoriteMatches().add(match);
-        userRepo.save(user);
-        return ResponseEntity.ok(null);
-    }
-
-    @Override
-    public ArrayList<UserDto> getAllUsers() {
+    public ResponseEntity<ArrayList<UserDto>> getAllUsers() {
         ArrayList<UserDto> result = new ArrayList<>();
 
         List<User> users = userRepo.findAll();
@@ -74,7 +29,7 @@ public class UserServiceImpl implements UserService {
             result.add(new UserDto(user.getId(), user.getUsername()));
         }
 
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     @Override
@@ -157,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ArrayList<UserDto> getAllFriends() {
+    public ResponseEntity<ArrayList<UserDto>> getAllFriends() {
         ArrayList<UserDto> result = new ArrayList<>();
 
         User me = getCurrentUserInstance();
@@ -166,7 +121,7 @@ public class UserServiceImpl implements UserService {
             result.add(new UserDto(user.getId(), user.getUsername()));
         }
 
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     public User getCurrentUserInstance() {
