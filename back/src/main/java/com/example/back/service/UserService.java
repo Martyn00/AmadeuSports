@@ -1,13 +1,9 @@
 package com.example.back.service;
 
-
 import com.example.back.controllers.dto.BetDto;
 import com.example.back.controllers.dto.MatchDto;
 import com.example.back.controllers.dto.UserDto;
-import com.example.back.models.entities.League;
-import com.example.back.models.entities.MatchEntity;
-import com.example.back.models.entities.Team;
-import com.example.back.models.entities.User;
+import com.example.back.models.entities.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -29,4 +25,5 @@ public interface UserService {
     User getCurrentUserInstance();
 
     ResponseEntity<UserDto> getLoggedInUser();
+    ResponseEntity<Integer> getUserWallet();
 }

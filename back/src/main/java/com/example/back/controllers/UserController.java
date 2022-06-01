@@ -51,4 +51,8 @@ public class UserController {
         return userService.getLoggedInUser();
     }
 
+    @GetMapping(path = "/wallet")
+    public ResponseEntity<Integer> getUserWallet() {
+        return userService.getUserWallet();
+    }
 }

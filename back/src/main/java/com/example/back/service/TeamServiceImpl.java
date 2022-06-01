@@ -46,6 +46,24 @@ public class TeamServiceImpl implements TeamService {
         return ResponseEntity.ok(result);
     }
 
+    public ResponseEntity<List<MatchDto>> getUpcomingMatches(Long id) {
+        matchService.updateAllMatches();
+
+        Team team = teamRepo.findById(id).orElseThrow(() -> {
+            throw new TeamNotFoundException();
+        });
+
+        ArrayList<MatchDto> result = new ArrayList<>();
+        for (MatchEntity match : team.getMatches()) {
+            if (!Objects.equals(match.getStatus(), "finished")) {
+                result.add(matchService.mapToMatchDto(match));
+            }
+        }
+
+        matchService.sortAscendingByDate(result);
+        return ResponseEntity.ok(result);
+    }
+
     @Override
     public ResponseEntity<String> addTeamToFavorites(Long teamId) {
         Team team = teamRepo.findById(teamId).orElseThrow(() -> {

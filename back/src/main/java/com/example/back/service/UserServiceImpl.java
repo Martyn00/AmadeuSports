@@ -5,7 +5,6 @@ import com.example.back.handlers.*;
 import com.example.back.models.entities.*;
 import com.example.back.repositories.UserRepo;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -150,5 +149,10 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         }
         throw new NotLoggedInException();
+    }
+
+    public ResponseEntity<Integer> getUserWallet() {
+        User user = getCurrentUserInstance();
+        return ResponseEntity.ok(user.getWallet());
     }
 }
