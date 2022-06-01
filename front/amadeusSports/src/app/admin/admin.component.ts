@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AddEventDto } from '../dto/AddEventDto';
 import { AddMatchDto } from '../dto/AddMatchDto';
+import { AdminService } from '../service/admin.service';
 
 @Component({
   selector: 'app-admin',
@@ -10,7 +11,7 @@ import { AddMatchDto } from '../dto/AddMatchDto';
 })
 export class AdminComponent implements OnInit {
 
-  constructor() { }
+  constructor(private adminService: AdminService) { }
 
   ngOnInit(): void {
   }
@@ -21,16 +22,17 @@ export class AdminComponent implements OnInit {
   })
   eventForm = new FormGroup({
     matchId: new FormControl(''),
-    goalType: new FormControl(''),  
-    time: new FormControl('')
+    goal: new FormControl(''),  
+    minute: new FormControl('')
   })
 
   submitMatch() {
     const result: AddMatchDto = Object.assign({}, this.matchForm.value);
-    console.log(result);
+    this.adminService.addMatch(result);
   }
 
-  submitEvenet() {
+  submitEvent() {
     const result: AddEventDto = Object.assign({}, this.eventForm.value);
+    this.adminService.addEvent(result);
   }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { MatchesTableComponent } from '../matches-table/matches-table.component';
+import { LeaguesService } from '../service/leagues.service';
 import { MatchTableLoaderService } from '../service/match-table-loader.service';
 import { TeamsService } from '../service/teams.service';
 @Component({
@@ -9,7 +10,7 @@ import { TeamsService } from '../service/teams.service';
 })
 export class MatchTabsComponent implements OnInit {
 
-  constructor(private matchTableLoaderService: MatchTableLoaderService, private teamService: TeamsService) { }
+  constructor(private matchTableLoaderService: MatchTableLoaderService, private teamService: TeamsService,private leagueService: LeaguesService) { }
   todayDate: Date = new Date();
   pDate: Date = new Date();
   ppDate: Date = new Date();
@@ -24,6 +25,9 @@ export class MatchTabsComponent implements OnInit {
     this.fDate.setDate(this.todayDate.getDate() + 2);
     this.ffDate.setDate(this.todayDate.getDate() + 3);
     this.teamService.favoriteChanged.subscribe(data => {
+      this.matchTableLoaderService.populateMatchTable(this.currentPosition - 3);
+    });
+    this.leagueService.favoriteChanged.subscribe(data => {
       this.matchTableLoaderService.populateMatchTable(this.currentPosition - 3);
     });
     this.matchTableLoaderService.populateMatchTable(-3);

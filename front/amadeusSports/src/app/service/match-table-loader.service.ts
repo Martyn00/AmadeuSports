@@ -28,7 +28,7 @@ export class MatchTableLoaderService {
     if (type === "matches") {
       url = url + "/match/favorites";
     } else if (type === "teams") {
-      url = url + "/team/matches/"+ id;
+      url = url + "/team/matches-upcoming/"+ id;
       console.log(url);
     } else if (type === "leagues") {
       url = url + "/league/upcoming/" + id ;
@@ -39,6 +39,7 @@ export class MatchTableLoaderService {
       this.favoriteMatchesLoaded.emit(this.sendMatches);
     });
   }
+  
   populateMatchTable( pos:number) {
     let url = URL + "/match/" + pos;
 

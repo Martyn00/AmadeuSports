@@ -21,15 +21,15 @@
     </mat-form-field>
     <mat-form-field appearance="fill">
         <mat-label>goal type</mat-label>
-        <mat-select formControlName="goalType">
+        <mat-select formControlName="goal">
             <mat-option value="HOME">HOME`</mat-option>
             <mat-option value="AWAY">AWAY</mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field>
         <mat-label>minute</mat-label>
-        <input matInput min="0" type="number" placeholder="time of goal" formControlName="time">
+        <input matInput min="0" type="number" placeholder="time of goal" formControlName="minute">
     </mat-form-field>
 
-    <button mat-raised-button (click)="submitEvenet()">Add event</button>
+    <button mat-raised-button (click)="submitEvent()">Add event</button>
 </form>

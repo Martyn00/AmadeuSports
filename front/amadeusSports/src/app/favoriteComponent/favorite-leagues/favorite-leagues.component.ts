@@ -24,5 +24,12 @@ export class FavoriteLeaguesComponent implements OnInit {
   removeFromFavorites(element: LeagueDto) {
     this.leagueService.changeFavoriteStateLeague(element);
     this.leagueService.getAllFavoriteLeagues()
+    this.removeElementFromLeagues(element);
+  }
+  removeElementFromLeagues(element: LeagueDto) {
+    const index = this.leagues.indexOf(element, 0);
+    if (index > -1) {
+      this.leagues.splice(index, 1);
+    }
   }
 }

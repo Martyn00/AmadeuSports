@@ -9,9 +9,7 @@
     </button>
     <div class="settings-btn">
         <button *ngIf="isUserAdmin()" mat-icon-button (click)="changeState('/admin')" aria-label="Example icon-button with a menu">
-            <span class="material-symbols-outlined">
-                group
-            </span>
+            <mat-icon>assignment_late</mat-icon>
         </button>
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>

@@ -26,8 +26,14 @@ export class FavoritesTableComponent implements OnInit {
     element.isFavorite = !element.isFavorite;
     console.log(element);
     this.matchTableService.changeFavoriteState(element);
-    this.matchTableService.populatMatchtableWithFavorites("matches", 0);
-    this.ngOnInit();
+    // this.matchTableService.populatMatchtableWithFavorites("matches", 0);
+    this.removeElementFromMatches(element);
+  }
+  removeElementFromMatches(element: MatchDto) {
+    const index = this.dataSource.indexOf(element, 0);
+    if (index > -1) {
+      this.dataSource.splice(index, 1);
+    }
   }
 
   favoritesLeague(element: MatchDto) {

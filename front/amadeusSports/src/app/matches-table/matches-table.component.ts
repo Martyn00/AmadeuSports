@@ -1,3 +1,4 @@
+import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y/input-modality/input-modality-detector';
 import { formatDate } from '@angular/common';
 import { Component, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,9 +36,7 @@ export class MatchesTableComponent implements OnInit {
   }
   clickedFavorite(element: MatchDto) {
     element.isFavorite = !element.isFavorite;
-    console.log(element);
     this.matchTableService.changeFavoriteState(element);
-    this.ngOnInit();
   }
 
   favoritesLeague(element: MatchDto) {
@@ -74,6 +73,8 @@ export class MatchesTableComponent implements OnInit {
       }
       // Data back from dialog
       this.betService.bet(result);
+      this.betService.getCoins()
+      console.log("aici da");
     });
   }
 

@@ -15,8 +15,10 @@ export class UpperBarComponent implements OnInit {
   ngOnInit(): void {
     this.betService.coinsLoaded.subscribe((data) => {
       this.coins = data;
+      console.log("this was called", this.coins);
     });
     this.betService.getCoins();
+
   }
   changeState(component: string) {
     this.loader.changeState(component);
