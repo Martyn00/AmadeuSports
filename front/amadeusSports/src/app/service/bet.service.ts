@@ -56,7 +56,6 @@ export class BetService {
 
       this.http.get<BetDto[]>(url).subscribe(response => {
         this.sendBets = response;
-        console.log("aici " + this.sendBets);
         if (type === 'history') {
           this.betsHistoryLoaded.emit(this.sendBets);
         }
@@ -73,8 +72,10 @@ export class BetService {
       let url = URL + '/bet/accept/' + element.id + "/" + result.toUpperCase();
       this.http.post<any>(url, httpOptions).subscribe(() => {
         console.log("responded");
+        this.getCoins();
+        this.getUserBets('pending');
       });
-      this.getCoins();
+      
     }
 
   cancelBet(element: BetDto) {
@@ -82,8 +83,10 @@ export class BetService {
     console.log(url);
       this.http.post<any>(url, httpOptions).subscribe(() => {
         console.log("responded");
+        this.getCoins();
+        this.getUserBets('pending');
       });
-      this.getCoins();
+      
     }
 
 }
