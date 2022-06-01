@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, EventEmitter } from '@angular/core';
+import { upperCase } from '@rxweb/reactive-form-validators';
 import { BetDto } from '../dto/BetDto';
 import { ResultDto } from '../dto/ResultDto';
 
@@ -28,7 +29,7 @@ export class BetService {
   }
   bet(result: ResultDto) {
     console.log(result);
-    this.http.post<any>(URL + '/bet/add-bet/' + result.matchId + '/' + result.userId + '/' + result.choice + '/' + result.coins, httpOptions).subscribe(() => {
+    this.http.post<any>(URL + '/bet/add', result, httpOptions).subscribe(() => {
       console.log("responded");
     })
 
@@ -51,15 +52,15 @@ export class BetService {
     });
   }
 
-  acceptBet(result: number, element: BetDto) {
-    let url = URL + '/bet/accept-bet/' + element.id + "/" + result;
+  acceptBet(result: string, element: BetDto) {
+    let url = URL + '/bet/accept/' + element.id + "/" + result.toUpperCase();
     this.http.post<any>(url, httpOptions).subscribe(() => {
       console.log("responded");
     });
   }
 
   cancelBet(element: BetDto) {
-    let url = URL + '/bet/cancel-bet/' + element.id
+    let url = URL + '/bet/cancel/' + element.id
     console.log(url);
     this.http.post<any>(url, httpOptions).subscribe(() => {
       console.log("responded");

@@ -26,10 +26,10 @@ export class TeamsService {
   changeFavoriteStateTeam(team: TeamDto) {
     let url;
     if (!team.isFavorite) {
-      url = URL + "/team/" + team.id + "/favorites-add";
+      url = URL + "/team/favorites-add/" + team.id;
 
     } else {
-      url = URL + "/team/" + team.id + "/favorites-remove";
+      url = URL + "/team/favorites-remove/" + team.id;
     }
     console.log(url)
     this.http.post<any>(url, null, httpOptions).subscribe(response => {  
@@ -44,4 +44,10 @@ export class TeamsService {
       this.teamsLoaded.emit(this.sendTeams);
     });
   }
+
+  getTeamByName(team: string) {
+    let url = URL + "/getTeamByName/" + team;
+    return this.http.get<TeamDto>(url, httpOptions)
+  }
+
 }

@@ -1,11 +1,11 @@
 export class ResultDto {
-    coins!: number;
-    userId!: number;
-    choice!: number;
+    amount!: number;
+    username!: string;
+    betType!: string;
     matchId!: number;
-    constructor(coins: number, userId: number, choice: number) {
-        this.choice = choice;
-        this.coins = coins;
-        this.userId = userId;
+    constructor(coins: number, username: string, betType: string) {
+        this.betType = betType;
+        this.amount = coins;
+        this.username = username;
     }
 }

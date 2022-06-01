@@ -51,7 +51,7 @@ export class MatchesTableComponent implements OnInit {
     updatedELement.team1.isFavorite != element.team1.isFavorite;
   }
   favoritesTeam2(element: MatchDto) {
-    this.teamService.changeFavoriteStateTeam(element.team2,);
+    this.teamService.changeFavoriteStateTeam(element.team2);
     let updatedELement: MatchDto = element;
     updatedELement.team2.isFavorite != element.team2.isFavorite;
   }
@@ -68,7 +68,7 @@ export class MatchesTableComponent implements OnInit {
     myTempDialog.afterClosed().subscribe((res) => {
       let result: ResultDto = res;
       console.log(result);
-      if (result.choice === -1 || result.coins === -1 || result.userId === -1) {
+      if (result.betType === 'PENDING' || result.amount === -1 || result.username === '') {
         this._snackBar.open("You did not fill all the necessary fields", "Dismiss");
         return;
       }

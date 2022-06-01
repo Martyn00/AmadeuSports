@@ -28,7 +28,7 @@ export class MatchTableLoaderService {
     if (type === "matches") {
       url = url + "/match/favorites";
     } else if (type === "teams") {
-      url = url + "/team/" + id + "/matches";
+      url = url + "/team/matches/"+ id;
       console.log(url);
     } else if (type === "leagues") {
       url = url + "/league/upcoming/" + id ;
@@ -51,10 +51,10 @@ export class MatchTableLoaderService {
   changeFavoriteState(element: MatchDto) {
     let url;
     if (element.isFavorite) {
-      url = URL + "/match/" + element.id + "/favorites-add";
+      url = URL + "/match/favorites-add/" + element.id;
 
     } else {
-      url = URL + "/match/" + element.id + "/favorites-remove";
+      url = URL + "/match/favorites-remove/" + element.id;
     }
 
     this.http.post<any>(url, null, httpOptions).subscribe(response => {

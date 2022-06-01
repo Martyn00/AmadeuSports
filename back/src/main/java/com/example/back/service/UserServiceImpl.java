@@ -151,20 +151,4 @@ public class UserServiceImpl implements UserService {
         }
         throw new NotLoggedInException();
     }
-
-    @Override
-    public ResponseEntity<UserDto> getLoggedInUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof User) {
-            Long me_id = ((User) principal).getId();
-            User me = userRepo.findById(me_id).orElseThrow(() -> {
-                throw new UserNotFoundException();
-            });
-            UserDto userDto = new UserDto();
-            userDto.setId(me.getId());
-            userDto.setUsername(me.getUsername());
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        }
-        throw new NotLoggedInException();
-    }
 }

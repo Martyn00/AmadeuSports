@@ -3,7 +3,7 @@
     <mat-form-field appearance="fill" [formControl]="friendForm">
         <mat-label>Choose friend</mat-label>
         <mat-select>
-            <mat-option *ngFor="let friend of friends" [value]="friend.username" (click)="changeId(friend.id)">
+            <mat-option *ngFor="let friend of friends" [value]="friend.username" (click)="changeUsername(friend.username)">
                 {{friend.username}}
             </mat-option>
         </mat-select>
@@ -18,9 +18,9 @@
     </div>
     <p>What's the result?</p>
     <section class="example-section">
-        <mat-checkbox class="example-margin" [checked]="this.checkedBoxes[0]" [disabled]="checkBoxesDisabled[0]" (change)="checkedABox(0)">team1</mat-checkbox>
-        <mat-checkbox class="example-margin" [checked]="this.checkedBoxes[1]" [disabled]="checkBoxesDisabled[1]" (change)="checkedABox(1)">team2</mat-checkbox>
-        <mat-checkbox class="example-margin" [checked]="this.checkedBoxes[2]" [disabled]="checkBoxesDisabled[2]" (change)="checkedABox(2)" >equal</mat-checkbox>
+        <mat-checkbox class="example-margin" [checked]="this.checkedBoxes[0]" [disabled]="checkBoxesDisabled[0]" (change)="checkedABox(0)">equal</mat-checkbox>
+        <mat-checkbox class="example-margin" [checked]="this.checkedBoxes[1]" [disabled]="checkBoxesDisabled[1]" (change)="checkedABox(1)">home</mat-checkbox>
+        <mat-checkbox class="example-margin" [checked]="this.checkedBoxes[2]" [disabled]="checkBoxesDisabled[2]" (change)="checkedABox(2)" >away</mat-checkbox>
 
     </section>
 </mat-dialog-content>

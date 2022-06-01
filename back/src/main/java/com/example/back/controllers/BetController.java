@@ -1,6 +1,8 @@
 package com.example.back.controllers;
 
+import com.example.back.controllers.dto.AddBetDto;
 import com.example.back.controllers.dto.BetDto;
+import com.example.back.models.entities.BetType;
 import com.example.back.service.BetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

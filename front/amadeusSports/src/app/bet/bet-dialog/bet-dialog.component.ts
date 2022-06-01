@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ResultDto } from 'src/app/dto/ResultDto';
 import { UserDto } from 'src/app/dto/UserDto';
 import { FriendService } from 'src/app/service/friend.service';
 
@@ -23,7 +24,7 @@ export class BetDialogComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public mydata: any,
     private friendsService: FriendService,
   ) {
-    this.result = new ResultDto(-1, -1, -1);
+    this.result = new ResultDto(-1, '', 'PENDING');
    }
 
   ngOnInit(): void {
@@ -41,17 +42,23 @@ export class BetDialogComponent implements OnInit {
       this.checkedBoxes[i] = false;
     }
     this.checkedBoxes[pos] = true;
-    this.result.choice = pos;
+    if (pos == 0) {
+      this.result.betType = 'EQUAL';
+    } else if (pos == 1) {
+      this.result.betType = 'HOME';
+    } else if (pos == 2) {
+      this.result.betType = 'AWAY';
+    }
   }
 
-  changeId(id: number) {
-    this.result.userId = id;
+  changeUsername(username: string) {
+    this.result.username = username;
     console.log(this.result);
   }
 
   changeCoin() {
-    this.result.coins = this.coinForm.value;
-    console.log(this.result.coins);
+    this.result.amount = this.coinForm.value;
+    console.log(this.result.amount);
   }
 }
 

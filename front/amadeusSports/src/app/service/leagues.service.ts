@@ -24,10 +24,10 @@ export class LeaguesService {
   changeFavoriteStateLeague(league: LeagueDto) {
     let url;
     if (!league.isFavorite) {
-      url = URL + "/league/" + league.id + "/favorites-add";
+      url = URL + "/league/favorites-add/" + league.id;
 
     } else {
-      url = URL + "/league/" + league.id + "/favorites-remove";
+      url = URL + "/league/favorites-remove/" + league.id;
     }
     console.log(url)
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
@@ -41,5 +41,10 @@ export class LeaguesService {
       console.log(this.sendLeagues);
       this.leaguesLoaded.emit(this.sendLeagues);
     });
+  }
+
+  getleagueByName(league: string){
+    let url = URL + "/getLeagueByName/" + league;
+    return this.http.get<LeagueDto>(url, httpOptions)
   }
 }

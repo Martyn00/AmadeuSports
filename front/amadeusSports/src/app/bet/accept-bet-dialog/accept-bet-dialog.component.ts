@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BetDto } from 'src/app/dto/BetDto';
 
 @Component({
@@ -14,28 +14,30 @@ export class AcceptBetDialogComponent implements OnInit {
   result2Name!: string;
   betData!: BetDto;
   choiceData!: number;
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public mydata: any) {
+  cancel = -1;
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public mydata: any, public dialogRef: MatDialogRef<any>) {
     this.choiceData = mydata[1];
     this.betData = mydata[0];
-    if (this.choiceData == 0) {
-      this.result1Name = 'team1';
-      this.result2Name = 'team2';
+    if (this.choiceData === 0) {
+      this.result1Name = 'equal';
+      this.result2Name = 'away';
       this.result1 = 1;
       this.result2 = 2;
-    } else if (this.choiceData == 1) {
+    } else if (this.choiceData === 1) {
       this.result1Name = 'equal';
-      this.result2Name = 'team2';
+      this.result2Name = 'away';
       this.result1 = 0;
       this.result2 = 2;
-    } else if (this.choiceData == 2) {
+    } else if (this.choiceData === 2) {
       this.result1Name = 'equal';
-      this.result2Name = 'team1';
+      this.result2Name = 'home';
       this.result1 = 0;
       this.result2 = 1;
     }
    }
 
   ngOnInit(): void {
+    this.dialogRef.updateSize('30%', '50%');
   }
 
 }
