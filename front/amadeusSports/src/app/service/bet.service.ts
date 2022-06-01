@@ -25,14 +25,18 @@ export class BetService {
   constructor(private http: HttpClient) { }
 
   getCoins() {
-    this.coinsLoaded.emit(this.coins);
+    let url = URL +  "/user/wallet"
+    this.http.get<number>(url).subscribe(response => {
+      this.coins = response;
+      this.coinsLoaded.emit(this.coins);
+    });
   }
   bet(result: ResultDto) {
     console.log(result);
     this.http.post<any>(URL + '/bet/add', result, httpOptions).subscribe(() => {
       console.log("responded");
-    })
-
+    });
+    this.getCoins();
   }
   getUserBets(type: string) {
     let url = URL + "/bet/" + type;
@@ -57,6 +61,7 @@ export class BetService {
     this.http.post<any>(url, httpOptions).subscribe(() => {
       console.log("responded");
     });
+    this.getCoins();
   }
 
   cancelBet(element: BetDto) {
@@ -65,6 +70,7 @@ export class BetService {
     this.http.post<any>(url, httpOptions).subscribe(() => {
       console.log("responded");
     });
+    this.getCoins();
   }
 
 }

@@ -21,4 +21,7 @@ export class UpperBarComponent implements OnInit {
   changeState(component: string) {
     this.loader.changeState(component);
   }
+  isUserAdmin() {
+    return (localStorage.getItem('role') === 'ADMIN');
+  }
 }

@@ -24,13 +24,13 @@ export class AcceptBetDialogComponent implements OnInit {
       this.result1 = 1;
       this.result2 = 2;
     } else if (this.choiceData === 1) {
-      this.result1Name = 'equal';
-      this.result2Name = 'away';
+      this.result1Name = 'home';
+      this.result2Name = 'equal';
       this.result1 = 0;
       this.result2 = 2;
     } else if (this.choiceData === 2) {
-      this.result1Name = 'equal';
-      this.result2Name = 'home';
+      this.result1Name = 'home';
+      this.result2Name = 'away';
       this.result1 = 0;
       this.result2 = 1;
     }

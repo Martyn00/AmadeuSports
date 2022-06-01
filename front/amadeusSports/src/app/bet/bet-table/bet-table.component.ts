@@ -17,7 +17,7 @@ export class BetTableComponent implements OnInit {
   constructor(private betService: BetService, private userService: UserService,
     private teamService: TeamsService, private leagueService: LeaguesService) { }
   dataSource!: BetDto[];
-  displayedColumns: string[] = ['time', 'team1', 'team2', 'result', 'league', 'bet', 'status', 'coins'];
+  displayedColumns: string[] = ['time', 'team1', 'team2', 'league', 'bet', 'coins'];
   user!: UserDto;
   ngOnInit(): void {
     this.betService.betsCurrentLoaded.subscribe(data => {
@@ -48,14 +48,27 @@ export class BetTableComponent implements OnInit {
 
   }
 
+  transformChoiceToString(choice: number) {
+    if (choice == 0) {
+      return 'HOME'
+    } else if (choice == 1) {
+      return 'AWAY'
+    } else if (choice == 2) {
+      return 'EQUAL'
+    }
+    return '';
+  }
+
   getLoggedUserBet(element: BetDto) {
 
     if (this.user.id === element.betChoice.user1Id) {
-      return element.betChoice.user1Choice
+      
+      return this.transformChoiceToString(element.betChoice.user1Choice)
     }
     if (this.user.id === element.betChoice.user2Id) {
-      return element.betChoice.user2Choice
+      return this.transformChoiceToString(element.betChoice.user2Choice)
     }
     return -1;
   }
+  
 }

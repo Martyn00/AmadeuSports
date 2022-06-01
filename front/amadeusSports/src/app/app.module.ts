@@ -48,6 +48,7 @@ import { BetDialogComponent } from './bet/bet-dialog/bet-dialog.component';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AcceptBetDialogComponent } from './bet/accept-bet-dialog/accept-bet-dialog.component';
+import { AdminComponent } from './admin/admin.component';
 
 
 @NgModule({
@@ -71,11 +72,13 @@ import { AcceptBetDialogComponent } from './bet/accept-bet-dialog/accept-bet-dia
     FavoritesTableComponent,
     BetDialogComponent,
     AcceptBetDialogComponent,
+    AdminComponent,
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
+      { path: 'admin', component: AdminComponent},
       {
         path: 'bets', component: BetsComponent
       },

@@ -38,7 +38,8 @@ export class LeaguesService {
     let path = "/league/favorites"
     this.http.get<TeamDto[]>(URL + path, httpOptions).subscribe(response => {
       this.sendLeagues = response;
-      console.log(this.sendLeagues);
+      // console.log('var', this.sendLeagues);
+      // console.log('raspuns', response)
       this.leaguesLoaded.emit(this.sendLeagues);
     });
   }

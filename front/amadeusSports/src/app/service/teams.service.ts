@@ -41,6 +41,7 @@ export class TeamsService {
     this.http.get<TeamDto[]>(url, httpOptions).subscribe(response => {
       this.sendTeams = response;
       console.log(this.sendTeams);
+      console.log(response);
       this.teamsLoaded.emit(this.sendTeams);
     });
   }

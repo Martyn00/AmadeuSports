@@ -22,10 +22,6 @@
                 [matMenuTriggerFor]="menut2">{{element.team2.name}}</button>
         </td>
     </ng-container>
-    <ng-container matColumnDef="result">
-        <th mat-header-cell *matHeaderCellDef>Result</th>
-        <td mat-cell *matCellDef="let element">{{element.result}}</td>
-    </ng-container>
     <!-- Symbol Column -->
     <ng-container matColumnDef="league">
         <th mat-header-cell *matHeaderCellDef>League</th>
@@ -38,10 +34,7 @@
             <th mat-header-cell *matHeaderCellDef>Your Bet</th>
             <td mat-cell *matCellDef="let element">{{getLoggedUserBet(element)}}</td>
         </ng-container>
-    <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>status</th>
-        <td mat-cell *matCellDef="let element">{{element.status}}</td>
-    </ng-container>
+
     <ng-container matColumnDef="coins">
         <th mat-header-cell *matHeaderCellDef>Coins</th>
         <td mat-cell *matCellDef="let element">{{element.amount}}</td>

@@ -36,6 +36,7 @@ export class UserService {
             console.log(response);
             localStorage.clear();
             localStorage.setItem("token", response.jwt);
+            localStorage.setItem("role", response.role);
         });
         this.loader.changeState("/match-tabs");
     }
