@@ -144,12 +144,11 @@ public class BetServiceImpl implements BetService {
 
         User user = userService.getCurrentUserInstance();
 
-        if (user == bet.getUser1()) {
-            user.setWallet(user.getWallet() + bet.getAmount());
-        } else if (user != bet.getUser2()) {
+        if (user != bet.getUser1() && user != bet.getUser2()) {
             throw new NotUsersBetException();
         }
 
+        bet.getUser1().setWallet(bet.getUser1().getWallet() + bet.getAmount());
 
         bet.getUser1().getBets().remove(bet);
         bet.getUser2().getBets().remove(bet);
