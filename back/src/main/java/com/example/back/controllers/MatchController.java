@@ -24,12 +24,12 @@ public class MatchController {
     }
 
     @PostMapping(path = "/favorites-add/{matchID}")
-    public ResponseEntity<String> addMatchToFavorites(@PathVariable Long matchID) {
+    public ResponseEntity addMatchToFavorites(@PathVariable Long matchID) {
         return matchService.addMatchToFavorites(matchID);
     }
 
     @PostMapping(path = "/favorites-remove/{matchID}")
-    public ResponseEntity<String> removeMatchFromFavorites(@PathVariable Long matchID) {
+    public ResponseEntity removeMatchFromFavorites(@PathVariable Long matchID) {
         return matchService.removeMatchFromFavorites(matchID);
     }
 
@@ -39,12 +39,12 @@ public class MatchController {
     }
 
     @PostMapping(path = "/add-match")
-    public ResponseEntity<String> addMatch(@RequestBody AddMatchDto addMatchDto) {
+    public ResponseEntity addMatch(@RequestBody AddMatchDto addMatchDto) {
         return matchService.addMatch(addMatchDto);
     }
 
     @PostMapping(path = "/add-event")
-    public ResponseEntity<String> addEvent(@RequestBody AddEventDto addEventDto) {
+    public ResponseEntity addEvent(@RequestBody AddEventDto addEventDto) {
         return matchService.addEvent(addEventDto);
     }
 

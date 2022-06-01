@@ -1,17 +1,24 @@
 <mat-drawer-container class="example-container">
     <mat-drawer mode="side" opened>
-        <div class>
+        <div class *ngIf="isSignedIn">
             <div>
                 <button mat-raised-button color="primary" (click)="changeState('/favorites')">Favorites</button>
             </div>
             <div>
                 <button mat-raised-button color="primary" (click)="changeState('/match-tabs')">
-                    All Matches
+                    All Matches 
                 </button>
             </div>
             <div>
                 <button mat-raised-button color="primary" (click)="changeState('/bets')">
                     Bets
+                </button>
+            </div>
+        </div>
+        <div class *ngIf="!isSignedIn">
+            <div>
+                <button mat-raised-button color="primary" (click)="changeState('/match-tabs')">
+                    All Matches
                 </button>
             </div>
         </div>

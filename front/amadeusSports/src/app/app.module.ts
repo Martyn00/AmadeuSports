@@ -47,6 +47,9 @@ import { FavoritesTableComponent } from './favoriteComponent/favorites-table/fav
 import { BetDialogComponent } from './bet/bet-dialog/bet-dialog.component';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AcceptBetDialogComponent } from './bet/accept-bet-dialog/accept-bet-dialog.component';
+import { AdminComponent } from './admin/admin.component';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
@@ -69,11 +72,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FavoriteLeaguesComponent,
     FavoritesTableComponent,
     BetDialogComponent,
+    AcceptBetDialogComponent,
+    AdminComponent,
   ],
   imports: [
     RouterModule.forRoot([
       { path: 'log-in', component: LogInComponent },
       { path: 'register', component: UserRegisterComponent },
+      { path: 'admin', component: AdminComponent},
       {
         path: 'bets', component: BetsComponent
       },
@@ -118,7 +124,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatDialogModule,
     MatCheckboxModule,
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, FriendService, {
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, DatePipe, FriendService, {
     provide: HTTP_INTERCEPTORS,
     useClass: UserEmulationInterceptor,
     multi: true

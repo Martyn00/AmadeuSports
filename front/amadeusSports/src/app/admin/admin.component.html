@@ -1,0 +1,35 @@
+<form (submit)="$event.preventDefault()" [formGroup]="matchForm">
+    <mat-form-field>
+        <mat-label>Home team name</mat-label>
+        <input matInput placeholder="team1Name" formControlName="team1Name">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Away team name</mat-label>
+        <input matInput placeholder="team2Name" formControlName="team2Name">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>start date and time</mat-label>
+        <input matInput type="datetime-local" formControlName="startTime" placeholder="startTime">
+    </mat-form-field>
+
+    <button mat-raised-button (click)="submitMatch()">Add match</button>
+</form>
+<form (submit)="$event.preventDefault()" [formGroup]="eventForm">
+    <mat-form-field>
+        <mat-label>matchId</mat-label>
+        <input matInput placeholder="match id" formControlName="matchId">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>goal type</mat-label>
+        <mat-select formControlName="goal">
+            <mat-option value="HOME">HOME`</mat-option>
+            <mat-option value="AWAY">AWAY</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>minute</mat-label>
+        <input matInput min="0" type="number" placeholder="time of goal" formControlName="minute">
+    </mat-form-field>
+
+    <button mat-raised-button (click)="submitEvent()">Add event</button>
+</form>

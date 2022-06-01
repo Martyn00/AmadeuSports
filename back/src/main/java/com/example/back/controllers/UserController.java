@@ -46,6 +46,11 @@ public class UserController {
         return userService.removeFriendByUserName(userName);
     }
 
+    @GetMapping(path = "/logged")
+    public ResponseEntity<UserDto> getLoggedInUser() {
+        return userService.getLoggedInUser();
+    }
+
     @GetMapping(path = "/wallet")
     public ResponseEntity<Integer> getUserWallet() {
         return userService.getUserWallet();

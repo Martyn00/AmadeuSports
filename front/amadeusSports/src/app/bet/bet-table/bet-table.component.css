@@ -1,0 +1,25 @@
+
+.demo-table {
+  width: 100%;
+}
+
+.mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-row:hover .mat-cell {
+  border-color: #673ab7;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}
+
+.mat-button-toggle{
+    height:48px !important;
+    width:90px !important;
+  text-align: center;
+  block-size: auto;
+}

@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { TeamDto } from 'src/app/dto/TeamDto';
 import { MatchTableLoaderService } from 'src/app/service/match-table-loader.service';
@@ -20,12 +21,18 @@ export class FavoriteTeamsComponent implements OnInit {
   }
 
   openGroup(team: TeamDto) {
-
     console.log(team.id);
     this.matchService.populatMatchtableWithFavorites("teams", team.id);
   }
   removeFromFavorites(element: TeamDto) {
     this.teamsService.changeFavoriteStateTeam(element);
-    this.ngOnInit();
+    this.removeElementFromTeams(element);
+    
+  }
+  removeElementFromTeams(element: TeamDto) {
+    const index = this.teams.indexOf(element, 0);
+    if (index > -1) {
+      this.teams.splice(index, 1);
+    }
   }
 }

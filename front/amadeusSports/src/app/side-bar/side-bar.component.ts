@@ -18,6 +18,9 @@ export class SideBarComponent implements OnInit {
   ngOnInit(): void {
     this.loader.stateLoaded
       .subscribe((data) => { this.changeState(data); });
+    if (localStorage.getItem('token') !== null) {
+      this.isSignedIn = true;
+    }
   }
 
   changeState(component: string): void {

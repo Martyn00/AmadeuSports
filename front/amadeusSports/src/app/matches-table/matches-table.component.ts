@@ -1,9 +1,12 @@
+import { TOUCH_BUFFER_MS } from '@angular/cdk/a11y/input-modality/input-modality-detector';
 import { formatDate } from '@angular/common';
 import { Component, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BetDialogComponent } from '../bet/bet-dialog/bet-dialog.component';
 import { MatchDto } from '../dto/MatchDto';
+import { ResultDto } from '../dto/ResultDto';
+import { BetService } from '../service/bet.service';
 import { LeaguesService } from '../service/leagues.service';
 import { MatchTableLoaderService } from '../service/match-table-loader.service';
 import { TeamsService } from '../service/teams.service';
@@ -21,9 +24,9 @@ export class MatchesTableComponent implements OnInit {
 
   @ViewChild('dialogRef')
   dialogRef!: TemplateRef<any>;
-  myFooList = ['Some Item', 'Item Second', 'Other In Row', 'What to write', 'Blah To Do']
 
-  constructor(private matchTableService: MatchTableLoaderService, private teamService: TeamsService, private leagueService: LeaguesService, public dialog: MatDialog, private _snackBar: MatSnackBar) {
+  constructor(private matchTableService: MatchTableLoaderService, private teamService: TeamsService,
+    private leagueService: LeaguesService, public dialog: MatDialog, private _snackBar: MatSnackBar, private betService: BetService) {
   }
 
   ngOnInit(): void {
@@ -33,23 +36,21 @@ export class MatchesTableComponent implements OnInit {
   }
   clickedFavorite(element: MatchDto) {
     element.isFavorite = !element.isFavorite;
-    console.log(element);
     this.matchTableService.changeFavoriteState(element);
-    this.ngOnInit();
   }
 
-  favoritesLeague(element:MatchDto) {
+  favoritesLeague(element: MatchDto) {
     this.leagueService.changeFavoriteStateLeague(element.league);
     let updatedELement: MatchDto = element;
     updatedELement.league.isFavorite != element.league.isFavorite;
   }
   favoritesTeam1(element: MatchDto) {
-    this.teamService.changeFavoriteStateTeam(element.team1, );
+    this.teamService.changeFavoriteStateTeam(element.team1,);
     let updatedELement: MatchDto = element;
     updatedELement.team1.isFavorite != element.team1.isFavorite;
   }
   favoritesTeam2(element: MatchDto) {
-    this.teamService.changeFavoriteStateTeam(element.team2, );
+    this.teamService.changeFavoriteStateTeam(element.team2);
     let updatedELement: MatchDto = element;
     updatedELement.team2.isFavorite != element.team2.isFavorite;
   }
@@ -64,9 +65,16 @@ export class MatchesTableComponent implements OnInit {
 
     const myTempDialog = this.dialog.open(BetDialogComponent, { data: element.id });
     myTempDialog.afterClosed().subscribe((res) => {
-
+      let result: ResultDto = res;
+      console.log(result);
+      if (result.betType === 'PENDING' || result.amount === -1 || result.username === '') {
+        this._snackBar.open("You did not fill all the necessary fields", "Dismiss");
+        return;
+      }
       // Data back from dialog
-      console.log({ res });
+      this.betService.bet(result);
+      this.betService.getCoins()
+      console.log("aici da");
     });
   }
 

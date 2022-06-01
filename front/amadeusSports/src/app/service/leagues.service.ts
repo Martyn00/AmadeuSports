@@ -24,22 +24,25 @@ export class LeaguesService {
   changeFavoriteStateLeague(league: LeagueDto) {
     let url;
     if (!league.isFavorite) {
-      url = URL + "/league/" + league.id + "/favorites-add";
+      url = URL + "/league/favorites-add/" + league.id;
 
     } else {
-      url = URL + "/league/" + league.id + "/favorites-remove";
+      url = URL + "/league/favorites-remove/" + league.id;
     }
-    console.log(url)
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
-
+      this.favoriteChanged.emit(league);
     });
   }
   getAllFavoriteLeagues() {
     let path = "/league/favorites"
     this.http.get<TeamDto[]>(URL + path, httpOptions).subscribe(response => {
       this.sendLeagues = response;
-      console.log(this.sendLeagues);
       this.leaguesLoaded.emit(this.sendLeagues);
     });
+  }
+
+  getleagueByName(league: string){
+    let url = URL + "/getLeagueByName/" + league;
+    return this.http.get<LeagueDto>(url, httpOptions)
   }
 }

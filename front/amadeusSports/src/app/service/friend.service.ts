@@ -30,13 +30,13 @@ export class FriendService {
   }
   addFriend(username: string) {
     console.log("aici" + username);
-    let url = URL + '/user/' + username + '/add-friend-by-username'
+    let url = URL + '/user/add-friend-by-username/' + username;
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
     });
     this.populateFriendsTable();
   }
   deleteFriend(username: string) {
-    let url = URL + '/user/' + username + '/remove-friend-by-username'
+    let url = URL + '/user/remove-friend-by-username/' + username;
     this.http.post<any>(url, null, httpOptions).subscribe(response => {
     });
     this.populateFriendsTable();

@@ -78,11 +78,11 @@ public class TeamServiceImpl implements TeamService {
 
         user.getFavoriteTeams().add(team);
         userRepo.save(user);
-        return ResponseEntity.ok("Team " + team.getName() + " has been added to favorites!");
+        return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<String> removeTeamFromFavorites(Long teamId) {
+    public ResponseEntity removeTeamFromFavorites(Long teamId) {
         Team team = teamRepo.findById(teamId).orElseThrow(() -> {
             throw new MatchNotFoundException();
         });
@@ -92,7 +92,7 @@ public class TeamServiceImpl implements TeamService {
         if(user.getFavoriteTeams().contains(team)) {
             user.getFavoriteTeams().remove(team);
             userRepo.save(user);
-            return ResponseEntity.ok("Team " + team.getName() + " removed from favorites!");
+            return ResponseEntity.ok().build();
         }
 
         throw new TeamNotInFavoritesException();

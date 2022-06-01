@@ -38,7 +38,7 @@ public class LeagueServiceImpl implements LeagueService {
 
         user.getFavoriteLeagues().add(league);
         userRepo.save(user);
-        return ResponseEntity.ok("League " + league.getName() + " has been added to favorites!");
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class LeagueServiceImpl implements LeagueService {
         if(user.getFavoriteLeagues().contains(league)) {
             user.getFavoriteLeagues().remove(league);
             userRepo.save(user);
-            return ResponseEntity.ok("League " + league.getName() + " removed from favorites!");
+            return ResponseEntity.ok().build();
         }
 
         throw new LeagueNotInFavoritesException();

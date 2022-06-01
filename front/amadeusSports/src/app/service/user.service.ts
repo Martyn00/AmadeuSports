@@ -36,10 +36,14 @@ export class UserService {
             console.log(response);
             localStorage.clear();
             localStorage.setItem("token", response.jwt);
+            localStorage.setItem("role", response.role);
         });
         this.loader.changeState("/match-tabs");
     }
     getUsers() {
-        return this.http.get<UserDto[]>(URL + '/user/all')
+        return this.http.get<UserDto[]>(URL + '/user/all');
+    }
+    getLoggedInUser() {
+        return this.http.get<UserDto>(URL + '/user/logged');
     }
 }
