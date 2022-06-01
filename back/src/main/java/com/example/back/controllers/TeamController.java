@@ -19,9 +19,14 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @GetMapping(path = "/matches/{id}")
+    @GetMapping(path = "/matches-history/{id}")
     public ResponseEntity<List<MatchDto>> getMatchesHistory(@PathVariable Long id) {
         return teamService.getMatchesHistory(id);
+    }
+
+    @GetMapping(path = "/matches-upcoming/{id}")
+    public ResponseEntity<List<MatchDto>> getUpcomingMatches(@PathVariable Long id) {
+        return teamService.getUpcomingMatches(id);
     }
 
     @PostMapping(path = "/favorites-add/{teamId}")

@@ -159,6 +159,10 @@ public class MatchServiceImpl implements MatchService {
 
         MatchEntity match = new MatchEntity(team1, team2, league, null, status, addMatchDto.getScore(), startDate, null, duration);
         matchRepo.save(match);
+        team1.getMatches().add(match);
+        team2.getMatches().add(match);
+        teamRepo.save(team1);
+        teamRepo.save(team2);
 
         return ResponseEntity.ok("A new match has been added!");
     }
@@ -292,5 +296,4 @@ public class MatchServiceImpl implements MatchService {
     public void sortDescendingByDate(ArrayList<MatchDto> result) {
         result.sort((o1, o2) -> o2.getTime().compareTo(o1.getTime()));
     }
-
 }

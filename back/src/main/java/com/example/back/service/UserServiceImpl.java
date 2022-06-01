@@ -134,4 +134,9 @@ public class UserServiceImpl implements UserService {
         }
         throw new NotLoggedInException();
     }
+
+    public ResponseEntity<Integer> getUserWallet() {
+        User user = getCurrentUserInstance();
+        return ResponseEntity.ok(user.getWallet());
+    }
 }

@@ -23,4 +23,5 @@ public interface UserService {
 
     ResponseEntity<ArrayList<UserDto>> getAllFriends();
     User getCurrentUserInstance();
+    ResponseEntity<Integer> getUserWallet();
 }
