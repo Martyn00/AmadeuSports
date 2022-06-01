@@ -18,7 +18,7 @@ public class Controller {
     private final LoginService loginService;
 
     @PostMapping(path = "/register")
-    public String registerNewUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<String> registerNewUser(@RequestBody RegisterRequest registerRequest) {
         return registerService.registerNewUser(registerRequest);
     }
 

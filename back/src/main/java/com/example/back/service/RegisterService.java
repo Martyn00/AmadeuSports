@@ -1,11 +1,16 @@
 package com.example.back.service;
 
+import com.example.back.handlers.EmailTakenException;
+import com.example.back.handlers.PasswordLengthException;
+import com.example.back.handlers.UsernameTakenException;
+import com.example.back.handlers.WrongEmailFormatException;
 import com.example.back.models.entities.ConfirmationToken;
 import com.example.back.models.entities.User;
 import com.example.back.models.requestsAndResponses.RegisterRequest;
 import com.example.back.repositories.UserRepo;
 import com.example.back.security.EmailValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,28 +30,27 @@ public class RegisterService implements UserDetailsService {
     private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
-    private final EmailService emailService;
 
-    public String registerNewUser(RegisterRequest registerRequest) {
+    public ResponseEntity<String> registerNewUser(RegisterRequest registerRequest) {
         //verificam daca email-ul are fromatul corespunzator
         if(!emailValidator.validateEmail(registerRequest.getEmail())) {
-            return "The email does not have the right format!";
+            throw new WrongEmailFormatException();
         }
 
         //verificam daca un user cu email-ul respectiv se gaseste deja
         Optional<User> appuser = userRepo.findByEmail(registerRequest.getEmail());
         if(appuser.isPresent()) {
-            return "Email already taken!";
+            throw new EmailTakenException();
         }
 
         //verificam daca un user cu username-ul respectiv se gaseste deja
         appuser = userRepo.findByUsername(registerRequest.getUsername());
         if(appuser.isPresent()) {
-            return "Username already taken!";
+            throw new UsernameTakenException();
         }
 
         if(registerRequest.getPassword().length() < 6) {
-            return "The password must be at least 6 characters!";
+            throw new PasswordLengthException();
         }
 
         //incriptam parola si salvam userul in baza de date
@@ -55,6 +59,8 @@ public class RegisterService implements UserDetailsService {
                 registerRequest.getPassword(),
                 registerRequest.getRole());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setWallet(500);
+        user.setConfirmed(true);
         userRepo.save(user);
 
         //salvam tokenul in baza de date
@@ -66,11 +72,7 @@ public class RegisterService implements UserDetailsService {
                 user
         ));
 
-        //trimitem tokenul pe mail pentru verificare
-        String link = "http://localhost:8080/api/confirmToken?token=" + token;
-        emailService.send(user.getEmail(), buildEmail(link));
-
-        return "You have been registered, now confirm your email!";
+        return ResponseEntity.ok("Hooray! You have been registered!");
     }
 
     public String buildEmail(String link) {
