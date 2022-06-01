@@ -49,6 +49,7 @@ import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/d
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AcceptBetDialogComponent } from './bet/accept-bet-dialog/accept-bet-dialog.component';
 import { AdminComponent } from './admin/admin.component';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
@@ -123,7 +124,7 @@ import { AdminComponent } from './admin/admin.component';
     MatDialogModule,
     MatCheckboxModule,
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, FriendService, {
+  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, DatePipe, FriendService, {
     provide: HTTP_INTERCEPTORS,
     useClass: UserEmulationInterceptor,
     multi: true

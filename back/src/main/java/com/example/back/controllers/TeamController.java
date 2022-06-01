@@ -30,12 +30,12 @@ public class TeamController {
     }
 
     @PostMapping(path = "/favorites-add/{teamId}")
-    public ResponseEntity<String> addTeamToFavorites(@PathVariable Long teamId) {
+    public ResponseEntity addTeamToFavorites(@PathVariable Long teamId) {
         return teamService.addTeamToFavorites(teamId);
     }
 
     @PostMapping(path = "/favorites-remove/{teamId}")
-    public ResponseEntity<String> removeTeamFromFavorites(@PathVariable Long teamId) {
+    public ResponseEntity removeTeamFromFavorites(@PathVariable Long teamId) {
         return teamService.removeTeamFromFavorites(teamId);
     }
 

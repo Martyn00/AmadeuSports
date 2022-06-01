@@ -37,7 +37,7 @@ public class BetServiceImpl implements BetService {
         return getBetsByStatus("current");
     }
 
-    public ResponseEntity<String> addBet(AddBetDto addBetDto) {
+    public ResponseEntity addBet(AddBetDto addBetDto) {
         updateAllBets();
 
         MatchEntity match = matchRepo.findById(addBetDto.getMatchId()).orElseThrow(() -> {
@@ -78,7 +78,7 @@ public class BetServiceImpl implements BetService {
         userRepo.save(user1);
         userRepo.save(user2);
 
-        return ResponseEntity.ok("You placed a bet for this match with user " + user2.getUsername() + ".");
+        return ResponseEntity.ok().build();
 
     }
 
@@ -128,7 +128,7 @@ public class BetServiceImpl implements BetService {
         user.setWallet(user.getWallet() - bet.getAmount());
         userRepo.save(user);
 
-        return ResponseEntity.ok("You accepted a bet for this match with user " + bet.getUser1().getUsername() + ".");
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<String> cancelBet(Long betId) {
@@ -157,7 +157,7 @@ public class BetServiceImpl implements BetService {
         userRepo.save(bet.getUser1());
         userRepo.save(bet.getUser2());
 
-        return ResponseEntity.ok("You canceled this bet.");
+        return ResponseEntity.ok().build();
     }
 
     private ResponseEntity<ArrayList<BetDto>> getBetsByStatus(String status) {

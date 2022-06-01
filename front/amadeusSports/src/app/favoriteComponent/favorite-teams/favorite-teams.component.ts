@@ -26,6 +26,13 @@ export class FavoriteTeamsComponent implements OnInit {
   }
   removeFromFavorites(element: TeamDto) {
     this.teamsService.changeFavoriteStateTeam(element);
-    this.ngOnInit();
+    this.removeElementFromTeams(element);
+    
+  }
+  removeElementFromTeams(element: TeamDto) {
+    const index = this.teams.indexOf(element, 0);
+    if (index > -1) {
+      this.teams.splice(index, 1);
+    }
   }
 }

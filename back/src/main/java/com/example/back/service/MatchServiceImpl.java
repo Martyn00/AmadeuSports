@@ -77,7 +77,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public ResponseEntity<String> addMatchToFavorites(Long matchID) {
+    public ResponseEntity addMatchToFavorites(Long matchID) {
         updateAllMatches();
 
         MatchEntity match = matchRepo.findById(matchID).orElseThrow(() -> {
@@ -92,11 +92,11 @@ public class MatchServiceImpl implements MatchService {
 
         user.getFavoriteMatches().add(match);
         userRepo.save(user);
-        return ResponseEntity.ok("Match has been added to favorites!");
+        return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<String> removeMatchFromFavorites(Long matchID) {
+    public ResponseEntity removeMatchFromFavorites(Long matchID) {
         updateAllMatches();
 
         MatchEntity match = matchRepo.findById(matchID).orElseThrow(() -> {
@@ -108,13 +108,13 @@ public class MatchServiceImpl implements MatchService {
         if(user.getFavoriteMatches().contains(match)) {
             user.getFavoriteMatches().remove(match);
             userRepo.save(user);
-            return ResponseEntity.ok("Match removed from favorites!");
+            return ResponseEntity.ok().build();
         }
 
         throw new MatchNotInFavoritesException();
     }
 
-    public ResponseEntity<String> addMatch(AddMatchDto addMatchDto) {
+    public ResponseEntity addMatch(AddMatchDto addMatchDto) {
         updateAllMatches();
 
         User user = userService.getCurrentUserInstance();
@@ -167,7 +167,7 @@ public class MatchServiceImpl implements MatchService {
         return ResponseEntity.ok("A new match has been added!");
     }
 
-    public ResponseEntity<String> addEvent(AddEventDto addEventDto) {
+    public ResponseEntity addEvent(AddEventDto addEventDto) {
         updateAllMatches();
 
         MatchEntity match = matchRepo.findById(addEventDto.getMatchId()).orElseThrow(() -> {
@@ -190,7 +190,7 @@ public class MatchServiceImpl implements MatchService {
         match.getEvents().add(event);
         matchRepo.save(match);
 
-        return ResponseEntity.ok("A new event has been added for this match!");
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<MatchDto> updateMatch(Long matchId) {

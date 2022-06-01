@@ -21,9 +21,9 @@ alter table league_matches add constraint UK_bw2qjvedqigcjdxmu2hq9e8sa unique (m
     alter table match_entity_events add constraint UK_dhaa7yu597l81trxwtp6lmkxn unique (events_id);
     alter table sport_leagues add constraint UK_fplrrpcs9ncrlyw6nygky2g0s unique (leagues_id);
 --     alter table team_matches add constraint UK_ca2prqkp1fs3h2l49re9ytvgt unique (matches_id);
-    alter table user_favorite_leagues add constraint UK_lhko7iqf4rt6q9b2sauq33cc1 unique (favorite_leagues_id);
-    alter table user_favorite_matches add constraint UK_am7rd7iu9t37a52dfw9wtc5e5 unique (favorite_matches_id);
-    alter table user_favorite_teams add constraint UK_elhl0b0fk583yu2sviv792ghr unique (favorite_teams_id);
+--     alter table user_favorite_leagues add constraint UK_lhko7iqf4rt6q9b2sauq33cc1 unique (favorite_leagues_id);
+--     alter table user_favorite_matches add constraint UK_am7rd7iu9t37a52dfw9wtc5e5 unique (favorite_matches_id);
+--     alter table user_favorite_teams add constraint UK_elhl0b0fk583yu2sviv792ghr unique (favorite_teams_id);
     alter table bet add constraint FK6okt30geuvye4va3y2dctwcs2 foreign key (match_id) references match_entity (id);
     alter table bet add constraint FK115n3uho26unht09309t5fw80 foreign key (user1_id) references user (id);
     alter table bet add constraint FKe7ucumi746eukm7rwg65qe3oc foreign key (user2_id) references user (id);
