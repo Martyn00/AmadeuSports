@@ -3,8 +3,9 @@
 <p>Choose a bet</p>
 
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button [mat-dialog-close]="result1" cdkFocusInitial>{{result1Name}}</button>
-    <button mat-button [mat-dialog-close]="result2" cdkFocusInitial>{{result2Name}}</button>
+    <button mat-button mat-dialog-close>EXIT</button>
+    <button mat-button [mat-dialog-close]="result1Name" cdkFocusInitial>{{result1Name}}</button>
+    <button mat-button [mat-dialog-close]="result2Name" cdkFocusInitial>{{result2Name}}</button>
+    <button mat-button [mat-dialog-close]="cancel" cdkFocusInitial>cancel bet</button>
 
 </mat-dialog-actions>
