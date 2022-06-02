@@ -25,4 +25,4 @@ export class BetDto {
         this.result = result;
         this.betChoice = betchoice;
     }
-}
+} // call to get matches for a team/league

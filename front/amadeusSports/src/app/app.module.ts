@@ -50,6 +50,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AcceptBetDialogComponent } from './bet/accept-bet-dialog/accept-bet-dialog.component';
 import { AdminComponent } from './admin/admin.component';
 import { DatePipe } from '@angular/common';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ResultComponent } from './result/result.component';
+import { SearchService } from './service/search.service';
 
 
 @NgModule({
@@ -74,6 +77,7 @@ import { DatePipe } from '@angular/common';
     BetDialogComponent,
     AcceptBetDialogComponent,
     AdminComponent,
+    ResultComponent,
   ],
   imports: [
     RouterModule.forRoot([
@@ -85,6 +89,7 @@ import { DatePipe } from '@angular/common';
       },
       { path: 'match-tabs', component: MatchTabsComponent },
       { path: 'friends', component: FriendsComponent },
+      { path: 'result', component: ResultComponent },
       {
         path: 'favorites', component: FavoritesComponent, children: [
           {
@@ -123,8 +128,9 @@ import { DatePipe } from '@angular/common';
     MatExpansionModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatSlideToggleModule
   ],
-  providers: [UserService, MatchTableLoaderService, PrincipalComponentLoaderService, BetService, DatePipe, FriendService, {
+  providers: [UserService, MatchTableLoaderService, SearchService, PrincipalComponentLoaderService, BetService, DatePipe, FriendService, {
     provide: HTTP_INTERCEPTORS,
     useClass: UserEmulationInterceptor,
     multi: true

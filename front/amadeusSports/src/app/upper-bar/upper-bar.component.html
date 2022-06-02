@@ -2,19 +2,28 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
 <mat-toolbar color="primary">
+
     <span>AmadeusSports</span>
+
+    <form class="example-form" [formGroup]="group" *ngIf="isUserLogged()">
+        <mat-form-field class="example-full-width" appearance="fill" >
+            <input matInput placeholder="Search" (keyup.enter)="onEnter()" formControlName="name">
+        </mat-form-field>
+        <mat-slide-toggle (change)="onChange($event)">{{slideValue}}</mat-slide-toggle>
+    </form>
     <span class="example-spacer"></span>
     <button class="settings-btn" mat-icon-button>
         {{coins}}<mat-icon>monetization_on</mat-icon>
     </button>
     <div class="settings-btn">
-        <button *ngIf="isUserAdmin()" mat-icon-button (click)="changeState('/admin')" aria-label="Example icon-button with a menu">
+        <button *ngIf="isUserAdmin()" mat-icon-button (click)="changeState('/admin')"
+            aria-label="Example icon-button with a menu">
             <mat-icon>assignment_late</mat-icon>
         </button>
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>more_vert</mat-icon>
         </button>
-        <button mat-icon-button (click)="changeState('/friends')" aria-label="Example icon-button with a menu">
+        <button mat-icon-button *ngIf="isUserLogged()" (click)="changeState('/friends')" aria-label="Example icon-button with a menu">
             <span class="material-symbols-outlined">
                 group
             </span>

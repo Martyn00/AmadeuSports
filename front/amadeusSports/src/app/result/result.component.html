@@ -1,0 +1,23 @@
+<div *ngIf="!isLeague">
+<h1>{{team.name}}</h1>
+<mat-button-toggle-group>
+    <mat-button-toggle *ngIf="team.isFavorite" checked={{team.isFavorite}} (click)="clickedFavoriteTeam(team)">
+        RESET
+    </mat-button-toggle>
+    <mat-button-toggle   *ngIf="!team.isFavorite" checked={{team.isFavorite}} (click)="clickedFavoriteTeam(team)">
+        FAVORITE
+    </mat-button-toggle>
+</mat-button-toggle-group>
+</div>
+<div *ngIf="isLeague">
+    <h1>{{league.name}}</h1>
+    <mat-button-toggle-group>
+        <mat-button-toggle *ngIf="league.isFavorite" checked={{league.isFavorite}} (click)="clickedFavoriteLeague(team)">
+            RESET
+        </mat-button-toggle>
+        <mat-button-toggle  *ngIf="!league.isFavorite" checked={{league.isFavorite}} (click)="clickedFavoriteLeague(team)">
+            FAVORITE
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+
